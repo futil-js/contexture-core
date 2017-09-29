@@ -5,7 +5,10 @@
   "main": "src/index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/_mocha --recursive",
-    "test-watch": "chokidar 'src/**/*.js' 'test/**/*.js' -c 'npm t'"
+    "test:ci": "./node_modules/mocha/bin/_mocha --recursive --reporter json > test-results.json",
+    "test-watch": "chokidar 'src/**/*.js' 'test/**/*.js' -c 'npm t'",
+    "duti": "duti",
+    "fmt": "prettier --write --single-quote --no-semi --trailing-comma es5"
   },
   "repository": {
     "type": "git",
@@ -29,6 +32,8 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chokidar-cli": "^1.2.0",
-    "mocha": "^3.5.3"
+    "duti": "^0.7.0",
+    "mocha": "^3.5.3",
+    "prettier": "^1.7.2"
   }
 }
