@@ -28,7 +28,7 @@ let runTypeProcessor = _.curry(async (getProvider, processor, item, ...args) => 
     let types = getProvider(item).types
     let defaultFn = _.get(`default.${processor}`, types) || _.noop
     let fn = _.get(`${item.type}.${processor}`, types) || defaultFn
-    return fn(item, ...args)
+    return await fn(item, ...args)
   } catch (error) {
     throw new Error(
       `Failed running search for ${item.type} (${item.key}) at ${processor}: ${error}`

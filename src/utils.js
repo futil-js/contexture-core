@@ -40,7 +40,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   // Pull .filter if it's a DC
   if (!relevantChildren) return group._meta.filter
   // Exclude sibling criteria in OR groups where the group is in the paths (meaning only exclude ORs that are in relation via path)
-  if (group.join == 'or' && currentKey)
+  if (group.join === 'or' && currentKey)
     relevantChildren = _.filter(
       {
         key: currentKey,
@@ -49,7 +49,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
     )
   // Exclude self
   relevantChildren = _.reject(
-    item => item.key == currentKey && !getItems(item),
+    item => item.key === currentKey && !getItems(item),
     relevantChildren
   )
 
@@ -57,7 +57,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
     _.map(getRelevantFilters(groupCombinator, path), relevantChildren)
   )
   if (!relevantFilters.length) return
-  if (relevantFilters.length == 1 && group.join !== 'not')
+  if (relevantFilters.length === 1 && group.join !== 'not')
     return relevantFilters[0]
 
   return groupCombinator(group, _.compact(relevantFilters))
