@@ -1,16 +1,17 @@
-var _ = require('lodash/fp')
-var Promise = require('bluebird')
-var utils = require('./utils')
+let _ = require('lodash/fp')
+let Promise = require('bluebird')
+let utils = require('./utils')
+let F = require('futil-js')
 
-var parentFirstDFS = utils.parentFirstDFS
-var getItems = utils.getItems
-var getRelevantFilters = utils.getRelevantFilters
+let parentFirstDFS = utils.parentFirstDFS
+let getItems = utils.getItems
+let getRelevantFilters = utils.getRelevantFilters
 
-var materializePaths = function(item, parent) {
+let materializePaths = (item, parent) => {
   item._meta.path = _.getOr([], '_meta.path', parent).concat([item.key])
 }
-var makeObjectsSafe = (item, parent) =>
-  _.defaults(
+let makeObjectsSafe = (item, parent) =>
+  F.defaultsOn(
     {
       data: {},
       config: {},
@@ -23,11 +24,11 @@ var makeObjectsSafe = (item, parent) =>
     item
   )
 
-var runTypeProcessor = _.curry((getProvider, processor, item, ...args) =>
+let runTypeProcessor = _.curry((getProvider, processor, item, ...args) =>
   Promise.try(() => {
-    var types = getProvider(item).types
-    var defaultFn = _.get(`default.${processor}`, types) || _.noop
-    var fn = _.get(`${item.type}.${processor}`, types) || defaultFn
+    let types = getProvider(item).types
+    let defaultFn = _.get(`default.${processor}`, types) || _.noop
+    let fn = _.get(`${item.type}.${processor}`, types) || defaultFn
     return Promise.resolve(fn(...[item, ...args]))
   }).catch(error => {
     throw new Error(
@@ -36,31 +37,28 @@ var runTypeProcessor = _.curry((getProvider, processor, item, ...args) =>
   })
 )
 
-module.exports = _.curryN(2, function(
-  { providers, schemas },
-  groupParam,
-  options = {}
-) {
-  var getProvider = utils.getProvider(providers, schemas)
-  var runProcessor = runTypeProcessor(getProvider)
-  var getSchema = schema => schemas[schema]
-  var group = _.cloneDeep(groupParam)
-  var processStep = f => parentFirstDFS(getItems, f, group)
-  return processStep([
-    makeObjectsSafe,
-    materializePaths,
-    item =>
-      runProcessor('hasValue', item).then(hasValue => {
-        item._meta.hasValue = hasValue
-        if (hasValue && !item.contextOnly) {
-          return runProcessor('filter', item).then(f => {
+module.exports = _.curryN(
+  2,
+  async ({providers, schemas}, groupParam, options = {}) => {
+    let getProvider = utils.getProvider(providers, schemas)
+    let runProcessor = runTypeProcessor(getProvider)
+    let getSchema = schema => schemas[schema]
+    let group = _.cloneDeep(groupParam)
+    let processStep = f => parentFirstDFS(getItems, f, group)
+    try {
+      await processStep([
+        makeObjectsSafe,
+        materializePaths,
+        async item => {
+          let hasValue = await runProcessor('hasValue', item)
+          item._meta.hasValue = hasValue
+          if (hasValue && !item.contextOnly) {
+            let f = await runProcessor('filter', item)
             item._meta.filter = f
-          })
-        }
-      }),
-  ])
-    .then(() =>
-      processStep(item => {
+          }
+        },
+      ])
+      await processStep(item => {
         // Skip groups
         if (!getItems(item))
           item._meta.relevantFilters = getRelevantFilters(
@@ -69,58 +67,49 @@ module.exports = _.curryN(2, function(
             group
           )
       })
-    )
-    .then(() =>
-      processStep(item =>
-        runProcessor('validContext', item)
-          .then(validContext => {
-            // Reject filterOnly
-            if (item.filterOnly || !validContext) return
 
-            var schema = getSchema(item.schema)
-            var curriedSearch = _.partial(getProvider(item).runSearch, [
-              options,
-              item,
-              schema,
-              item._meta.relevantFilters,
-            ])
-            return runProcessor(
-              'result',
-              item,
-              curriedSearch,
-              schema,
-              getProvider(item),
-              options
-            ).catch(error => {
-              throw _.extend(error, {
-                item,
-              })
-            })
+      await processStep(async item => {
+        let validContext = await runProcessor('validContext', item)
+
+        // Reject filterOnly
+        if (item.filterOnly || !validContext) return
+
+        let schema = getSchema(item.schema)
+        let curriedSearch = _.partial(getProvider(item).runSearch, [
+          options,
+          item,
+          schema,
+          item._meta.relevantFilters,
+        ])
+
+        let result = await runProcessor(
+          'result',
+          item,
+          curriedSearch,
+          schema,
+          getProvider(item),
+          options
+        ).catch(error => {
+          throw F.extendOn(error, {
+            item,
           })
-          .then(result => {
-            item.context = _.defaults(result, {
-              took: _.sum(_.map('response.took', item._meta.requests)),
-            })
-            if (options.onResult) options.onResult(result)
-          })
-      )
-    )
-    .then(() =>
-      processStep(item => {
+        })
+        item.context = result
+        if (options.onResult) options.onResult(result)
+      })
+
+      await processStep(item => {
         if (!options.debug) delete item._meta
       })
-    )
-    .return(group)
-    .catch(error => {
+
+      return group
+    } catch (error) {
       throw error.item
         ? error
         : new Error(`Failed running search (uncaught): ${error}`)
-    })
-  // .then(() => {
-  //     console.log('------------')
-  //     console.log(JSON.stringify(group, null, 2))
-  // })
-})
+    }
+  }
+)
 
 // Psuedo code process
 // -----
