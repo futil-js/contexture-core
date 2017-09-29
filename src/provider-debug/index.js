@@ -5,17 +5,17 @@ let DebugProvider = {
     [group.join]: filters,
   }),
   runSearch: function(options, context, schema, filters, aggs) {
-    let request = {where: filters, retrieve: aggs}
+    let request = { where: filters, retrieve: aggs }
     context._meta.requests.push(request)
     return Promise.resolve(request)
   },
   types: {
     default: {
       validContext: () => true,
-      hasValue: () => true
+      hasValue: () => true,
     },
     test: {
-      filter: x => ({[`${x.field || x.key} (${x.type})`]: x.data}),
+      filter: x => ({ [`${x.field || x.key} (${x.type})`]: x.data }),
       result: (context, search) =>
         search({ test: context.config }).return({
           abc: 123,
@@ -24,9 +24,9 @@ let DebugProvider = {
     results: {
       result: (context, search) =>
         search({ results: context.config }).return({
-          results: []
-        })
-    }
+          results: [],
+        }),
+    },
   },
 }
 

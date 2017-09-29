@@ -23,22 +23,24 @@ let makeObjectsSafe = (item, parent) =>
     item
   )
 
-let runTypeProcessor = _.curry(async (getProvider, processor, item, ...args) => {
-  try {
-    let types = getProvider(item).types
-    let defaultFn = _.get(`default.${processor}`, types) || _.noop
-    let fn = _.get(`${item.type}.${processor}`, types) || defaultFn
-    return await fn(item, ...args)
-  } catch (error) {
-    throw new Error(
-      `Failed running search for ${item.type} (${item.key}) at ${processor}: ${error}`
-    )
+let runTypeProcessor = _.curry(
+  async (getProvider, processor, item, ...args) => {
+    try {
+      let types = getProvider(item).types
+      let defaultFn = _.get(`default.${processor}`, types) || _.noop
+      let fn = _.get(`${item.type}.${processor}`, types) || defaultFn
+      return await fn(item, ...args)
+    } catch (error) {
+      throw new Error(
+        `Failed running search for ${item.type} (${item.key}) at ${processor}: ${error}`
+      )
+    }
   }
-})
+)
 
 module.exports = _.curryN(
   2,
-  async ({providers, schemas}, groupParam, options = {}) => {
+  async ({ providers, schemas }, groupParam, options = {}) => {
     let getProvider = utils.getProvider(providers, schemas)
     let runProcessor = runTypeProcessor(getProvider)
     let getSchema = schema => schemas[schema]

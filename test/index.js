@@ -1,4 +1,4 @@
-let {expect} = require('chai')
+let { expect } = require('chai')
 let Contexture = require('../src/index')
 let provider = require('../src/provider-debug')
 
@@ -33,7 +33,7 @@ describe('Contexture Core', () => {
     ],
   }
   it('should work', async () => {
-    let {items: [filter, results]} = await process(dsl)
+    let { items: [filter, results] } = await process(dsl)
     expect(filter.context).to.deep.equal({
       abc: 123,
     })
@@ -44,14 +44,14 @@ describe('Contexture Core', () => {
     expect(results._meta).to.not.exist
   })
   it('should add _meta with debug option', async () => {
-    let result = await process(dsl, {debug: true})
-    let {items: [filter, results]} = result
+    let result = await process(dsl, { debug: true })
+    let { items: [filter, results] } = result
 
     expect(filter._meta).to.deep.equal({
       requests: [
         {
           where: undefined,
-          retrieve: {test: {}},
+          retrieve: { test: {} },
         },
       ],
       path: ['root', 'filter'],
