@@ -1,0 +1,9 @@
+{
+  "prNetChangeThreshold": 500,
+  "recommendedPrReviewers": 1,
+  "lintResultsPath": ".",
+  "testResultsPath": ".",
+  "autoFix": {
+    "extensions": [".js"]
+  }
+}
