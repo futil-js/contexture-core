@@ -1,0 +1,4 @@
+{
+  "extends": "smartprocure",
+  "parser": "babel-eslint"
+}

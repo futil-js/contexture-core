@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps-{{ checksum "package.json" }}
+      - run:
+          name: install
+          command: npm install
+      - save_cache:
+          key: deps-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: lint
+          command: npm run lint:ci
+      - run:
+          name: test
+          command: npm run test:ci
+      - run:
+          name: pre-duti
+          command: git config user.email "drodriguez@smartprocure.us" && git config user.name "Decrapifier" && git config push.default current
+          when: always
+      - run:
+          name: duti
+          command: npm run duti
+          when: always
+      - deploy:
+          name: Maybe Deploy
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+              npm publish
+            fi
