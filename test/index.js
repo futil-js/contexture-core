@@ -1,52 +1,89 @@
-let { expect } = require('chai')
-let _ = require('lodash/fp')
+let {expect} = require('chai')
 let Contexture = require('../src/index')
 let provider = require('../src/provider-debug')
 
-let log = {
-  stringify: (...args) => console.log(JSON.stringify(...args)),
-  json: (...args) => args.forEach(x => log.stringify(x, null, 2))
-}
-
 describe('Contexture Core', () => {
-  it('should work', async () => {
-    let process = Contexture({
-      schemas: {
-        test: {
-          debug: true
-        }
+  let process = Contexture({
+    schemas: {
+      test: {
+        debug: true,
       },
-      providers: {
-        debug: provider
-      }
-    })
-
-    let dsl = {
-      key: 'root',
-      type: 'group',
-      schema: 'test',
-      // join: 'and',
-      items: [ //children??
-        {
-          key: 'filter',
-          type: 'test',
-          data: {
-            value: 1
-          }
+    },
+    providers: {
+      debug: provider,
+    },
+  })
+  let dsl = {
+    key: 'root',
+    type: 'group',
+    schema: 'test',
+    // join: 'and',
+    items: [
+      {
+        key: 'filter',
+        type: 'test',
+        data: {
+          value: 1,
         },
-        {
-          key: 'results',
-          type: 'results'
-        }
-      ]
-    }
-
-    let result1 = await process(dsl)
-    expect(result1.items[0].context).to.deep.equal({
-      abc: 123
+      },
+      {
+        key: 'results',
+        type: 'results',
+      },
+    ],
+  }
+  it('should work', async () => {
+    let {items: [filter, results]} = await process(dsl)
+    expect(filter.context).to.deep.equal({
+      abc: 123,
     })
-    expect(result1.items[1].context).to.deep.equal({
-      results: []
+    expect(filter._meta).to.not.exist
+    expect(results.context).to.deep.equal({
+      results: [],
+    })
+    expect(results._meta).to.not.exist
+  })
+  it('should add _meta with debug option', async () => {
+    let result = await process(dsl, {debug: true})
+    let {items: [filter, results]} = result
+
+    expect(filter._meta).to.deep.equal({
+      requests: [
+        {
+          where: undefined,
+          retrieve: {test: {}},
+        },
+      ],
+      path: ['root', 'filter'],
+      hasValue: true,
+      relevantFilters: undefined,
+      filter: {
+        'filter (test)': {
+          value: 1,
+        },
+      },
+    })
+    expect(results._meta).to.deep.equal({
+      requests: [
+        {
+          where: {
+            'filter (test)': {
+              value: 1,
+            },
+          },
+          retrieve: {
+            results: {},
+          },
+        },
+      ],
+      path: ['root', 'results'],
+      hasValue: true,
+      relevantFilters: {
+        'filter (test)': {
+          value: 1,
+        },
+      },
+      filter: undefined,
     })
   })
 })
