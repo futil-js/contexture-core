@@ -1,6 +1,6 @@
-let _ = require('lodash/fp'),
-  Promise = require('bluebird'),
-  F = require('futil-js')
+let _ = require('lodash/fp')
+let Promise = require('bluebird')
+let F = require('futil-js')
 
 // Parent first promise DFS
 // TODO: futil walkAsync

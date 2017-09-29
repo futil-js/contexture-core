@@ -1,10 +1,10 @@
-var _ = require('lodash/fp'),
-  Promise = require('bluebird'),
-  utils = require('./utils')
+var _ = require('lodash/fp')
+var Promise = require('bluebird')
+var utils = require('./utils')
 
-var parentFirstDFS = utils.parentFirstDFS,
-  getItems = utils.getItems,
-  getRelevantFilters = utils.getRelevantFilters
+var parentFirstDFS = utils.parentFirstDFS
+var getItems = utils.getItems
+var getRelevantFilters = utils.getRelevantFilters
 
 var materializePaths = function(item, parent) {
   item._meta.path = _.getOr([], '_meta.path', parent).concat([item.key])
