@@ -6,11 +6,11 @@ let _ = require('lodash/fp'),
 // TODO: futil walkAsync
 let parentFirstDFS = function(getChildren, fn, collection, parent) {
   let fns = _.castArray(fn)
-  return Promise.map(fns, f => f(collection, parent)).then(() => {
-    return Promise.map(getChildren(collection) || [], item => {
-      return parentFirstDFS(getChildren, fns, item, collection)
-    })
-  })
+  return Promise.map(fns, f => f(collection, parent)).then(() =>
+    Promise.map(getChildren(collection) || [], item =>
+      parentFirstDFS(getChildren, fns, item, collection)
+    )
+  )
 }
 
 // TODO: Handle no provider and have global default?
@@ -43,7 +43,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   if (group.join == 'or' && currentKey)
     relevantChildren = _.filter(
       {
-        key: currentKey
+        key: currentKey,
       },
       relevantChildren
     )
@@ -67,5 +67,5 @@ module.exports = {
   parentFirstDFS,
   getProvider,
   getItems,
-  getRelevantFilters
+  getRelevantFilters,
 }
