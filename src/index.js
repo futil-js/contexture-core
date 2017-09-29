@@ -1,10 +1,9 @@
-let _ = require('lodash/fp')
-let Promise = require('bluebird')
-let utils = require('./utils')
 let F = require('futil-js')
+let _ = require('lodash/fp')
+let utils = require('./utils')
 
-let parentFirstDFS = utils.parentFirstDFS
 let getItems = utils.getItems
+let parentFirstDFS = utils.parentFirstDFS
 let getRelevantFilters = utils.getRelevantFilters
 
 let materializePaths = (item, parent) => {
@@ -24,18 +23,18 @@ let makeObjectsSafe = (item, parent) =>
     item
   )
 
-let runTypeProcessor = _.curry((getProvider, processor, item, ...args) =>
-  Promise.try(() => {
+let runTypeProcessor = _.curry(async (getProvider, processor, item, ...args) => {
+  try {
     let types = getProvider(item).types
     let defaultFn = _.get(`default.${processor}`, types) || _.noop
     let fn = _.get(`${item.type}.${processor}`, types) || defaultFn
-    return Promise.resolve(fn(...[item, ...args]))
-  }).catch(error => {
+    return fn(item, ...args)
+  } catch (error) {
     throw new Error(
       `Failed running search for ${item.type} (${item.key}) at ${processor}: ${error}`
     )
-  })
-)
+  }
+})
 
 module.exports = _.curryN(
   2,
@@ -53,8 +52,7 @@ module.exports = _.curryN(
           let hasValue = await runProcessor('hasValue', item)
           item._meta.hasValue = hasValue
           if (hasValue && !item.contextOnly) {
-            let f = await runProcessor('filter', item)
-            item._meta.filter = f
+            item._meta.filter = await runProcessor('filter', item)
           }
         },
       ])
@@ -67,7 +65,6 @@ module.exports = _.curryN(
             group
           )
       })
-
       await processStep(async item => {
         let validContext = await runProcessor('validContext', item)
 
@@ -97,7 +94,6 @@ module.exports = _.curryN(
         item.context = result
         if (options.onResult) options.onResult(result)
       })
-
       await processStep(item => {
         if (!options.debug) delete item._meta
       })
