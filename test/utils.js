@@ -1,5 +1,4 @@
 let { expect } = require('chai')
-require('chai').should()
 let { getProvider, getRelevantFilters } = require('../src/utils')
 let DebugProvider = require('../src/provider-debug')
 
@@ -74,7 +73,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal('test')
+      expect(result).to.deep.equal('test')
     })
     it('should handle two siblings', () => {
       let result = getRelevantFilters(
@@ -108,7 +107,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal({
+      expect(result).to.deep.equal({
         and: ['test', 'test2'],
       })
     })
@@ -144,7 +143,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal({
+      expect(result).to.deep.equal({
         and: ['test', 'blah'],
       })
     })
@@ -180,7 +179,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal('blah')
+      expect(result).to.deep.equal('blah')
     })
     it('should not collapse NOT', () => {
       let result = getRelevantFilters(
@@ -220,7 +219,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal({
+      expect(result).to.deep.equal({
         and: [
           'test',
           {
@@ -284,7 +283,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal({
+      expect(result).to.deep.equal({
         and: [
           'cable',
           {
@@ -359,7 +358,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal({
+      expect(result).to.deep.equal({
         and: [
           'cable',
           {
@@ -434,7 +433,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal('res:FL')
+      expect(result).to.deep.equal('res:FL')
     })
     it('should handle nested AND', () => {
       let result = getRelevantFilters(
@@ -493,7 +492,7 @@ describe('Utils', () => {
           ],
         }
       )
-      result.should.deep.equal({
+      expect(result).to.deep.equal({
         and: ['cable', 'result'],
       })
     })
