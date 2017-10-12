@@ -13,19 +13,22 @@ let parentFirstDFS = function(getChildren, fn, collection, parent) {
   )
 }
 
+// For futil? map args is _.overArgs on all args
+let mapArgs = (f, g) => (...x) => f(...x.map(g))
+let commonKeys = mapArgs(_.intersection, _.keys)
+
 // TODO: Handle no provider and have global default?
-let getProvider = _.curry((providers, schemas, item) => {
-  let providerKeys = _.keys(providers)
-  let schemaFields = _.keys(schemas[item.schema])
-  let provider =
-    item.provider || _.find(_.includes(_, providerKeys), schemaFields)
-  let result = providers[provider]
-  if (!result)
-    throw new Error(
-      `No Provider found ${item.schema} and was not overridden for ${item.key}`
+let getProvider = _.curry(
+  (providers, schemas, item) =>
+    providers[
+      item.provider || _.first(commonKeys(providers, schemas[item.schema]))
+    ] ||
+    F.throws(
+      new Error(
+        `No Provider found ${item.schema} and was not overridden for ${item.key}`
+      )
     )
-  return result
-})
+)
 
 let getItems = F.cascade(['items', 'data.items'])
 let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
@@ -37,7 +40,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   let currentKey = path[0]
 
   let relevantChildren = getItems(group)
-  // Pull .filter if it's a DC
+  // Pull .filter if it's a leaf node
   if (!relevantChildren) return group._meta.filter
   // Exclude sibling criteria in OR groups where the group is in the paths (meaning only exclude ORs that are in relation via path)
   if (group.join === 'or' && currentKey)
