@@ -4,7 +4,7 @@ let DebugProvider = {
   groupCombinator: (group, filters) => ({
     [group.join]: filters,
   }),
-  runSearch: function(options, context, schema, filters, aggs) {
+  runSearch(options, context, schema, filters, aggs) {
     let request = { where: filters, retrieve: aggs }
     context._meta.requests.push(request)
     return Promise.resolve(request)

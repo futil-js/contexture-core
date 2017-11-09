@@ -25,7 +25,9 @@ let getProvider = _.curry(
     ] ||
     F.throws(
       new Error(
-        `No Provider found ${item.schema} and was not overridden for ${item.key}`
+        `No Provider found ${item.schema} and was not overridden for ${
+          item.key
+        }`
       )
     )
 )
