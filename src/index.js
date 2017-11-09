@@ -86,7 +86,7 @@ module.exports = _.curryN(
           item,
           curriedSearch,
           schema,
-          getProvider(item),
+          {getProvider, getSchema},
           options
         ).catch(error => {
           throw F.extendOn(error, {
