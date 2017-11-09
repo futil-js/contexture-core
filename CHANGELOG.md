@@ -1,3 +1,6 @@
+### 0.0.4
+- Pass getProvider and getSchema to result functions
+
 ### 0.0.3
 - Fixed some core bugs, added better tests, and moved to async/await
 
