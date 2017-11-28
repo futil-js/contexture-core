@@ -11,6 +11,17 @@ The canonical example of a Contexture Node is faceted search, where you have a c
 Contexture takes as input the tree DSL and returns it hydrated with contextual results on it's `context`, and uses `provider`s for different backing data stores (like elasticsearch and mongo) to actually run the search results. This means that Contexture typically runs on the server, but it doesn't have to - you can build providers that call APIs instead of directly hitting a database.
 While the Contexture DSL can be built anyway you'd like, it pairs well with the `contexture-client`, which leverages the generic structure and makes sure things update only when needed.
 
+### Ecosystem And Resources
+
+| Github | npm | Desccription |
+| ------ | --- | ------------ |
+| [`contexture`](http://github.com/smartprocure/contexture) | [`contexture`](https://www.npmjs.com/package/contexture) | The core library that exectues the DSL to retrieve data |
+| [`contexture-elasticsearch`](http://github.com/smartprocure/contexture-elasticsearch) | [`contexture-elasticsearch`](https://www.npmjs.com/package/contexture-elasticsearch) | Elasticsearch provider for contexture |
+| [`contexture-mongo`](http://github.com/smartprocure/contexture-mongo) | [`contexture-mongo`](https://www.npmjs.com/package/contexture-mongo) | MongoDB provider for contexture |
+| [`contexture-client`](http://github.com/smartprocure/contexture-client) | [`contexture-client`](https://www.npmjs.com/package/contexture-client) | The client library that manages the DSL, allowing for hyper efficient updates running only what is exactly needed |
+| [`contexture-react`](http://github.com/smartprocure/contexture-react) | [`contexture-react`](https://www.npmjs.com/package/contexture-react) | React components for building contexture interfaces |
+| [`contexture-ec18-talk`](http://github.com/smartprocure/contexture-ec18-talk) | n/a | Elasticon 2018 Talk About Contexture |
+
 ## Example Usage
 
 ```js
