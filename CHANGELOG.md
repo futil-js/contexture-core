@@ -1,3 +1,6 @@
+### 0.0.5
+- Ecosystem And Resources readme update (version bump for npm pubishing)
+
 ### 0.0.4
 - Pass getProvider and getSchema to result functions
 
