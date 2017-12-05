@@ -35,9 +35,9 @@ let runTypeProcessor = _.curry(
       return await fn(item, ...args)
     } catch (error) {
       throw new Error(
-        `Failed running search for ${item.type} (${item.key}) at ${
-          processor
-        }: ${error}`
+        `Failed running search for ${item.type} (${
+          item.key
+        }) at ${processor}: ${error}`
       )
     }
   }
