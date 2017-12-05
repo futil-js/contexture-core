@@ -75,6 +75,34 @@ describe('Utils', () => {
       )
       expect(result).to.deep.equal('test')
     })
+    it('should handle basic sibling, but with items instead of children', () => {
+      let result = getRelevantFilters(
+        DebugProvider.groupCombinator,
+        ['a', 'b', 'c'],
+        {
+          key: 'a',
+          join: 'and',
+          items: [
+            {
+              key: 'b',
+              join: 'and',
+              items: [
+                {
+                  key: 'c',
+                },
+                {
+                  key: 'd',
+                  _meta: {
+                    filter: 'test',
+                  },
+                },
+              ],
+            },
+          ],
+        }
+      )
+      expect(result).to.deep.equal('test')
+    })
     it('should handle two siblings', () => {
       let result = getRelevantFilters(
         DebugProvider.groupCombinator,
