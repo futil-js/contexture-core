@@ -1,3 +1,6 @@
+﻿### 0.1.0
+- Supporting `children`.
+
 ### 0.0.5
 - Ecosystem And Resources readme update (version bump for npm pubishing)
 

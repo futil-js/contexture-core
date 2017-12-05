@@ -32,7 +32,7 @@ let getProvider = _.curry(
     )
 )
 
-let getItems = F.cascade(['items', 'data.items'])
+let getChildren = F.cascade(['children', 'items', 'data.items'])
 let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   if (!_.includes(group.key, Path))
     // If we're not in the path, it doesn't matter what the rest of it is
@@ -41,7 +41,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   let path = Path.slice(1) // pop off this level
   let currentKey = path[0]
 
-  let relevantChildren = getItems(group)
+  let relevantChildren = getChildren(group)
   // Pull .filter if it's a leaf node
   if (!relevantChildren) return group._meta.filter
   // Exclude sibling criteria in OR groups where the group is in the paths (meaning only exclude ORs that are in relation via path)
@@ -54,7 +54,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
     )
   // Exclude self
   relevantChildren = _.reject(
-    item => item.key === currentKey && !getItems(item),
+    item => item.key === currentKey && !getChildren(item),
     relevantChildren
   )
 
@@ -71,6 +71,6 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
 module.exports = {
   parentFirstDFS,
   getProvider,
-  getItems,
+  getChildren,
   getRelevantFilters,
 }
