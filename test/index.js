@@ -18,7 +18,7 @@ describe('Contexture Core', () => {
     type: 'group',
     schema: 'test',
     // join: 'and',
-    items: [
+    children: [
       {
         key: 'filter',
         type: 'test',
@@ -33,7 +33,7 @@ describe('Contexture Core', () => {
     ],
   }
   it('should work', async () => {
-    let { items: [filter, results] } = await process(dsl)
+    let { children: [filter, results] } = await process(dsl)
     expect(filter.context).to.deep.equal({
       abc: 123,
     })
@@ -45,7 +45,7 @@ describe('Contexture Core', () => {
   })
   it('should add _meta with debug option', async () => {
     let result = await process(dsl, { debug: true })
-    let { items: [filter, results] } = result
+    let { children: [filter, results] } = result
 
     expect(filter._meta).to.deep.equal({
       requests: [

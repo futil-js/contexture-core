@@ -1,3 +1,6 @@
+﻿### 0.1.0
+- Using `children` instead of `items`.
+
 ### 0.0.5
 - Ecosystem And Resources readme update (version bump for npm pubishing)
 

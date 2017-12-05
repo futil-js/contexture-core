@@ -2,7 +2,7 @@ let F = require('futil-js')
 let _ = require('lodash/fp')
 let utils = require('./utils')
 
-let getItems = utils.getItems
+let getChildren = utils.getChildren
 let parentFirstDFS = utils.parentFirstDFS
 let getRelevantFilters = utils.getRelevantFilters
 
@@ -50,7 +50,7 @@ module.exports = _.curryN(
     let runProcessor = runTypeProcessor(getProvider)
     let getSchema = schema => schemas[schema]
     let group = _.cloneDeep(groupParam)
-    let processStep = f => parentFirstDFS(getItems, f, group)
+    let processStep = f => parentFirstDFS(getChildren, f, group)
     try {
       await processStep([
         makeObjectsSafe,
@@ -65,7 +65,7 @@ module.exports = _.curryN(
       ])
       await processStep(item => {
         // Skip groups
-        if (!getItems(item))
+        if (!getChildren(item))
           item._meta.relevantFilters = getRelevantFilters(
             getProvider(item).groupCombinator,
             item._meta.path,

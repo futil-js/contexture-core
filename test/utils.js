@@ -54,11 +54,11 @@ describe('Utils', () => {
         {
           key: 'a',
           join: 'and',
-          items: [
+          children: [
             {
               key: 'b',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'c',
                 },
@@ -82,11 +82,11 @@ describe('Utils', () => {
         {
           key: 'a',
           join: 'and',
-          items: [
+          children: [
             {
               key: 'b',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'c',
                 },
@@ -118,11 +118,11 @@ describe('Utils', () => {
         {
           key: 'a',
           join: 'and',
-          items: [
+          children: [
             {
               key: 'b',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'c',
                 },
@@ -154,11 +154,11 @@ describe('Utils', () => {
         {
           key: 'a',
           join: 'and',
-          items: [
+          children: [
             {
               key: 'b',
               join: 'or',
-              items: [
+              children: [
                 {
                   key: 'c',
                 },
@@ -188,11 +188,11 @@ describe('Utils', () => {
         {
           key: 'a',
           join: 'and',
-          items: [
+          children: [
             {
               key: 'b',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'c',
                 },
@@ -207,7 +207,7 @@ describe('Utils', () => {
             {
               key: 'blah',
               join: 'not',
-              items: [
+              children: [
                 {
                   key: 'asdf',
                   _meta: {
@@ -236,11 +236,11 @@ describe('Utils', () => {
         {
           key: 'root',
           join: 'and',
-          items: [
+          children: [
             {
               key: 'criteria',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'cgnya6ja8ys10iwl8fr',
                   _meta: {
@@ -250,7 +250,7 @@ describe('Utils', () => {
                 {
                   key: 'criteria',
                   join: 'or',
-                  items: [
+                  children: [
                     {
                       key: '8ilrqpm1je3m8ed5z5mi',
                       _meta: {
@@ -274,7 +274,7 @@ describe('Utils', () => {
               type: 'group',
               key: 'analysis',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'results',
                 },
@@ -299,11 +299,11 @@ describe('Utils', () => {
         {
           key: 'root',
           join: 'and',
-          items: [
+          children: [
             {
               key: 'criteria',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'cgnya6ja8ys10iwl8fr',
                   _meta: {
@@ -313,7 +313,7 @@ describe('Utils', () => {
                 {
                   key: 'criteria',
                   join: 'or',
-                  items: [
+                  children: [
                     {
                       key: '8ilrqpm1je3m8ed5z5mi',
                       _meta: {
@@ -336,12 +336,12 @@ describe('Utils', () => {
             {
               key: 'analysisOR',
               join: 'or',
-              items: [
+              children: [
                 {
                   type: 'group',
                   key: 'analysis',
                   join: 'and',
-                  items: [
+                  children: [
                     {
                       key: 'results',
                     },
@@ -374,11 +374,11 @@ describe('Utils', () => {
         {
           key: 'root',
           join: 'or',
-          items: [
+          children: [
             {
               key: 'criteria',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'cgnya6ja8ys10iwl8fr',
                   _meta: {
@@ -388,7 +388,7 @@ describe('Utils', () => {
                 {
                   key: 'criteria',
                   join: 'or',
-                  items: [
+                  children: [
                     {
                       key: '8ilrqpm1je3m8ed5z5mi',
                       _meta: {
@@ -411,12 +411,12 @@ describe('Utils', () => {
             {
               key: 'analysisOR',
               join: 'and',
-              items: [
+              children: [
                 {
                   type: 'group',
                   key: 'analysis',
                   join: 'and',
-                  items: [
+                  children: [
                     {
                       key: 'results',
                     },
@@ -442,11 +442,11 @@ describe('Utils', () => {
         {
           key: 'root',
           join: 'and',
-          items: [
+          children: [
             {
               key: 'criteria',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'cgnya6ja8ys10iwl8fr',
                   _meta: {
@@ -456,7 +456,7 @@ describe('Utils', () => {
                 {
                   key: 'criteria2',
                   join: 'or',
-                  items: [
+                  children: [
                     {
                       key: 'dod',
                       _meta: {
@@ -480,7 +480,7 @@ describe('Utils', () => {
               type: 'group',
               key: 'analysis',
               join: 'and',
-              items: [
+              children: [
                 {
                   key: 'results',
                   _meta: {
