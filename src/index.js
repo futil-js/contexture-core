@@ -24,7 +24,8 @@ let makeObjectsSafe = (item, parent) =>
   )
 
 let extendAllOn = _.extendAll.convert({ immutable: false })
-let flattenLegacyFields = item => extendAllOn([
+let flattenLegacyFields = item =>
+  extendAllOn([
     item,
     item.config,
     item.filterConfig,
