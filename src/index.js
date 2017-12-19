@@ -23,6 +23,15 @@ let makeObjectsSafe = (item, parent) =>
     item
   )
 
+let extendAllOn = _.extendAll.convert({ immutable: false })
+let flattenLegacyFields = item => extendAllOn([
+    item,
+    item.config,
+    item.filterConfig,
+    item.data,
+    item.resultConfig,
+  ])
+
 let runTypeProcessor = _.curry(
   async (getProvider, processor, item, ...args) => {
     try {
@@ -54,6 +63,7 @@ module.exports = _.curryN(
     try {
       await processStep([
         makeObjectsSafe,
+        flattenLegacyFields,
         materializePaths,
         async item => {
           let hasValue = await runProcessor('hasValue', item)
