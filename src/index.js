@@ -67,10 +67,11 @@ module.exports = _.curryN(
         flattenLegacyFields,
         materializePaths,
         async item => {
-          let hasValue = await runProcessor('hasValue', item)
+          let schema = getSchema(item.schema)
+          let hasValue = await runProcessor('hasValue', item, schema)
           item._meta.hasValue = hasValue
           if (hasValue && !item.contextOnly) {
-            item._meta.filter = await runProcessor('filter', item)
+            item._meta.filter = await runProcessor('filter', item, schema)
           }
         },
       ])
@@ -84,12 +85,12 @@ module.exports = _.curryN(
           )
       })
       await processStep(async item => {
-        let validContext = await runProcessor('validContext', item)
+        let schema = getSchema(item.schema)
+        let validContext = await runProcessor('validContext', item, schema)
 
         // Reject filterOnly
         if (item.filterOnly || !validContext) return
 
-        let schema = getSchema(item.schema)
         let curriedSearch = _.partial(getProvider(item).runSearch, [
           options,
           item,

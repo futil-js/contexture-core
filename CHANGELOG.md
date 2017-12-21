@@ -1,3 +1,6 @@
+### 0.2.1
+* Pass `schema` to more step functions
+
 ### 0.2.0
 * Flatten legacy fields, so `data` and `config` (and their more modern `filterConfig` and `resultConfig` aliases) are merged into the nodes so types can safely ignore the distinction
 
