@@ -1,5 +1,5 @@
 # contexture
-The Contexture (aka ContextTree) Core
+The Contexture DSL Processor
 
 ## Overview
 Contexture is a tool for running the Contexture DSL, which is primarily about abstracting queries/filters and results/aggregrations.
