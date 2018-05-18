@@ -36,13 +36,10 @@ let flattenLegacyFields = item =>
 let runTypeProcessor = _.curry(
   async (getProvider, processor, item, ...args) => {
     try {
-      let types = getProvider(item).types
-      let fn =
-        F.cascade(
-          [`${item.type}.${processor}`, `default.${processor}`],
-          types
-        ) || _.noop
-      return await fn(item, ...args)
+      return await (F.cascade(
+        [`${item.type}.${processor}`, `default.${processor}`],
+        getProvider(item).types
+      ) || _.noop)(item, ...args)
     } catch (error) {
       throw new Error(
         `Failed running search for ${item.type} (${
