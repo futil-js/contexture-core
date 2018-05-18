@@ -50,7 +50,7 @@ let runTypeProcessor = _.curry(
   }
 )
 
-module.exports = _.curryN(
+let process = _.curryN(
   2,
   async ({ providers, schemas }, groupParam, options = {}) => {
     let getProvider = utils.getProvider(providers, schemas)
@@ -123,6 +123,7 @@ module.exports = _.curryN(
     }
   }
 )
+module.exports = process
 
 // Psuedo code process
 // -----
