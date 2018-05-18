@@ -4,12 +4,10 @@ let F = require('futil-js')
 
 // Parent first promise DFS
 // TODO: futil walkAsync
-let parentFirstDFS = function(getChildren, fn, collection, parent) {
-  let fns = _.castArray(fn)
-  return Promise.map(fns, f => f(collection, parent)).then(() =>
-    Promise.map(getChildren(collection) || [], item =>
-      parentFirstDFS(getChildren, fns, item, collection)
-    )
+let parentFirstDFS = async (getChildren, fn, collection, parent) => {
+  await fn(collection, parent)
+  await Promise.map(getChildren(collection) || [], item =>
+    parentFirstDFS(getChildren, fn, item, collection)
   )
 }
 

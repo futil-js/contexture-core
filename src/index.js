@@ -59,7 +59,7 @@ module.exports = _.curryN(
     let group = _.cloneDeep(groupParam)
     let processStep = f => parentFirstDFS(getChildren, f, group)
     try {
-      await processStep([
+      await processStep(_.over([
         makeObjectsSafe,
         flattenLegacyFields,
         materializePaths,
@@ -72,6 +72,7 @@ module.exports = _.curryN(
           }
         },
       ])
+      ]))
       await processStep(item => {
         // Skip groups
         if (!getChildren(item))
