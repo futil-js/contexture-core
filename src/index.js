@@ -1,3 +1,4 @@
+let Promise = require('bluebird')
 let F = require('futil-js')
 let _ = require('lodash/fp')
 let utils = require('./utils')
@@ -59,7 +60,7 @@ let process = _.curryN(
     let group = _.cloneDeep(groupParam)
     let processStep = f => parentFirstDFS(getChildren, f, group)
     try {
-      await processStep(_.over([
+      await processStep(_.flow(_.over([
         makeObjectsSafe,
         flattenLegacyFields,
         materializePaths,
@@ -71,7 +72,7 @@ let process = _.curryN(
             item._meta.filter = await runProcessor('filter', item, schema)
           }
         },
-      ]))
+      ]), Promise.all))
       await processStep(item => {
         // Skip groups
         if (!getChildren(item))
