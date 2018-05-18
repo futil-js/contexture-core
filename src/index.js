@@ -71,7 +71,6 @@ let process = _.curryN(
             item._meta.filter = await runProcessor('filter', item, schema)
           }
         },
-      ])
       ]))
       await processStep(item => {
         // Skip groups
