@@ -26,15 +26,15 @@ describe('Contexture Core', () => {
           value: 1,
         },
         config: {
-          c: 1
-        }
+          c: 1,
+        },
       },
       {
         key: 'results',
         type: 'results',
         config: {
-          page: 1
-        }
+          page: 1,
+        },
       },
     ],
   }
@@ -83,7 +83,7 @@ describe('Contexture Core', () => {
           },
           retrieve: {
             results: {
-              page: 1
+              page: 1,
             },
           },
         },
