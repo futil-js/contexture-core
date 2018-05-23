@@ -10,15 +10,8 @@ let { getChildren, parentFirstDFS, getRelevantFilters } = utils
 let materializePaths = (item, parent) => {
   item._meta.path = _.getOr([], '_meta.path', parent).concat([item.key])
 }
-let initNode = (item, parent) =>
-  F.defaultsOn(
-    {
-      _meta: { requests: [] },
-      // Stamp Schemas
-      schema: parent && parent.schema,
-    },
-    item
-  )
+let initNode = (item, { schema } = {}) =>
+  F.defaultsOn({ _meta: { requests: [] }, schema }, item)
 
 let flattenLegacyFields = item =>
   extendAllOn([
