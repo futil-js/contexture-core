@@ -1,28 +1,25 @@
-let Promise = require('bluebird')
 let F = require('futil-js')
 let _ = require('lodash/fp')
+let Promise = require('bluebird')
 let utils = require('./utils')
 
-let getChildren = utils.getChildren
-let parentFirstDFS = utils.parentFirstDFS
-let getRelevantFilters = utils.getRelevantFilters
+let overAsync = fns => _.flow(_.over(fns), Promise.all)
+let extendAllOn = _.extendAll.convert({ immutable: false })
+let { getChildren, parentFirstDFS, getRelevantFilters } = utils
 
 let materializePaths = (item, parent) => {
   item._meta.path = _.getOr([], '_meta.path', parent).concat([item.key])
 }
-let makeObjectsSafe = (item, parent) =>
+let initNode = (item, parent) =>
   F.defaultsOn(
     {
-      _meta: {
-        requests: [],
-      },
+      _meta: { requests: [] },
       // Stamp Schemas
       schema: parent && parent.schema,
     },
     item
   )
 
-let extendAllOn = _.extendAll.convert({ immutable: false })
 let flattenLegacyFields = item =>
   extendAllOn([
     item,
@@ -49,7 +46,6 @@ let runTypeProcessor = _.curry(
   }
 )
 
-let overAsync = fns => _.flow(_.over(fns), Promise.all)
 let walkAsync = tree => f => parentFirstDFS(getChildren, f, tree)
 let process = _.curryN(
   2,
@@ -66,9 +62,9 @@ let process = _.curryN(
     let walk = walkAsync(group)
     try {
       await walk(
+        // Do all of these in the same traversal
         overAsync([
-          // Do all of these in the same traversal
-          makeObjectsSafe,
+          initNode,
           flattenLegacyFields,
           materializePaths,
           async item => {
