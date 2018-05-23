@@ -1,3 +1,6 @@
+### 0.3.0
+* Refactoring
+
 ### 0.2.1
 * Pass `schema` to more step functions
 
