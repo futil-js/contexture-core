@@ -56,7 +56,7 @@ let walkAsync = tree => f => parentFirstDFS(getChildren, f, tree)
 let process = _.curryN(
   2,
   async ({ providers, schemas }, groupParam, options = {}) => {
-    let processGroup = g => process({providers, schemas }, g, options)
+    let processGroup = g => process({ providers, schemas }, g, options)
     let getProvider = utils.getProvider(providers, schemas)
     let getSchema = schema => schemas[schema]
     let processorConfig = { getProvider, getSchema, options, processGroup }
@@ -68,7 +68,8 @@ let process = _.curryN(
     let walk = walkAsync(group)
     try {
       await walk(
-        overAsync([ // Do all of these in the same traversal
+        overAsync([
+          // Do all of these in the same traversal
           makeObjectsSafe,
           flattenLegacyFields,
           materializePaths,
@@ -105,7 +106,9 @@ let process = _.curryN(
         ])
 
         let result = await runProcessor('result', item, curriedSearch).catch(
-          error => { throw F.extendOn(error, { item }) }
+          error => {
+            throw F.extendOn(error, { item })
+          }
         )
         item.context = result
         if (options.onResult) options.onResult(result)
