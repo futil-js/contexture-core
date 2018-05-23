@@ -13,14 +13,7 @@ let materializePaths = (item, parent) => {
 let initNode = (item, { schema } = {}) =>
   F.defaultsOn({ _meta: { requests: [] }, schema }, item)
 
-let flattenLegacyFields = item =>
-  extendAllOn([
-    item,
-    item.config,
-    item.filterConfig,
-    item.data,
-    item.resultConfig,
-  ])
+let flattenLegacyFields = item => extendAllOn([item, item.config, item.data])
 
 let runTypeProcessor = _.curry(
   async (getProvider, processor, item, ...args) => {
