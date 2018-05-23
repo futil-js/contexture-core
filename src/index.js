@@ -55,7 +55,7 @@ let process = _.curryN(
     let getSchema = schema => schemas[schema]
     let processorConfig = { getProvider, getSchema, options, processGroup }
     let runProcessor = (...args) => {
-      let schema = getSchema(args[1])
+      let schema = getSchema(args[1].schema)
       return runTypeProcessor(getProvider, ...args, schema, processorConfig)
     }
     let group = _.cloneDeep(groupParam)
