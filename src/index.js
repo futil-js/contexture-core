@@ -13,8 +13,6 @@ let materializePaths = (item, parent) => {
 let makeObjectsSafe = (item, parent) =>
   F.defaultsOn(
     {
-      data: {},
-      config: {},
       _meta: {
         requests: [],
       },
