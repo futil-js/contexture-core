@@ -1,6 +1,6 @@
 {
   "name": "contexture",
-  "version": "0.3.0",
+  "version": "0.2.2",
   "description": "The Contexture (aka ContextTree) Core",
   "main": "src/index.js",
   "scripts": {
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/smartprocure/contexture#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "futil-js": "^1.48.0",
+    "futil-js": "^1.31.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
