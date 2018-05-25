@@ -65,7 +65,7 @@ let runTypeFunction = config => async (name, item, search) => {
   let schema = config.getSchema(item.schema)
   let fn = F.cascade(
     [`${item.type}.${name}`, `default.${name}`],
-    getProvider(item).types,
+    config.getProvider(item).types,
     _.noop
   )
   try {

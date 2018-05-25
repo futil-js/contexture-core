@@ -22,9 +22,9 @@ let process = _.curryN(
     let getProvider = utils.getProvider(providers, schemas)
     let getSchema = schema => schemas[schema]
     let runTypeFunction = utils.runTypeFunction({
-      getProvider,
-      getSchema,
       options,
+      getSchema,
+      getProvider,
       processGroup: g => process({ providers, schemas }, g, options)
     })
     let group = _.cloneDeep(groupParam)
