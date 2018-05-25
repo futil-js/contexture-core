@@ -19,29 +19,14 @@ let walkAsync = tree => f => parentFirstDFS(getChildren, f, tree)
 let process = _.curryN(
   2,
   async ({ providers, schemas }, groupParam, options = {}) => {
-    let processGroup = g => process({ providers, schemas }, g, options)
     let getProvider = utils.getProvider(providers, schemas)
     let getSchema = schema => schemas[schema]
-    let processorConfig = { getProvider, getSchema, options, processGroup }
-    let runTypeFunction = async (name, item, search) => {
-      let schema = getSchema(item.schema)
-      let fn = F.cascade(
-        [`${item.type}.${name}`, `default.${name}`],
-        getProvider(item).types,
-        _.noop
-      )
-      try {
-        return await (search
-          ? fn(item, search, schema, processorConfig)
-          : fn(item, schema, processorConfig))
-      } catch (error) {
-        throw new Error(
-          `Failed running search for ${item.type} (${
-            item.key
-          }) at ${name}: ${error}`
-        )
-      }
-    }
+    let runTypeFunction = utils.runTypeFunction({
+      getProvider,
+      getSchema,
+      options,
+      processGroup: g => process({ providers, schemas }, g, options)
+    })
     let group = _.cloneDeep(groupParam)
     let walk = walkAsync(group)
     try {

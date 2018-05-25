@@ -66,9 +66,31 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   return groupCombinator(group, _.compact(relevantFilters))
 })
 
+let runTypeFunction = config => async (name, item, search) => {
+  let schema = config.getSchema(item.schema)
+  let fn = F.cascade(
+    [`${item.type}.${name}`, `default.${name}`],
+    getProvider(item).types,
+    _.noop
+  )
+  try {
+    return await (search
+      ? fn(item, search, schema, config)
+      : fn(item, schema, config))
+  } catch (error) {
+    throw new Error(
+      `Failed running search for ${item.type} (${
+        item.key
+      }) at ${name}: ${error}`
+    )
+  }
+}
+
+
 module.exports = {
   parentFirstDFS,
   getProvider,
   getChildren,
   getRelevantFilters,
+  runTypeFunction
 }
