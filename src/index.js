@@ -15,24 +15,6 @@ let initNode = (item, { schema } = {}) =>
 
 let flattenLegacyFields = item => extendAllOn([item, item.config, item.data])
 
-let runTypeProcessor = _.curry(
-  async (getProvider, processor, item, ...args) => {
-    try {
-      return await F.cascade(
-        [`${item.type}.${processor}`, `default.${processor}`],
-        getProvider(item).types,
-        _.noop
-      )(item, ...args)
-    } catch (error) {
-      throw new Error(
-        `Failed running search for ${item.type} (${
-          item.key
-        }) at ${processor}: ${error}`
-      )
-    }
-  }
-)
-
 let walkAsync = tree => f => parentFirstDFS(getChildren, f, tree)
 let process = _.curryN(
   2,
@@ -41,9 +23,24 @@ let process = _.curryN(
     let getProvider = utils.getProvider(providers, schemas)
     let getSchema = schema => schemas[schema]
     let processorConfig = { getProvider, getSchema, options, processGroup }
-    let runProcessor = (...args) => {
-      let schema = getSchema(args[1].schema)
-      return runTypeProcessor(getProvider, ...args, schema, processorConfig)
+    let runProcessor = async (processor, item, search) => {
+      let schema = getSchema(item.schema)
+      let fn = F.cascade(
+        [`${item.type}.${processor}`, `default.${processor}`],
+        getProvider(item).types,
+        _.noop
+      )
+      try {
+        return await search
+          ? fn(item, search, schema, processorConfig)
+          : fn(item, schema, processorConfig)
+      } catch(error) {
+        throw new Error(
+          `Failed running search for ${item.type} (${
+            item.key
+          }) at ${processor}: ${error}`
+        )
+      }
     }
     let group = _.cloneDeep(groupParam)
     let walk = walkAsync(group)
