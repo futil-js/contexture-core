@@ -31,10 +31,10 @@ let process = _.curryN(
         _.noop
       )
       try {
-        return await search
+        return await (search
           ? fn(item, search, schema, processorConfig)
-          : fn(item, schema, processorConfig)
-      } catch(error) {
+          : fn(item, schema, processorConfig))
+      } catch (error) {
         throw new Error(
           `Failed running search for ${item.type} (${
             item.key
