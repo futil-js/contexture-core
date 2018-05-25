@@ -52,9 +52,8 @@ let process = _.curryN(
           flattenLegacyFields,
           materializePaths,
           async item => {
-            let hasValue = await runProcessor('hasValue', item)
-            item._meta.hasValue = hasValue
-            if (hasValue && !item.contextOnly) {
+            item._meta.hasValue = await runProcessor('hasValue', item)
+            if (item._meta.hasValue && !item.contextOnly) {
               item._meta.filter = await runProcessor('filter', item)
             }
           },
