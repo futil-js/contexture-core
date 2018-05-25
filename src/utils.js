@@ -79,11 +79,10 @@ let runTypeFunction = config => async (name, item, search) => {
   }
 }
 
-
 module.exports = {
   parentFirstDFS,
   getProvider,
   getChildren,
   getRelevantFilters,
-  runTypeFunction
+  runTypeFunction,
 }
