@@ -23,10 +23,10 @@ let process = _.curryN(
     let getProvider = utils.getProvider(providers, schemas)
     let getSchema = schema => schemas[schema]
     let processorConfig = { getProvider, getSchema, options, processGroup }
-    let runProcessor = async (processor, item, search) => {
+    let runTypeFunction = async (name, item, search) => {
       let schema = getSchema(item.schema)
       let fn = F.cascade(
-        [`${item.type}.${processor}`, `default.${processor}`],
+        [`${item.type}.${name}`, `default.${name}`],
         getProvider(item).types,
         _.noop
       )
@@ -38,7 +38,7 @@ let process = _.curryN(
         throw new Error(
           `Failed running search for ${item.type} (${
             item.key
-          }) at ${processor}: ${error}`
+          }) at ${name}: ${error}`
         )
       }
     }
@@ -52,9 +52,9 @@ let process = _.curryN(
           flattenLegacyFields,
           materializePaths,
           async item => {
-            item._meta.hasValue = await runProcessor('hasValue', item)
+            item._meta.hasValue = await runTypeFunction('hasValue', item)
             if (item._meta.hasValue && !item.contextOnly) {
-              item._meta.filter = await runProcessor('filter', item)
+              item._meta.filter = await runTypeFunction('filter', item)
             }
           },
         ])
@@ -69,7 +69,7 @@ let process = _.curryN(
           )
       })
       await walk(async item => {
-        let validContext = await runProcessor('validContext', item)
+        let validContext = await runTypeFunction('validContext', item)
 
         // Reject filterOnly
         if (item.filterOnly || !validContext) return
@@ -81,7 +81,7 @@ let process = _.curryN(
           item._meta.relevantFilters,
         ])
 
-        let result = await runProcessor('result', item, curriedSearch).catch(
+        let result = await runTypeFunction('result', item, curriedSearch).catch(
           error => {
             throw F.extendOn(error, { item })
           }
