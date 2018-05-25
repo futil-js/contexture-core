@@ -18,10 +18,11 @@ let flattenLegacyFields = item => extendAllOn([item, item.config, item.data])
 let runTypeProcessor = _.curry(
   async (getProvider, processor, item, ...args) => {
     try {
-      return await (F.cascade(
+      return await F.cascade(
         [`${item.type}.${processor}`, `default.${processor}`],
-        getProvider(item).types
-      ) || _.noop)(item, ...args)
+        getProvider(item).types,
+        _.noop
+      )(item, ...args)
     } catch (error) {
       throw new Error(
         `Failed running search for ${item.type} (${
@@ -72,7 +73,6 @@ let process = _.curryN(
           )
       })
       await walk(async item => {
-        let schema = getSchema(item.schema)
         let validContext = await runProcessor('validContext', item)
 
         // Reject filterOnly
@@ -81,7 +81,7 @@ let process = _.curryN(
         let curriedSearch = _.partial(getProvider(item).runSearch, [
           options,
           item,
-          schema,
+          getSchema(item.schema),
           item._meta.relevantFilters,
         ])
 
