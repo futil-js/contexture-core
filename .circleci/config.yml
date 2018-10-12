@@ -22,7 +22,7 @@ jobs:
           command: npm run test:ci
       - run:
           name: pre-duti
-          command: git config user.email "drodriguez@smartprocure.us" && git config user.name "Decrapifier" && git config push.default current
+          command: git config user.email "decrapifier@govspend.us" && git config user.name "Decrapifier" && git config push.default current
           when: always
       - run:
           name: duti
