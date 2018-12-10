@@ -20,6 +20,7 @@ While the Contexture DSL can be built anyway you'd like, it pairs well with the 
 | [`contexture-mongo`](http://github.com/smartprocure/contexture-mongo) | [`contexture-mongo`](https://www.npmjs.com/package/contexture-mongo) | MongoDB provider for contexture |
 | [`contexture-client`](http://github.com/smartprocure/contexture-client) | [`contexture-client`](https://www.npmjs.com/package/contexture-client) | The client library that manages the DSL, allowing for hyper efficient updates running only what is exactly needed |
 | [`contexture-react`](http://github.com/smartprocure/contexture-react) | [`contexture-react`](https://www.npmjs.com/package/contexture-react) | React components for building contexture interfaces |
+| [`contexture-export`](http://github.com/smartprocure/contexture-export) | [`contexture-export`](https://www.npmjs.com/package/contexture-export) | Export searches into files or any other target |
 | [`contexture-ec18-talk`](http://github.com/smartprocure/contexture-ec18-talk) | n/a | Elasticon 2018 Talk About Contexture |
 
 ## Example Usage
