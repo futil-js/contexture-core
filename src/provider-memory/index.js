@@ -58,12 +58,12 @@ let MemoryProvider = {
             _.countBy(field),
             _.toPairs,
             _.map(([name, count]) => ({ name, count })),
-            _.orderBy('count', 'desc'),
+            _.orderBy('count', 'desc')
           )
         )
         return {
           cardinality: _.size(options),
-          options:  _.take(size, options),
+          options: _.take(size, options),
         }
       },
     },

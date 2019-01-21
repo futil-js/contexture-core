@@ -9,11 +9,7 @@ describe('Memory Provider', () => {
     schemas: {
       test: {
         memory: {
-          records: [
-            { a: 1, b: 1 },
-            { a: 1, b: 3 },
-            { a: 2, b: 2 }
-          ]
+          records: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
         },
       },
       movies: {
@@ -21,9 +17,9 @@ describe('Memory Provider', () => {
           records: _.map(x => {
             x.released = new Date(x.released)
             return x
-          }, movies)
-        }
-      }
+          }, movies),
+        },
+      },
     },
     providers: {
       memory: provider,
@@ -41,13 +37,13 @@ describe('Memory Provider', () => {
             key: 'filter',
             type: 'facet',
             field: 'a',
-            values: [1,2]
+            values: [1, 2],
           },
           {
             key: 'filter2',
             type: 'facet',
             field: 'a',
-            values: [1]
+            values: [1],
           },
           {
             key: 'results',
@@ -61,20 +57,14 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       expect(result.children[0].context).to.deep.equal({
         cardinality: 1,
-        options: [{ name: '1', count: 2 }]
+        options: [{ name: '1', count: 2 }],
       })
       expect(result.children[1].context).to.deep.equal({
         cardinality: 2,
-        options: [
-          { name: '1', count: 2 },
-          { name: '2', count: 1 }
-        ]
+        options: [{ name: '1', count: 2 }, { name: '2', count: 1 }],
       })
       expect(result.children[2].context).to.deep.equal({
-        "results": [
-          { a: 1, b: 1 },
-          { a: 1, b: 3 }
-        ]
+        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }],
       })
     })
     it('should handle basic OR test case', async () => {
@@ -88,13 +78,13 @@ describe('Memory Provider', () => {
             key: 'filter',
             type: 'facet',
             field: 'a',
-            values: [1, 2]
+            values: [1, 2],
           },
           {
             key: 'filter2',
             type: 'facet',
             field: 'a',
-            values: [1]
+            values: [1],
           },
           {
             key: 'results',
@@ -108,24 +98,14 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       expect(result.children[0].context).to.deep.equal({
         cardinality: 2,
-        options: [
-          { name: '1', count: 2 },
-          { name: '2', count: 1 }
-        ]
+        options: [{ name: '1', count: 2 }, { name: '2', count: 1 }],
       })
       expect(result.children[1].context).to.deep.equal({
         cardinality: 2,
-        options: [
-          { name: '1', count: 2 },
-          { name: '2', count: 1 }
-        ]
+        options: [{ name: '1', count: 2 }, { name: '2', count: 1 }],
       })
       expect(result.children[2].context).to.deep.equal({
-        "results": [
-          { a: 1, b: 1 },
-          { a: 1, b: 3 },
-          { a: 2, b: 2 },
-        ]
+        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
       })
     })
   })
@@ -142,7 +122,7 @@ describe('Memory Provider', () => {
             key: 'ratings',
             type: 'facet',
             field: 'rated',
-            values: ['R', 'PG-13']
+            values: ['R', 'PG-13'],
           },
           // {
           //   key: 'filter',
@@ -178,7 +158,7 @@ describe('Memory Provider', () => {
         { name: 'TV-MA', count: 152 },
         { name: 'Approved', count: 149 },
         { name: 'Unrated', count: 125 },
-        { name: 'G', count: 87 }
+        { name: 'G', count: 87 },
       ])
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = results.map(_.pick(['title', 'year', 'rated']))
@@ -188,13 +168,15 @@ describe('Memory Provider', () => {
         { title: 'American Beauty', year: 1999, rated: 'R' },
         { title: 'The Prestige', year: 2006, rated: 'PG-13' },
         { title: 'Braveheart', year: 1995, rated: 'R' },
-        { title: 'Eternal Sunshine of the Spotless Mind',
+        {
+          title: 'Eternal Sunshine of the Spotless Mind',
           year: 2004,
-          rated: 'R' },
+          rated: 'R',
+        },
         { title: 'The Sixth Sense', year: 1999, rated: 'PG-13' },
         { title: 'Life Is Beautiful', year: 1997, rated: 'PG-13' },
         { title: "Pan's Labyrinth", year: 2006, rated: 'R' },
-        { title: 'Heat', year: 1995, rated: 'R' }
+        { title: 'Heat', year: 1995, rated: 'R' },
       ])
     })
   })
