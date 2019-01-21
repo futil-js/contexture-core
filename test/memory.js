@@ -2,11 +2,9 @@ let _ = require('lodash/fp')
 let { expect } = require('chai')
 let Contexture = require('../src/index')
 let provider = require('../src/provider-memory')
-
-let fs = require('fs')
 let movies = require('./imdb-data')
 
-describe.only('Memory Provider', () => {
+describe('Memory Provider', () => {
   let process = Contexture({
     schemas: {
       test: {
