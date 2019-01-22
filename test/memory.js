@@ -179,12 +179,6 @@ describe('Memory Provider', () => {
             value: 'game',
             operator: 'startsWith',
           },
-          // {
-          //   key:'datefilter',
-          //   type: 'date',
-          //   field: 'released',
-          //   from: '2005-01-01'
-          // },
           {
             key: 'results',
             type: 'results',
