@@ -1,5 +1,8 @@
-### 0.2.2
+### 0.3.1
 * Refactoring
+
+### 0.3.0
+* Add memory provider and tests
 
 ### 0.2.1
 * Pass `schema` to more step functions
