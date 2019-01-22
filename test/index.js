@@ -33,7 +33,9 @@ describe('Contexture Core', () => {
     ],
   }
   it('should work', async () => {
-    let { children: [filter, results] } = await process(dsl)
+    let {
+      children: [filter, results],
+    } = await process(dsl)
     expect(filter.context).to.deep.equal({
       abc: 123,
     })
@@ -45,7 +47,9 @@ describe('Contexture Core', () => {
   })
   it('should add _meta with debug option', async () => {
     let result = await process(dsl, { debug: true })
-    let { children: [filter, results] } = result
+    let {
+      children: [filter, results],
+    } = result
 
     expect(filter._meta).to.deep.equal({
       requests: [
