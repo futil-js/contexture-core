@@ -198,7 +198,7 @@ describe('Memory Provider', () => {
       expect(inspectedResults).to.deep.equal([
         'Game of Thrones',
         'Gamer',
-        'Game Night'
+        'Game Night',
       ])
     })
     it('should handle date', async () => {
@@ -209,10 +209,10 @@ describe('Memory Provider', () => {
         join: 'and',
         children: [
           {
-            key:'datefilter',
+            key: 'datefilter',
             type: 'date',
             field: 'released',
-            from: '2013-01-01'
+            from: '2013-01-01',
           },
           {
             key: 'results',
@@ -234,7 +234,7 @@ describe('Memory Provider', () => {
         2013,
         2013,
         2012,
-        2013
+        2013,
       ])
     })
     it('should handle results sorting', async () => {
@@ -249,20 +249,21 @@ describe('Memory Provider', () => {
             type: 'results',
             page: 1,
             pageSize: 1,
-            sortField: 'year'
+            sortField: 'year',
           },
         ],
       }
       let result = await process(dsl)
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = _.map('year', results)
-      expect(inspectedResults).to.deep.equal([ 2013 ])
+      expect(inspectedResults).to.deep.equal([2013])
 
       dsl.children[0].sortDir = 'asc'
       let ascResult = await process(dsl)
-      let ascResults = _.find({ key: 'results' }, ascResult.children).context.results
+      let ascResults = _.find({ key: 'results' }, ascResult.children).context
+        .results
       let ascInspectedResults = _.map('year', ascResults)
-      expect(ascInspectedResults).to.deep.equal([ 1915 ])
+      expect(ascInspectedResults).to.deep.equal([1915])
     })
   })
 })
