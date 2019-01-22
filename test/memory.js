@@ -124,20 +124,6 @@ describe('Memory Provider', () => {
             field: 'rated',
             values: ['R', 'PG-13'],
           },
-          // {
-          //   key: 'filter',
-          //   type: 'text',
-          //   field: 'title',
-          //   value: 'game',
-          //   operator: 'startsWith'
-          //   values: [1995]
-          // },
-          // {
-          //   key:'datefilter',
-          //   type: 'date',
-          //   field: 'released',
-          //   from: '2005-01-01'
-          // },
           {
             key: 'results',
             type: 'results',
@@ -178,6 +164,105 @@ describe('Memory Provider', () => {
         { title: "Pan's Labyrinth", year: 2006, rated: 'R' },
         { title: 'Heat', year: 1995, rated: 'R' },
       ])
+    })
+    it('should handle text', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'movies',
+        join: 'and',
+        children: [
+          {
+            key: 'filter',
+            type: 'text',
+            field: 'title',
+            value: 'game',
+            operator: 'startsWith',
+          },
+          // {
+          //   key:'datefilter',
+          //   type: 'date',
+          //   field: 'released',
+          //   from: '2005-01-01'
+          // },
+          {
+            key: 'results',
+            type: 'results',
+            page: 1,
+          },
+        ],
+      }
+      let result = await process(dsl)
+      let results = _.find({ key: 'results' }, result.children).context.results
+      let inspectedResults = _.map('title', results)
+      expect(inspectedResults).to.deep.equal([
+        'Game of Thrones',
+        'Gamer',
+        'Game Night'
+      ])
+    })
+    it('should handle date', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'movies',
+        join: 'and',
+        children: [
+          {
+            key:'datefilter',
+            type: 'date',
+            field: 'released',
+            from: '2013-01-01'
+          },
+          {
+            key: 'results',
+            type: 'results',
+            page: 1,
+          },
+        ],
+      }
+      let result = await process(dsl)
+      let results = _.find({ key: 'results' }, result.children).context.results
+      let inspectedResults = _.map('year', results)
+      expect(inspectedResults).to.deep.equal([
+        2012,
+        2013,
+        2009,
+        2013,
+        2012,
+        2013,
+        2013,
+        2013,
+        2012,
+        2013
+      ])
+    })
+    it('should handle results sorting', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'movies',
+        join: 'and',
+        children: [
+          {
+            key: 'results',
+            type: 'results',
+            page: 1,
+            pageSize: 1,
+            sortField: 'year'
+          },
+        ],
+      }
+      let result = await process(dsl)
+      let results = _.find({ key: 'results' }, result.children).context.results
+      let inspectedResults = _.map('year', results)
+      expect(inspectedResults).to.deep.equal([ 2013 ])
+
+      dsl.children[0].sortDir = 'asc'
+      let ascResult = await process(dsl)
+      let ascResults = _.find({ key: 'results' }, ascResult.children).context.results
+      let ascInspectedResults = _.map('year', ascResults)
+      expect(ascInspectedResults).to.deep.equal([ 1915 ])
     })
   })
 })
