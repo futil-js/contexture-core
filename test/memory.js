@@ -7,6 +7,36 @@ let exampleTypes = require('../src/exampleTypes')
 let movies = require('./imdb-data')
 
 describe('Memory Provider', () => {
+  let getSavedSearch = async id => ({
+    AdamFavorites: {
+      key: 'criteria',
+      type: 'group',
+      schema: 'favorites',
+      join: 'and',
+      children: [
+        {
+          key: 'filter',
+          type: 'facet',
+          field: 'user',
+          values: ['Adam'],
+        },
+      ],
+    },
+    HopeFavorites: {
+      key: 'criteria',
+      type: 'group',
+      schema: 'favorites',
+      join: 'and',
+      children: [
+        {
+          key: 'filter',
+          type: 'facet',
+          field: 'user',
+          values: ['Hope'],
+        },
+      ],
+    }
+  }[id])
   let process = Contexture({
     schemas: {
       test: {
@@ -44,7 +74,9 @@ describe('Memory Provider', () => {
         ...provider,
         types: {
           ...memoryExampleTypes(),
-          ...exampleTypes()
+          ...exampleTypes({
+            getSavedSearch
+          })
         }
       }
     },
@@ -407,6 +439,34 @@ describe('Memory Provider', () => {
             config: {
               page: 1,
             },
+          },
+        ],
+      }
+      let result = await process(dsl)
+      let results = result.children[1].context.results
+      expect(_.map('title', results)).to.deep.equal([
+        'Game of Thrones',
+        'Star Trek: The Next Generation',
+        'The Matrix',
+      ])
+    })
+    it('should handle subquery by saved search id', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'movies',
+        join: 'and',
+        children: [
+          {
+            key: 'subquery',
+            type: 'subquery',
+            localField: 'title',
+            foreignField: 'movie',
+            searchId: 'AdamFavorites'
+          },
+          {
+            key: 'results',
+            type: 'results',
           },
         ],
       }
