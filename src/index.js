@@ -29,7 +29,7 @@ let process = _.curryN(
       options,
       getSchema,
       getProvider,
-      processGroup: g => process({ providers, schemas }, g, options),
+      processGroup: (g, options) => process({ providers, schemas }, g, options),
     })
     let group = _.cloneDeep(groupParam)
     let walk = walkAsync(group)
