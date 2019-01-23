@@ -144,8 +144,8 @@ let MemoryProvider = {
       },
     },
     subquery: {
-      filter: async (node, schema, { processGroup }) =>
-        MemoryProvider.types.facet.filter({
+      filter: async (node, schema, { processGroup, getProvider }) =>
+        getProvider(node).types.facet.filter({
           field: node.localField,
           values: await strategies
             .facet({
