@@ -23,8 +23,6 @@ let wrapTree = _.curry((analysisNodes, tree) => ({
   children: [setFilterOnly(tree), ..._.castArray(analysisNodes)],
 }))
 
-
-// this does too mauch so is poorly named
 let analyzeTree = _.curry(async (service, tree, analysisNodes) =>
   lastChild(await service(wrapTree(analysisNodes, tree)))
 )
