@@ -56,7 +56,7 @@ module.exports = () => ({
       )
       return {
         cardinality: _.size(options),
-        options: _.take(size, options),
+        options: size ? _.take(size, options) : options,
       }
     },
   },
