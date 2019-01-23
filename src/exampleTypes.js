@@ -6,7 +6,7 @@ module.exports = ({ getSavedSearch } = {}) => ({
   savedSearch: {
     async filter(node, schema, { processGroup }) {
       let debugSearch = x => processGroup(x, { debug: true })
-      let search = node.search || await getSavedSearch(node.searchId)
+      let search = node.search || (await getSavedSearch(node.searchId))
       let result = await strategies.analyzeTree(debugSearch, search, {
         key: 'targetNode',
       })
@@ -20,7 +20,7 @@ module.exports = ({ getSavedSearch } = {}) => ({
         values: await strategies
           .facet({
             service: processGroup,
-            tree: node.search || await getSavedSearch(node.searchId),
+            tree: node.search || (await getSavedSearch(node.searchId)),
             field: node.foreignField,
             //size: 0 // <- put in once facet respects size: 0
           })
