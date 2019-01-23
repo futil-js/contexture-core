@@ -62,13 +62,7 @@ module.exports = () => ({
   },
   text: {
     hasValue: node => node.value || _.size(node.values),
-    filter({
-      join = 'all',
-      values,
-      value,
-      operator = 'containsWord',
-      field,
-    }) {
+    filter({ join = 'all', values, value, operator = 'containsWord', field }) {
       let regexMap = (operator, val) =>
         ({
           containsWord: val,

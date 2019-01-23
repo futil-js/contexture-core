@@ -7,36 +7,37 @@ let exampleTypes = require('../src/exampleTypes')
 let movies = require('./imdb-data')
 
 describe('Memory Provider', () => {
-  let getSavedSearch = async id => ({
-    AdamFavorites: {
-      key: 'criteria',
-      type: 'group',
-      schema: 'favorites',
-      join: 'and',
-      children: [
-        {
-          key: 'filter',
-          type: 'facet',
-          field: 'user',
-          values: ['Adam'],
-        },
-      ],
-    },
-    HopeFavorites: {
-      key: 'criteria',
-      type: 'group',
-      schema: 'favorites',
-      join: 'and',
-      children: [
-        {
-          key: 'filter',
-          type: 'facet',
-          field: 'user',
-          values: ['Hope'],
-        },
-      ],
-    }
-  }[id])
+  let getSavedSearch = async id =>
+    ({
+      AdamFavorites: {
+        key: 'criteria',
+        type: 'group',
+        schema: 'favorites',
+        join: 'and',
+        children: [
+          {
+            key: 'filter',
+            type: 'facet',
+            field: 'user',
+            values: ['Adam'],
+          },
+        ],
+      },
+      HopeFavorites: {
+        key: 'criteria',
+        type: 'group',
+        schema: 'favorites',
+        join: 'and',
+        children: [
+          {
+            key: 'filter',
+            type: 'facet',
+            field: 'user',
+            values: ['Hope'],
+          },
+        ],
+      },
+    }[id])
   let process = Contexture({
     schemas: {
       test: {
@@ -75,10 +76,10 @@ describe('Memory Provider', () => {
         types: {
           ...memoryExampleTypes(),
           ...exampleTypes({
-            getSavedSearch
-          })
-        }
-      }
+            getSavedSearch,
+          }),
+        },
+      },
     },
   })
   describe('basic test cases', () => {
@@ -462,7 +463,7 @@ describe('Memory Provider', () => {
             type: 'subquery',
             localField: 'title',
             foreignField: 'movie',
-            searchId: 'AdamFavorites'
+            searchId: 'AdamFavorites',
           },
           {
             key: 'results',
