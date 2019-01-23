@@ -1,5 +1,14 @@
 let _ = require('lodash/fp')
 let F = require('futil-js')
+let strategies = require('./dataStrategies')
+
+// like `_.includes` but coerces everything to string first
+let coerciveIncludes = _.curry((item, list) => 
+  _.includes(
+    _.toString(item),
+    _.map(_.toString, list)
+  )
+)
 
 let MemoryProvider = {
   groupCombinator: (group, filters) =>
@@ -49,7 +58,7 @@ let MemoryProvider = {
       hasValue: node => _.size(node.values),
       filter: ({ field, values }) =>
         _.conforms({
-          [field]: _.includes(_, values),
+          [field]: coerciveIncludes(_, values),
         }),
       result({ field, size = 10 }, search) {
         let options = search(
@@ -126,6 +135,35 @@ let MemoryProvider = {
         ),
       }),
     },
+    savedsearch: {
+      filter: async (node, schema, { processGroup }) => {
+        let debugSearch = x => processGroup(x, { debug: true })
+        let result = await strategies.executeAnalysis(
+          debugSearch,
+          {
+            key: 'analysisOutput',
+            type: 'results',
+            filterOnly: true
+          },
+          node.search
+        )
+        return result._meta.relevantFilters
+      }
+    },
+    subquery: {
+      filter: async (node, schema, { processGroup }) =>
+        MemoryProvider.types.facet.filter({
+          field: node.localField,
+          values: await strategies
+            .facet({
+              service: processGroup,
+              tree: node.search,
+              field: node.foreignField,
+              //size: 0 // <- put in once facet respects size: 0
+            })
+            .getNext()
+        })
+    },    
   },
 }
 
