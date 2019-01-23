@@ -1,6 +1,5 @@
 let _ = require('lodash/fp')
 let F = require('futil-js')
-let strategies = require('../dataStrategies')
 
 // like `_.includes` but casts everything to string first
 let toStringIncludes = _.curry((item, list) =>

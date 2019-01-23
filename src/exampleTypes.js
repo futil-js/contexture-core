@@ -1,5 +1,3 @@
-let _ = require('lodash/fp')
-let F = require('futil-js')
 let strategies = require('./dataStrategies')
 
 module.exports = ({ getSavedSearch } = {}) => ({
