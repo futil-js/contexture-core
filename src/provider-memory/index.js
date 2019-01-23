@@ -2,8 +2,8 @@ let _ = require('lodash/fp')
 let F = require('futil-js')
 let strategies = require('./dataStrategies')
 
-// like `_.includes` but coerces everything to string first
-let coerciveIncludes = _.curry((item, list) =>
+// like `_.includes` but casts everything to string first
+let toStringIncludes = _.curry((item, list) =>
   _.includes(_.toString(item), _.map(_.toString, list))
 )
 
@@ -55,7 +55,7 @@ let MemoryProvider = {
       hasValue: node => _.size(node.values),
       filter: ({ field, values }) =>
         _.conforms({
-          [field]: coerciveIncludes(_, values),
+          [field]: toStringIncludes(_, values),
         }),
       result({ field, size = 10 }, search) {
         let options = search(
