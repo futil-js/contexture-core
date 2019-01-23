@@ -124,7 +124,7 @@ describe('Memory Provider', () => {
         results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
       })
     })
-    it('should handle savedsearch', async () => {
+    it('should handle savedSearch', async () => {
       let dsl = {
         key: 'root',
         type: 'group',
