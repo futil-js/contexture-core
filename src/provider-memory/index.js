@@ -135,7 +135,7 @@ let MemoryProvider = {
         ),
       }),
     },
-    savedsearch: {
+    savedSearch: {
       filter: async (node, schema, { processGroup }) => {
         let debugSearch = x => processGroup(x, { debug: true })
         let result = await strategies.executeAnalysis(

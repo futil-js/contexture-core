@@ -129,23 +129,17 @@ describe('Memory Provider', () => {
         key: 'root',
         type: 'group',
         schema: 'test',
-        join: 'or',
+        join: 'and',
         children: [
           {
-            key: 'savedsearch',
-            type: 'savedsearch',
+            key: 'savedSearch',
+            type: 'savedSearch',
             search: {
               key: 'root',
               type: 'group',
               schema: 'test',
-              join: 'or',
+              join: 'and',
               children: [
-                {
-                  key: 'filter',
-                  type: 'facet',
-                  field: 'a',
-                  values: [1, 2],
-                },
                 {
                   key: 'filter2',
                   type: 'facet',
@@ -165,15 +159,12 @@ describe('Memory Provider', () => {
           {
             key: 'results',
             type: 'results',
-            config: {
-              page: 1,
-            },
           },
         ],
       }
       let result = await process(dsl)
       expect(result.children[1].context).to.deep.equal({
-        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
+        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }],
       })
     })
     it('should handle subquery', async () => {
