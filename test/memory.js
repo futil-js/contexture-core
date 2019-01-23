@@ -2,14 +2,52 @@ let _ = require('lodash/fp')
 let { expect } = require('chai')
 let Contexture = require('../src/index')
 let provider = require('../src/provider-memory')
+let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
+let exampleTypes = require('../src/exampleTypes')
 let movies = require('./imdb-data')
 
 describe('Memory Provider', () => {
+  let getSavedSearch = async id =>
+    ({
+      AdamFavorites: {
+        key: 'criteria',
+        type: 'group',
+        schema: 'favorites',
+        join: 'and',
+        children: [
+          {
+            key: 'filter',
+            type: 'facet',
+            field: 'user',
+            values: ['Adam'],
+          },
+        ],
+      },
+      HopeFavorites: {
+        key: 'criteria',
+        type: 'group',
+        schema: 'favorites',
+        join: 'and',
+        children: [
+          {
+            key: 'filter',
+            type: 'facet',
+            field: 'user',
+            values: ['Hope'],
+          },
+        ],
+      },
+    }[id])
   let process = Contexture({
     schemas: {
       test: {
         memory: {
           records: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
+        },
+      },
+      test2: {
+        memory: {
+          records: [{ b: 1, c: 1 }, { b: 2, c: 2 }, { b: 3, c: 1 }],
         },
       },
       movies: {
@@ -20,9 +58,28 @@ describe('Memory Provider', () => {
           }, movies),
         },
       },
+      favorites: {
+        memory: {
+          records: [
+            { movie: 'Game of Thrones', user: 'Adam' },
+            { movie: 'The Matrix', user: 'Adam' },
+            { movie: 'Star Trek: The Next Generation', user: 'Adam' },
+            { movie: 'Game of Thrones', user: 'Hope' },
+            { movie: 'The Lucky One', user: 'Hope' },
+          ],
+        },
+      },
     },
     providers: {
-      memory: provider,
+      memory: {
+        ...provider,
+        types: {
+          ...memoryExampleTypes(),
+          ...exampleTypes({
+            getSavedSearch,
+          }),
+        },
+      },
     },
   })
   describe('basic test cases', () => {
@@ -106,6 +163,97 @@ describe('Memory Provider', () => {
       })
       expect(result.children[2].context).to.deep.equal({
         results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
+      })
+    })
+    it('should handle savedSearch', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'test',
+        join: 'and',
+        children: [
+          {
+            key: 'savedSearch',
+            type: 'savedSearch',
+            search: {
+              key: 'root',
+              type: 'group',
+              schema: 'test',
+              join: 'and',
+              children: [
+                {
+                  key: 'filter2',
+                  type: 'facet',
+                  field: 'a',
+                  values: [1],
+                },
+                {
+                  key: 'results',
+                  type: 'results',
+                  config: {
+                    page: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            key: 'results',
+            type: 'results',
+          },
+        ],
+      }
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }],
+      })
+    })
+    it('should handle subquery', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'test2',
+        join: 'and',
+        children: [
+          {
+            key: 'subquery',
+            type: 'subquery',
+            localField: 'b',
+            foreignField: 'b',
+            search: {
+              key: 'root',
+              type: 'group',
+              schema: 'test',
+              join: 'and',
+              children: [
+                {
+                  key: 'filter',
+                  type: 'facet',
+                  field: 'a',
+                  values: [1],
+                },
+                {
+                  key: 'results',
+                  type: 'results',
+                  config: {
+                    page: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            key: 'results',
+            type: 'results',
+            config: {
+              page: 1,
+            },
+          },
+        ],
+      }
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [{ b: 1, c: 1 }, { b: 3, c: 1 }],
       })
     })
   })
@@ -258,6 +406,78 @@ describe('Memory Provider', () => {
         .results
       let ascInspectedResults = _.map('year', ascResults)
       expect(ascInspectedResults).to.deep.equal([1915])
+    })
+    it('should handle subquery', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'movies',
+        join: 'and',
+        children: [
+          {
+            key: 'subquery',
+            type: 'subquery',
+            localField: 'title',
+            foreignField: 'movie',
+            search: {
+              key: 'root',
+              type: 'group',
+              schema: 'favorites',
+              join: 'and',
+              children: [
+                {
+                  key: 'filter',
+                  type: 'facet',
+                  field: 'user',
+                  values: ['Adam'],
+                },
+              ],
+            },
+          },
+          {
+            key: 'results',
+            type: 'results',
+            config: {
+              page: 1,
+            },
+          },
+        ],
+      }
+      let result = await process(dsl)
+      let results = result.children[1].context.results
+      expect(_.map('title', results)).to.deep.equal([
+        'Game of Thrones',
+        'Star Trek: The Next Generation',
+        'The Matrix',
+      ])
+    })
+    it('should handle subquery by saved search id', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'movies',
+        join: 'and',
+        children: [
+          {
+            key: 'subquery',
+            type: 'subquery',
+            localField: 'title',
+            foreignField: 'movie',
+            searchId: 'AdamFavorites',
+          },
+          {
+            key: 'results',
+            type: 'results',
+          },
+        ],
+      }
+      let result = await process(dsl)
+      let results = result.children[1].context.results
+      expect(_.map('title', results)).to.deep.equal([
+        'Game of Thrones',
+        'Star Trek: The Next Generation',
+        'The Matrix',
+      ])
     })
   })
 })
