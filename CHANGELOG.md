@@ -1,3 +1,9 @@
+### 0.4.0
+* Memory Provider: Add savedSearch type
+* Memory Provider: Add subquery type
+* Memory Provider: Facet now coerces values to strings (since number options are strings anyway)
+* Added facet export data strategy
+
 ### 0.3.1
 * Refactoring
 
