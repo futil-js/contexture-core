@@ -135,11 +135,9 @@ let MemoryProvider = {
     savedSearch: {
       async filter(node, schema, { processGroup }) {
         let debugSearch = x => processGroup(x, { debug: true })
-        let result = await strategies.analyzeTree(
-          debugSearch,
-          node.search,
-          { key: 'targetNode' },
-        )
+        let result = await strategies.analyzeTree(debugSearch, node.search, {
+          key: 'targetNode',
+        })
         return result._meta.relevantFilters
       },
     },
