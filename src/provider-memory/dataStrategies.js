@@ -13,9 +13,9 @@ let Tree = F.tree(_.get('children'), key => ({ key }))
 let setFilterOnly = safeWalk(Tree, node => {
   node.filterOnly = true
 })
+let lastChild = x => _.last(Tree.traverse(x))
 
-let getTreeResults = Tree.lookup(['analysisOutput'])
-let analysisTree = _.curry((analysisNodes, tree) => ({
+let wrapTree = _.curry((analysisNodes, tree) => ({
   key: 'analysisRoot',
   type: 'group',
   join: 'and',
@@ -23,37 +23,32 @@ let analysisTree = _.curry((analysisNodes, tree) => ({
   children: [setFilterOnly(tree), ..._.castArray(analysisNodes)],
 }))
 
-let executeAnalysis = _.curry(async (service, analysisNodes, tree) =>
-  getTreeResults(await service(analysisTree(analysisNodes, tree)))
+
+// this does too mauch so is poorly named
+let analyzeTree = _.curry(async (service, tree, analysisNodes) =>
+  lastChild(await service(wrapTree(analysisNodes, tree)))
 )
 
 let facet = ({ service, tree, field, size = 100, sortDir }) => {
+  let analyze = analyzeTree(service, tree)
   let getTotalRecords = _.memoize(async () => {
-    let result = await executeAnalysis(
-      service,
-      {
-        key: 'analysisOutput',
-        type: 'cardinality',
-        field,
-      },
-      tree
-    )
+    let result = await analyze({
+      key: 'analysisOutput',
+      type: 'cardinality',
+      field,
+    })
     return _.get('context.value', result)
   })
 
   let done = false
   let getNext = async () => {
-    let result = await executeAnalysis(
-      service,
-      {
-        key: 'analysisOutput',
-        type: 'facet',
-        field,
-        size,
-        sortDir,
-      },
-      tree
-    )
+    let result = await analyze({
+      key: 'analysisOutput',
+      type: 'facet',
+      field,
+      size,
+      sortDir,
+    })
     done = true
     return _.map('name', result.context.options)
   }
@@ -67,5 +62,5 @@ let facet = ({ service, tree, field, size = 100, sortDir }) => {
 
 module.exports = {
   facet,
-  executeAnalysis,
+  analyzeTree,
 }
