@@ -25,10 +25,16 @@ describe('Contexture Core', () => {
         data: {
           value: 1,
         },
+        config: {
+          c: 1,
+        },
       },
       {
         key: 'results',
         type: 'results',
+        config: {
+          page: 1,
+        },
       },
     ],
   }
@@ -55,7 +61,7 @@ describe('Contexture Core', () => {
       requests: [
         {
           where: undefined,
-          retrieve: { test: {} },
+          retrieve: { test: { c: 1 } },
         },
       ],
       path: ['root', 'filter'],
@@ -76,7 +82,9 @@ describe('Contexture Core', () => {
             },
           },
           retrieve: {
-            results: {},
+            results: {
+              page: 1,
+            },
           },
         },
       ],
