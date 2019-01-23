@@ -1,0 +1,29 @@
+let _ = require('lodash/fp')
+let F = require('futil-js')
+let strategies = require('./dataStrategies')
+
+module.exports = () => ({
+  savedSearch: {
+    async filter(node, schema, { processGroup }) {
+      let debugSearch = x => processGroup(x, { debug: true })
+      let result = await strategies.analyzeTree(debugSearch, node.search, {
+        key: 'targetNode',
+      })
+      return result._meta.relevantFilters
+    },
+  },
+  subquery: {
+    filter: async (node, schema, { processGroup, getProvider }) =>
+      getProvider(node).types.facet.filter({
+        field: node.localField,
+        values: await strategies
+          .facet({
+            service: processGroup,
+            tree: node.search,
+            field: node.foreignField,
+            //size: 0 // <- put in once facet respects size: 0
+          })
+          .getNext(),
+      }),
+  },
+})

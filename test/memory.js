@@ -2,7 +2,8 @@ let _ = require('lodash/fp')
 let { expect } = require('chai')
 let Contexture = require('../src/index')
 let provider = require('../src/provider-memory')
-let types = require('../src/provider-memory/exampleTypes')
+let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
+let exampleTypes = require('../src/exampleTypes')
 let movies = require('./imdb-data')
 
 describe('Memory Provider', () => {
@@ -39,7 +40,13 @@ describe('Memory Provider', () => {
       },
     },
     providers: {
-      memory: { ...provider, types: types()}
+      memory: {
+        ...provider,
+        types: {
+          ...memoryExampleTypes(),
+          ...exampleTypes()
+        }
+      }
     },
   })
   describe('basic test cases', () => {
