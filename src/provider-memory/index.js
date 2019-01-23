@@ -3,11 +3,8 @@ let F = require('futil-js')
 let strategies = require('./dataStrategies')
 
 // like `_.includes` but coerces everything to string first
-let coerciveIncludes = _.curry((item, list) => 
-  _.includes(
-    _.toString(item),
-    _.map(_.toString, list)
-  )
+let coerciveIncludes = _.curry((item, list) =>
+  _.includes(_.toString(item), _.map(_.toString, list))
 )
 
 let MemoryProvider = {
@@ -136,19 +133,19 @@ let MemoryProvider = {
       }),
     },
     savedSearch: {
-      filter: async (node, schema, { processGroup }) => {
+      async filter(node, schema, { processGroup }) {
         let debugSearch = x => processGroup(x, { debug: true })
         let result = await strategies.executeAnalysis(
           debugSearch,
           {
             key: 'analysisOutput',
             type: 'results',
-            filterOnly: true
+            filterOnly: true,
           },
           node.search
         )
         return result._meta.relevantFilters
-      }
+      },
     },
     subquery: {
       filter: async (node, schema, { processGroup }) =>
@@ -161,9 +158,9 @@ let MemoryProvider = {
               field: node.foreignField,
               //size: 0 // <- put in once facet respects size: 0
             })
-            .getNext()
-        })
-    },    
+            .getNext(),
+        }),
+    },
   },
 }
 

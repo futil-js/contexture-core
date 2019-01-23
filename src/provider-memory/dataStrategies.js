@@ -9,7 +9,7 @@ let safeWalk = _.curry((Tree, f, tree) => {
   return result
 })
 
-let Tree = F.tree(_.get('children'), key => ({key}))
+let Tree = F.tree(_.get('children'), key => ({ key }))
 let setFilterOnly = safeWalk(Tree, node => {
   node.filterOnly = true
 })
@@ -24,38 +24,36 @@ let analysisTree = _.curry((analysisNodes, tree) => ({
 }))
 
 let executeAnalysis = _.curry(async (service, analysisNodes, tree) =>
-  getTreeResults(
-    await service(
-      analysisTree(analysisNodes, tree)
-    )
-  )
+  getTreeResults(await service(analysisTree(analysisNodes, tree)))
 )
 
-let facet = ({
-  service,
-  tree,
-  field,
-  size = 100,
-  sortDir
-}) => {
+let facet = ({ service, tree, field, size = 100, sortDir }) => {
   let getTotalRecords = _.memoize(async () => {
-    let result = await executeAnalysis(service, {
-      key: 'analysisOutput',
-      type: 'cardinality',
-      field,
-    }, tree)
+    let result = await executeAnalysis(
+      service,
+      {
+        key: 'analysisOutput',
+        type: 'cardinality',
+        field,
+      },
+      tree
+    )
     return _.get('context.value', result)
   })
 
   let done = false
   let getNext = async () => {
-    let result = await executeAnalysis(service, {
-      key: 'analysisOutput',
-      type: 'facet',
-      field,
-      size,
-      sortDir,
-    }, tree)
+    let result = await executeAnalysis(
+      service,
+      {
+        key: 'analysisOutput',
+        type: 'facet',
+        field,
+        size,
+        sortDir,
+      },
+      tree
+    )
     done = true
     return _.map('name', result.context.options)
   }
@@ -69,5 +67,5 @@ let facet = ({
 
 module.exports = {
   facet,
-  executeAnalysis
+  executeAnalysis,
 }

@@ -14,8 +14,8 @@ describe('Memory Provider', () => {
       },
       test2: {
         memory: {
-          records: [{ b: 1, c: 1 }, { b: 2, c: 2 }, { b: 3, c: 1 }]
-        }
+          records: [{ b: 1, c: 1 }, { b: 2, c: 2 }, { b: 3, c: 1 }],
+        },
       },
       movies: {
         memory: {
@@ -33,9 +33,9 @@ describe('Memory Provider', () => {
             { movie: 'Star Trek: The Next Generation', user: 'Adam' },
             { movie: 'Game of Thrones', user: 'Hope' },
             { movie: 'The Lucky One', user: 'Hope' },
-          ]
-        }
-      }
+          ],
+        },
+      },
     },
     providers: {
       memory: provider,
@@ -154,7 +154,7 @@ describe('Memory Provider', () => {
                   },
                 },
               ],
-            }
+            },
           },
           {
             key: 'results',
@@ -199,7 +199,7 @@ describe('Memory Provider', () => {
                   },
                 },
               ],
-            }
+            },
           },
           {
             key: 'results',
@@ -389,9 +389,9 @@ describe('Memory Provider', () => {
                   type: 'facet',
                   field: 'user',
                   values: ['Adam'],
-                }
+                },
               ],
-            }
+            },
           },
           {
             key: 'results',
