@@ -20,7 +20,7 @@ module.exports = ({ getSavedSearch } = {}) => ({
             service: processGroup,
             tree: node.search || (await getSavedSearch(node.searchId)),
             field: node.foreignField,
-            size: 0 // get all results
+            size: 0, // get all results
           })
           .getNext(),
       }),
