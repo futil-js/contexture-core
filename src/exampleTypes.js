@@ -2,6 +2,7 @@ let strategies = require('./dataStrategies')
 
 module.exports = ({ getSavedSearch } = {}) => ({
   savedSearch: {
+    hasValue: node => node.search || node.searchId,
     async filter(node, schema, { processGroup }) {
       let debugSearch = x => processGroup(x, { debug: true })
       let search = node.search || (await getSavedSearch(node.searchId))
@@ -12,6 +13,7 @@ module.exports = ({ getSavedSearch } = {}) => ({
     },
   },
   subquery: {
+    hasValue: node => node.localField && node.foreignField && (node.search || node.searchId),
     filter: async (node, schema, { processGroup, getProvider, getSchema }) => {
       let tree = node.search || (await getSavedSearch(node.searchId))
       return getProvider(node).types.facet.filter({
