@@ -1,3 +1,7 @@
+### 0.4.1
+* Pass schemas along in subquery type
+* Add missing hasValue functions for subquery and savedSearch
+
 ### 0.4.0
 * Memory Provider: Add savedSearch type
 * Memory Provider: Add subquery type
