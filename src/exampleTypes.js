@@ -2,6 +2,7 @@ let strategies = require('./dataStrategies')
 
 module.exports = ({ getSavedSearch } = {}) => ({
   savedSearch: {
+    hasValue: node => node.search || node.searchId,
     async filter(node, schema, { processGroup }) {
       let debugSearch = x => processGroup(x, { debug: true })
       let search = node.search || (await getSavedSearch(node.searchId))
@@ -12,17 +13,27 @@ module.exports = ({ getSavedSearch } = {}) => ({
     },
   },
   subquery: {
-    filter: async (node, schema, { processGroup, getProvider }) =>
-      getProvider(node).types.facet.filter({
-        field: node.localField,
-        values: await strategies
-          .facet({
-            service: processGroup,
-            tree: node.search || (await getSavedSearch(node.searchId)),
-            field: node.foreignField,
-            size: 0, // get all results
-          })
-          .getNext(),
-      }),
+    hasValue: node =>
+      node.localField && node.foreignField && (node.search || node.searchId),
+    async filter(node, schema, { processGroup, getProvider, getSchema }) {
+      let tree = node.search || (await getSavedSearch(node.searchId))
+      return getProvider(node).types.facet.filter(
+        {
+          field: node.localField,
+          values: await strategies
+            .facet(
+              {
+                service: processGroup,
+                tree,
+                field: node.foreignField,
+                size: 0, // get all results
+              },
+              getSchema(tree.schema)
+            )
+            .getNext(),
+        },
+        schema
+      )
+    },
   },
 })
