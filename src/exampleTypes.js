@@ -12,17 +12,19 @@ module.exports = ({ getSavedSearch } = {}) => ({
     },
   },
   subquery: {
-    filter: async (node, schema, { processGroup, getProvider }) =>
-      getProvider(node).types.facet.filter({
+    filter: async (node, schema, { processGroup, getProvider, getSchema }) => {
+      let tree = node.search || (await getSavedSearch(node.searchId))
+      return getProvider(node).types.facet.filter({
         field: node.localField,
         values: await strategies
           .facet({
             service: processGroup,
-            tree: node.search || (await getSavedSearch(node.searchId)),
+            tree,
             field: node.foreignField,
             size: 0, // get all results
-          })
+          }, getSchema(tree.schema))
           .getNext(),
-      }),
+      }, schema)
+    },
   },
 })
