@@ -1,3 +1,6 @@
+### 0.4.2
+* Documentation: Define DSL
+
 ### 0.4.1
 * Pass schemas along in subquery type
 * Add missing hasValue functions for subquery and savedSearch
