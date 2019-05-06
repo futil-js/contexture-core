@@ -1,5 +1,5 @@
 # contexture
-The Contexture DSL Processor
+The Contexture DSL (Domain Specific Language) Processor
 
 ## Overview
 Contexture is a tool for running the Contexture DSL, which is primarily about abstracting queries/filters and results/aggregrations.
