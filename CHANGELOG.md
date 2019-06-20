@@ -1,3 +1,6 @@
+### 0.4.2
+* Throw Error object instead of just the error message
+
 ### 0.4.1
 * Pass schemas along in subquery type
 * Add missing hasValue functions for subquery and savedSearch
