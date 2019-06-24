@@ -73,7 +73,7 @@ let runTypeFunction = config => async (name, item, search) => {
   } catch (error) {
     throw {
       message: `Failed running search for ${item.type} (${item.key}) at ${name}: ${_.getOr(error, 'message', error)}`,
-      F.extendOn(error, { item })
+      F.extendOn(error, { node: item })
     }
   }
 }
