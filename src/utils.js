@@ -23,9 +23,7 @@ let getProvider = _.curry(
     ] ||
     F.throws(
       new Error(
-        `No Provider found ${item.schema} and was not overridden for ${
-          item.key
-        }`
+        `No Provider found ${item.schema} and was not overridden for ${item.key}`
       )
     )
 )
@@ -72,10 +70,14 @@ let runTypeFunction = config => async (name, item, search) => {
     return await (search
       ? fn(item, search, schema, config)
       : fn(item, schema, config))
-  } catch (e) {
-    throw new Error(
-      `Failed running search for ${item.type} (${item.key}) at ${name}: ${e}`
-    )
+  } catch (error) {
+    throw {
+      message: `Failed running search for ${item.type} (${
+        item.key
+      }) at ${name}: ${_.getOr(error, 'message', error)}`,
+      error,
+      node: item,
+    }
   }
 }
 
