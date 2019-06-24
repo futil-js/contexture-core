@@ -122,6 +122,7 @@ describe('Memory Provider', () => {
       })
       expect(result.children[2].context).to.deep.equal({
         results: [{ a: 1, b: 1 }, { a: 1, b: 3 }],
+        totalRecords: 2
       })
     })
     it('should handle basic OR test case', async () => {
@@ -163,6 +164,7 @@ describe('Memory Provider', () => {
       })
       expect(result.children[2].context).to.deep.equal({
         results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
+        totalRecords: 3
       })
     })
     it('should handle savedSearch', async () => {
@@ -206,6 +208,7 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       expect(result.children[1].context).to.deep.equal({
         results: [{ a: 1, b: 1 }, { a: 1, b: 3 }],
+        totalRecords: 2,
       })
     })
     it('should handle subquery', async () => {
@@ -254,6 +257,7 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       expect(result.children[1].context).to.deep.equal({
         results: [{ b: 1, c: 1 }, { b: 3, c: 1 }],
+        totalRecords: 2,
       })
     })
   })
