@@ -1,3 +1,6 @@
+### 0.5.0
+Memory Provider: Add `totalRecords` to `results` example type
+
 ### 0.4.2
 * Throw Error object instead of just the error message
 
