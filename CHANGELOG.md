@@ -1,3 +1,6 @@
+### 0.5.1
+* Documentation: Define DSL
+
 ### 0.5.0
 Memory Provider: Add `totalRecords` to `results` example type
 
