@@ -1,5 +1,11 @@
-### 0.4.2
+### 0.5.1
 * Documentation: Define DSL
+
+### 0.5.0
+Memory Provider: Add `totalRecords` to `results` example type
+
+### 0.4.2
+* Throw Error object instead of just the error message
 
 ### 0.4.1
 * Pass schemas along in subquery type
