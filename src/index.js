@@ -3,11 +3,7 @@ let _ = require('lodash/fp')
 let Promise = require('bluebird')
 let utils = require('./utils')
 
-let overAsync = fns =>
-  _.flow(
-    _.over(fns),
-    Promise.all
-  )
+let overAsync = fns => _.flow(_.over(fns), Promise.all)
 let extendAllOn = _.extendAll.convert({ immutable: false })
 let { getChildren, parentFirstDFS, getRelevantFilters } = utils
 
