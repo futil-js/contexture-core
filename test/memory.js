@@ -42,12 +42,20 @@ describe('Memory Provider', () => {
     schemas: {
       test: {
         memory: {
-          records: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
+          records: [
+            { a: 1, b: 1 },
+            { a: 1, b: 3 },
+            { a: 2, b: 2 },
+          ],
         },
       },
       test2: {
         memory: {
-          records: [{ b: 1, c: 1 }, { b: 2, c: 2 }, { b: 3, c: 1 }],
+          records: [
+            { b: 1, c: 1 },
+            { b: 2, c: 2 },
+            { b: 3, c: 1 },
+          ],
         },
       },
       movies: {
@@ -118,10 +126,16 @@ describe('Memory Provider', () => {
       })
       expect(result.children[1].context).to.deep.equal({
         cardinality: 2,
-        options: [{ name: '1', count: 2 }, { name: '2', count: 1 }],
+        options: [
+          { name: '1', count: 2 },
+          { name: '2', count: 1 },
+        ],
       })
       expect(result.children[2].context).to.deep.equal({
-        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }],
+        results: [
+          { a: 1, b: 1 },
+          { a: 1, b: 3 },
+        ],
         totalRecords: 2,
       })
     })
@@ -156,14 +170,24 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       expect(result.children[0].context).to.deep.equal({
         cardinality: 2,
-        options: [{ name: '1', count: 2 }, { name: '2', count: 1 }],
+        options: [
+          { name: '1', count: 2 },
+          { name: '2', count: 1 },
+        ],
       })
       expect(result.children[1].context).to.deep.equal({
         cardinality: 2,
-        options: [{ name: '1', count: 2 }, { name: '2', count: 1 }],
+        options: [
+          { name: '1', count: 2 },
+          { name: '2', count: 1 },
+        ],
       })
       expect(result.children[2].context).to.deep.equal({
-        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }],
+        results: [
+          { a: 1, b: 1 },
+          { a: 1, b: 3 },
+          { a: 2, b: 2 },
+        ],
         totalRecords: 3,
       })
     })
@@ -207,7 +231,10 @@ describe('Memory Provider', () => {
       }
       let result = await process(dsl)
       expect(result.children[1].context).to.deep.equal({
-        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }],
+        results: [
+          { a: 1, b: 1 },
+          { a: 1, b: 3 },
+        ],
         totalRecords: 2,
       })
     })
@@ -256,7 +283,10 @@ describe('Memory Provider', () => {
       }
       let result = await process(dsl)
       expect(result.children[1].context).to.deep.equal({
-        results: [{ b: 1, c: 1 }, { b: 3, c: 1 }],
+        results: [
+          { b: 1, c: 1 },
+          { b: 3, c: 1 },
+        ],
         totalRecords: 2,
       })
     })
@@ -493,13 +523,13 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       let firstPage = result.context.results
       expect(_.map('movie', firstPage)).to.deep.equal([
-        'Game of Thrones', 
+        'Game of Thrones',
         'The Matrix',
       ])
       result = await process({ ...dsl, page: 2 })
       let secondPage = result.context.results
       expect(_.map('movie', secondPage)).to.deep.equal([
-        'Star Trek: The Next Generation', 
+        'Star Trek: The Next Generation',
         'Game of Thrones',
       ])
     })
