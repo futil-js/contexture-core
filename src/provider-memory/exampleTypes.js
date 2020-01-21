@@ -109,7 +109,7 @@ module.exports = () => ({
       results: search(
         _.flow(
           _.orderBy(sortField, sortDir),
-          _.slice((page - 1) * pageSize, pageSize)
+          _.slice((page - 1) * pageSize, page * pageSize)
         )
       ),
     }),
