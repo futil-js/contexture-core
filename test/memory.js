@@ -483,7 +483,7 @@ describe('Memory Provider', () => {
         'The Matrix',
       ])
     })
-    it('should handle pagination') () => {
+    it('should handle pagination', async () => {
       let dsl = {
         key: 'results',
         type: 'results',
