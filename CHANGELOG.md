@@ -1,4 +1,5 @@
 ### 0.6.0
+* Add global `raw` example type
 * Chore: move from `futil-js` to `futil`
 
 ### 0.5.2
