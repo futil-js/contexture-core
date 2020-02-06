@@ -42,5 +42,5 @@ module.exports = ({ getSavedSearch } = {}) => ({
     filter: ({ filter }) => filter,
     validContext: _.get('result'),
     result: async ({ result }, search) => ({ result: search(result) }),
-  }  
+  },
 })
