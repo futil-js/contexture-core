@@ -1,7 +1,7 @@
 // TODO: All of this should move to contexture-export
 
 let _ = require('lodash/fp')
-let F = require('futil-js')
+let F = require('futil')
 
 let safeWalk = _.curry((Tree, f, tree) => {
   let result = _.cloneDeep(tree)

@@ -1,3 +1,6 @@
+### 0.6.0
+* Chore: move from `futil-js` to `futil`
+
 ### 0.5.2
 * Memory Provider: Fix bug in results type pagination
 
