@@ -1,3 +1,4 @@
+let _ = require('lodash/fp')
 let strategies = require('./dataStrategies')
 
 module.exports = ({ getSavedSearch } = {}) => ({
@@ -35,5 +36,11 @@ module.exports = ({ getSavedSearch } = {}) => ({
         schema
       )
     },
+  },
+  raw: {
+    hasValue: _.get('filter'),
+    filter: ({ filter }) => filter,
+    validContext: _.get('result'),
+    result: async ({ result }, search) => ({ result: search(result) }),
   },
 })

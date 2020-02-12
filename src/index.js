@@ -1,4 +1,4 @@
-let F = require('futil-js')
+let F = require('futil')
 let _ = require('lodash/fp')
 let Promise = require('bluebird')
 let utils = require('./utils')

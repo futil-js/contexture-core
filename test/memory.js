@@ -533,5 +533,16 @@ describe('Memory Provider', () => {
         'Game of Thrones',
       ])
     })
+    it('should handle raw', async () => {
+      let dsl = {
+        key: 'raw',
+        schema: 'movies',
+        type: 'raw',
+        filter: x => x.year > 2010,
+        result: _.flow(_.map('year'), _.uniq),
+      }
+      let result = await process(dsl)
+      expect(result.context.result).to.deep.equal([2011, 2012, 2013])
+    })
   })
 })
