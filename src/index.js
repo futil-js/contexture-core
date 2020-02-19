@@ -72,8 +72,9 @@ let process = _.curryN(
           }
         )
         node.context = result
+        let path = node._meta.path
         if (!options.debug) delete node._meta
-        if (options.onResult) options.onResult(result)
+        if (options.onResult) options.onResult({ path, node })
       })
       
       return group

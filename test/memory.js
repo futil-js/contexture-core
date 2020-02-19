@@ -544,5 +544,32 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       expect(result.context.result).to.deep.equal([2011, 2012, 2013])
     })
+    it('should handle onResult', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'movies',
+        join: 'and',
+        children: [
+          {
+            key: 'ratings',
+            type: 'facet',
+            field: 'rated',
+            values: ['R', 'PG-13'],
+          },
+          {
+            key: 'results',
+            type: 'results',
+            page: 1,
+          },
+        ],
+      }
+      let results = []
+      let onResult = x => {
+        results.push(x)
+      }
+      await process(dsl, { onResult })
+      expect(_.map('path', results)).to.deep.equal([['root'], ['root', 'ratings'], ['root', 'results']])
+    })
   })
 })
