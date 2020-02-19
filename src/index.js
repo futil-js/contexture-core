@@ -7,13 +7,13 @@ let overAsync = fns => _.flow(_.over(fns), Promise.all)
 let extendAllOn = _.extendAll.convert({ immutable: false })
 let { getChildren, parentFirstDFS, getRelevantFilters } = utils
 
-let materializePaths = (item, parent) => {
-  item._meta.path = _.getOr([], '_meta.path', parent).concat([item.key])
+let materializePaths = (node, parent) => {
+  node._meta.path = _.getOr([], '_meta.path', parent).concat([node.key])
 }
-let initNode = (item, { schema } = {}) =>
-  F.defaultsOn({ _meta: { requests: [] }, schema }, item)
+let initNode = (node, { schema } = {}) =>
+  F.defaultsOn({ _meta: { requests: [] }, schema }, node)
 
-let flattenLegacyFields = item => extendAllOn([item, item.config, item.data])
+let flattenLegacyFields = node => extendAllOn([node, node.config, node.data])
 
 let walkAsync = tree => f => parentFirstDFS(getChildren, f, tree)
 let process = _.curryN(
@@ -36,51 +36,51 @@ let process = _.curryN(
           initNode,
           flattenLegacyFields,
           materializePaths,
-          async item => {
-            item._meta.hasValue = await runTypeFunction('hasValue', item)
-            if (item._meta.hasValue && !item.contextOnly) {
-              item._meta.filter = await runTypeFunction('filter', item)
+          async node => {
+            node._meta.hasValue = await runTypeFunction('hasValue', node)
+            if (node._meta.hasValue && !node.contextOnly) {
+              node._meta.filter = await runTypeFunction('filter', node)
             }
           },
         ])
       )
-      await walk(item => {
+      await walk(node => {
         // Skip groups
-        if (!getChildren(item))
-          item._meta.relevantFilters = getRelevantFilters(
-            getProvider(item).groupCombinator,
-            item._meta.path,
+        if (!getChildren(node))
+          node._meta.relevantFilters = getRelevantFilters(
+            getProvider(node).groupCombinator,
+            node._meta.path,
             group
           )
       })
-      await walk(async item => {
-        let validContext = await runTypeFunction('validContext', item)
+      await walk(async node => {
+        let validContext = await runTypeFunction('validContext', node)
 
         // Reject filterOnly
-        if (item.filterOnly || !validContext) return
+        if (node.filterOnly || !validContext) return
 
-        let curriedSearch = _.partial(getProvider(item).runSearch, [
+        let curriedSearch = _.partial(getProvider(node).runSearch, [
           options,
-          item,
-          getSchema(item.schema),
-          item._meta.relevantFilters,
+          node,
+          getSchema(node.schema),
+          node._meta.relevantFilters,
         ])
 
-        let result = await runTypeFunction('result', item, curriedSearch).catch(
+        let result = await runTypeFunction('result', node, curriedSearch).catch(
           error => {
-            throw F.extendOn(error, { item })
+            throw F.extendOn(error, { node })
           }
         )
-        item.context = result
+        node.context = result
         if (options.onResult) options.onResult(result)
       })
       await walk(item => {
         if (!options.debug) delete item._meta
       })
-
+      
       return group
     } catch (error) {
-      throw error.item
+      throw error.node
         ? error
         : new Error(`Failed running search (uncaught): ${error}`)
     }
