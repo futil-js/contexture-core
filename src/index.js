@@ -72,10 +72,8 @@ let process = _.curryN(
           }
         )
         node.context = result
+        if (!options.debug) delete node._meta
         if (options.onResult) options.onResult(result)
-      })
-      await walk(item => {
-        if (!options.debug) delete item._meta
       })
       
       return group
