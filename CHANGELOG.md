@@ -1,3 +1,9 @@
+### 0.7.0
+* Pass the node and path in `onResult`, not the raw context value
+* Optimize performance by reducing the number of tree traversals
+* Clean up repo by using new `futil` methods instead of local utils
+* General refactoring
+
 ### 0.6.1
 * Fix `raw` function
 

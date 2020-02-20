@@ -1,34 +1,9 @@
 let _ = require('lodash/fp')
-let Promise = require('bluebird')
 let F = require('futil')
 
-// Parent first promise DFS
-// TODO: futil walkAsync
-let parentFirstDFS = async (getChildren, fn, collection, parent) => {
-  await fn(collection, parent)
-  await Promise.map(getChildren(collection) || [], item =>
-    parentFirstDFS(getChildren, fn, item, collection)
-  )
-}
+let getChildren = x => F.cascade(['children', 'items', 'data.items'], x)
+let Tree = F.tree(getChildren)
 
-// For futil? map args is _.overArgs on all args
-let mapArgs = (f, g) => (...x) => f(...x.map(g))
-let commonKeys = mapArgs(_.intersection, _.keys)
-
-// TODO: Handle no provider and have global default?
-let getProvider = _.curry(
-  (providers, schemas, item) =>
-    providers[
-      item.provider || _.first(commonKeys(providers, schemas[item.schema]))
-    ] ||
-    F.throws(
-      new Error(
-        `No Provider found ${item.schema} and was not overridden for ${item.key}`
-      )
-    )
-)
-
-let getChildren = F.cascade(['children', 'items', 'data.items'])
 let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   if (!_.includes(group.key, Path))
     // If we're not in the path, it doesn't matter what the rest of it is
@@ -45,7 +20,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
     relevantChildren = _.filter({ key: currentKey }, relevantChildren)
   // Exclude self
   relevantChildren = _.reject(
-    item => item.key === currentKey && !getChildren(item),
+    node => node.key === currentKey && !getChildren(node),
     relevantChildren
   )
 
@@ -59,32 +34,43 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   return groupCombinator(group, _.compact(relevantFilters))
 })
 
-let runTypeFunction = config => async (name, item, search) => {
-  let schema = config.getSchema(item.schema)
+let getProvider = _.curry(
+  (providers, schemas, node) =>
+    providers[
+      node.provider || F.firstCommonKey(providers, schemas[node.schema])
+    ] ||
+    F.throws(
+      new Error(
+        `No Provider found ${node.schema} and was not overridden for ${node.key}`
+      )
+    )
+)
+
+let runTypeFunction = config => async (name, node, search) => {
+  let schema = config.getSchema(node.schema)
   let fn = F.cascade(
-    [`${item.type}.${name}`, `default.${name}`],
-    config.getProvider(item).types,
+    [`${node.type}.${name}`, `default.${name}`],
+    config.getProvider(node).types,
     _.noop
   )
   try {
     return await (search
-      ? fn(item, search, schema, config)
-      : fn(item, schema, config))
+      ? fn(node, search, schema, config)
+      : fn(node, schema, config))
   } catch (error) {
     throw {
-      message: `Failed running search for ${item.type} (${
-        item.key
+      message: `Failed running search for ${node.type} (${
+        node.key
       }) at ${name}: ${_.getOr(error, 'message', error)}`,
       error,
-      node: item,
+      node,
     }
   }
 }
 
 module.exports = {
-  parentFirstDFS,
-  getProvider,
-  getChildren,
+  Tree,
   getRelevantFilters,
+  getProvider,
   runTypeFunction,
 }
