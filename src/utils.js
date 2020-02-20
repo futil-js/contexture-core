@@ -3,13 +3,13 @@ let F = require('futil')
 
 // TODO: Handle no provider and have global default?
 let getProvider = _.curry(
-  (providers, schemas, item) =>
+  (providers, schemas, node) =>
     providers[
-      item.provider || F.firstCommonKey(providers, schemas[item.schema])
+      node.provider || F.firstCommonKey(providers, schemas[node.schema])
     ] ||
     F.throws(
       new Error(
-        `No Provider found ${item.schema} and was not overridden for ${item.key}`
+        `No Provider found ${node.schema} and was not overridden for ${node.key}`
       )
     )
 )
@@ -31,7 +31,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
     relevantChildren = _.filter({ key: currentKey }, relevantChildren)
   // Exclude self
   relevantChildren = _.reject(
-    item => item.key === currentKey && !getChildren(item),
+    node => node.key === currentKey && !getChildren(node),
     relevantChildren
   )
 
@@ -45,24 +45,24 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   return groupCombinator(group, _.compact(relevantFilters))
 })
 
-let runTypeFunction = config => async (name, item, search) => {
-  let schema = config.getSchema(item.schema)
+let runTypeFunction = config => async (name, node, search) => {
+  let schema = config.getSchema(node.schema)
   let fn = F.cascade(
-    [`${item.type}.${name}`, `default.${name}`],
-    config.getProvider(item).types,
+    [`${node.type}.${name}`, `default.${name}`],
+    config.getProvider(node).types,
     _.noop
   )
   try {
     return await (search
-      ? fn(item, search, schema, config)
-      : fn(item, schema, config))
+      ? fn(node, search, schema, config)
+      : fn(node, schema, config))
   } catch (error) {
     throw {
-      message: `Failed running search for ${item.type} (${
-        item.key
+      message: `Failed running search for ${node.type} (${
+        node.key
       }) at ${name}: ${_.getOr(error, 'message', error)}`,
       error,
-      node: item,
+      node: node,
     }
   }
 }
