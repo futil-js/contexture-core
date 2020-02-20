@@ -3,14 +3,8 @@
 let _ = require('lodash/fp')
 let F = require('futil')
 
-let safeWalk = _.curry((Tree, f, tree) => {
-  let result = _.cloneDeep(tree)
-  Tree.walk(f)(result)
-  return result
-})
-
 let Tree = F.tree(_.get('children'), key => ({ key }))
-let setFilterOnly = safeWalk(Tree, node => {
+let setFilterOnly = Tree.transform(node => {
   node.filterOnly = true
 })
 let lastChild = x => _.last(Tree.traverse(x))

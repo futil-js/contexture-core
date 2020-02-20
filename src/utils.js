@@ -11,15 +11,11 @@ let parentFirstDFS = async (getChildren, fn, collection, parent) => {
   )
 }
 
-// For futil? map args is _.overArgs on all args
-let mapArgs = (f, g) => (...x) => f(...x.map(g))
-let commonKeys = mapArgs(_.intersection, _.keys)
-
 // TODO: Handle no provider and have global default?
 let getProvider = _.curry(
   (providers, schemas, item) =>
     providers[
-      item.provider || _.first(commonKeys(providers, schemas[item.schema]))
+      item.provider || F.firstCommonKey(providers, schemas[item.schema])
     ] ||
     F.throws(
       new Error(
