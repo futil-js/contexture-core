@@ -9,7 +9,7 @@ let Tree = F.tree(getChildren)
 let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
   // Add schema, _meta path and requests
   F.defaultsOn(
-    { _meta: { requests: [], path: path.concat([node.key]) }, schema },
+    { schema, _meta: { requests: [], path: path.concat([node.key]) } },
     node
   )
   // Flatten legacy fields
