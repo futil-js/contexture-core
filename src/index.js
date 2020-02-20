@@ -29,15 +29,13 @@ let process = _.curryN(
     })
     let group = _.cloneDeep(groupParam)
     try {
-      await Tree.walkAsync(
-        async (node, ...args) => {
-          initNode(node, ...args)
-          node._meta.hasValue = await runTypeFunction('hasValue', node)
-          if (node._meta.hasValue && !node.contextOnly) {
-            node._meta.filter = await runTypeFunction('filter', node)
-          }
+      await Tree.walkAsync(async (node, ...args) => {
+        initNode(node, ...args)
+        node._meta.hasValue = await runTypeFunction('hasValue', node)
+        if (node._meta.hasValue && !node.contextOnly) {
+          node._meta.filter = await runTypeFunction('filter', node)
         }
-      )(group)
+      })(group)
       Tree.walk(node => {
         // Skip groups
         if (!getChildren(node))
