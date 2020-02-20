@@ -22,7 +22,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
     options,
     getSchema,
     getProvider,
-    processGroup: (g, options) => process({ providers, schemas }, g, options)
+    processGroup: (g, options) => process({ providers, schemas }, g, options),
   })
   try {
     await Tree.walkAsync(async (node, ...args) => {
