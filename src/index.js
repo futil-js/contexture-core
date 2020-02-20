@@ -15,7 +15,6 @@ let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
   // Flatten legacy fields
   extendAllOn([node, node.config, node.data])
 }
-let walkAsync = f => tree => Promise.all(Tree.toArrayBy(f, tree))
 
 let process = _.curryN(
   2,
@@ -29,18 +28,17 @@ let process = _.curryN(
       processGroup: (g, options) => process({ providers, schemas }, g, options),
     })
     let group = _.cloneDeep(groupParam)
-    let walk = f => walkAsync(f)(group)
     try {
       Tree.walk(initNode)(group)
-      await walk(
+      await Tree.walkAsync(
         async node => {
           node._meta.hasValue = await runTypeFunction('hasValue', node)
           if (node._meta.hasValue && !node.contextOnly) {
             node._meta.filter = await runTypeFunction('filter', node)
           }
         }
-      )
-      await walk(node => {
+      )(group)
+      Tree.walk(node => {
         // Skip groups
         if (!getChildren(node))
           node._meta.relevantFilters = getRelevantFilters(
@@ -48,8 +46,8 @@ let process = _.curryN(
             node._meta.path,
             group
           )
-      })
-      await walk(async node => {
+      })(group)
+      await Tree.walkAsync(async node => {
         let validContext = await runTypeFunction('validContext', node)
 
         // Reject filterOnly
@@ -71,7 +69,7 @@ let process = _.curryN(
         let path = node._meta.path
         if (!options.debug) delete node._meta
         if (options.onResult) options.onResult({ path, node })
-      })
+      })(group)
       
       return group
     } catch (error) {

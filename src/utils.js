@@ -14,7 +14,7 @@ let getProvider = _.curry(
     )
 )
 
-let getChildren = F.cascade(['children', 'items', 'data.items'])
+let getChildren = x => F.cascade(['children', 'items', 'data.items'], x)
 let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   if (!_.includes(group.key, Path))
     // If we're not in the path, it doesn't matter what the rest of it is
