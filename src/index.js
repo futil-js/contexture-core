@@ -67,9 +67,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
 
     return group
   } catch (error) {
-    throw error.node
-      ? error
-      : new Error(`Failed running search (uncaught): ${error}`)
+    throw error.node ? error : new Error(`Uncaught search exception: ${error}`)
   }
 })
 module.exports = process
