@@ -68,7 +68,7 @@ let process = _.curryN(
         if (!options.debug) delete node._meta
         if (options.onResult) options.onResult({ path, node })
       })(group)
-      
+
       return group
     } catch (error) {
       throw error.node

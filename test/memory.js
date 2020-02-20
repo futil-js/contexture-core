@@ -569,7 +569,11 @@ describe('Memory Provider', () => {
         results.push(x)
       }
       await process(dsl, { onResult })
-      expect(_.map('path', results)).to.deep.equal([['root'], ['root', 'ratings'], ['root', 'results']])
+      expect(_.map('path', results)).to.deep.equal([
+        ['root'],
+        ['root', 'ratings'],
+        ['root', 'results'],
+      ])
     })
   })
 })
