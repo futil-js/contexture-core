@@ -22,7 +22,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
     options,
     getSchema,
     getProvider,
-    processGroup: (g, options) => process({ providers, schemas }, g, options),
+    processGroup: (g, options) => process({ providers, schemas }, g, options)
   })
   try {
     await Tree.walkAsync(async (node, ...args) => {
@@ -54,12 +54,11 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
         node._meta.relevantFilters,
       ])
 
-      let result = await runTypeFunction('result', node, curriedSearch).catch(
+      node.context = await runTypeFunction('result', node, curriedSearch).catch(
         error => {
           throw F.extendOn(error, { node })
         }
       )
-      node.context = result
       let path = node._meta.path
       if (!options.debug) delete node._meta
       if (options.onResult) options.onResult({ path, node })
