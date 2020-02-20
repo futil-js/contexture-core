@@ -3,8 +3,7 @@ let _ = require('lodash/fp')
 let utils = require('./utils')
 
 let extendAllOn = _.extendAll.convert({ immutable: false })
-let { getChildren, getRelevantFilters } = utils
-let Tree = F.tree(getChildren)
+let { Tree, getRelevantFilters } = utils
 
 let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
   // Add schema, _meta path and requests
@@ -35,7 +34,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
     })(group)
     Tree.walk(node => {
       // Skip groups
-      if (!getChildren(node))
+      if (!Tree.traverse(node))
         node._meta.relevantFilters = getRelevantFilters(
           getProvider(node).groupCombinator,
           node._meta.path,

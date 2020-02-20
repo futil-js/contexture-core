@@ -1,20 +1,9 @@
 let _ = require('lodash/fp')
 let F = require('futil')
 
-// TODO: Handle no provider and have global default?
-let getProvider = _.curry(
-  (providers, schemas, node) =>
-    providers[
-      node.provider || F.firstCommonKey(providers, schemas[node.schema])
-    ] ||
-    F.throws(
-      new Error(
-        `No Provider found ${node.schema} and was not overridden for ${node.key}`
-      )
-    )
-)
-
 let getChildren = x => F.cascade(['children', 'items', 'data.items'], x)
+let Tree = F.tree(getChildren)
+
 let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   if (!_.includes(group.key, Path))
     // If we're not in the path, it doesn't matter what the rest of it is
@@ -45,6 +34,18 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   return groupCombinator(group, _.compact(relevantFilters))
 })
 
+let getProvider = _.curry(
+  (providers, schemas, node) =>
+    providers[
+      node.provider || F.firstCommonKey(providers, schemas[node.schema])
+    ] ||
+    F.throws(
+      new Error(
+        `No Provider found ${node.schema} and was not overridden for ${node.key}`
+      )
+    )
+)
+
 let runTypeFunction = config => async (name, node, search) => {
   let schema = config.getSchema(node.schema)
   let fn = F.cascade(
@@ -68,8 +69,8 @@ let runTypeFunction = config => async (name, node, search) => {
 }
 
 module.exports = {
-  getProvider,
-  getChildren,
+  Tree,
   getRelevantFilters,
+  getProvider,
   runTypeFunction,
 }
