@@ -62,7 +62,7 @@ let runTypeFunction = config => async (name, node, search) => {
         node.key
       }) at ${name}: ${_.getOr(error, 'message', error)}`,
       error,
-      node: node,
+      node,
     }
   }
 }
