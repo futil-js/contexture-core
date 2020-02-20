@@ -1,5 +1,3 @@
-let Promise = require('bluebird')
-
 let DebugProvider = {
   groupCombinator: (group, filters) => ({
     [group.join]: filters,
@@ -17,15 +15,15 @@ let DebugProvider = {
     test: {
       filter: x => ({ [`${x.field || x.key} (${x.type})`]: x.data }),
       result: (context, search) =>
-        search({ test: context.config }).return({
+        search({ test: context.config }).then(() => ({
           abc: 123,
-        }),
+        })),
     },
     results: {
       result: (context, search) =>
-        search({ results: context.config }).return({
+        search({ results: context.config }).then(() => ({
           results: [],
-        }),
+        })),
     },
   },
 }

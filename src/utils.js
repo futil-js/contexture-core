@@ -1,15 +1,5 @@
 let _ = require('lodash/fp')
-let Promise = require('bluebird')
 let F = require('futil')
-
-// Parent first promise DFS
-// TODO: futil walkAsync
-let parentFirstDFS = async (getChildren, fn, collection, parent) => {
-  await fn(collection, parent)
-  await Promise.map(getChildren(collection) || [], item =>
-    parentFirstDFS(getChildren, fn, item, collection)
-  )
-}
 
 // TODO: Handle no provider and have global default?
 let getProvider = _.curry(
@@ -78,7 +68,6 @@ let runTypeFunction = config => async (name, item, search) => {
 }
 
 module.exports = {
-  parentFirstDFS,
   getProvider,
   getChildren,
   getRelevantFilters,

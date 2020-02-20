@@ -1,21 +1,22 @@
 let F = require('futil')
 let _ = require('lodash/fp')
-let Promise = require('bluebird')
 let utils = require('./utils')
 
-let overAsync = fns => _.flow(_.over(fns), Promise.all)
 let extendAllOn = _.extendAll.convert({ immutable: false })
-let { getChildren, parentFirstDFS, getRelevantFilters } = utils
+let { getChildren, getRelevantFilters } = utils
+let Tree = F.tree(getChildren)
 
-let materializePaths = (node, parent) => {
-  node._meta.path = _.getOr([], '_meta.path', parent).concat([node.key])
+let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
+  // Add schema, _meta path and requests
+  F.defaultsOn(
+    { _meta: { requests: [], path: path.concat([node.key]) }, schema },
+    node
+  )
+  // Flatten legacy fields
+  extendAllOn([node, node.config, node.data])
 }
-let initNode = (node, { schema } = {}) =>
-  F.defaultsOn({ _meta: { requests: [] }, schema }, node)
+let walkAsync = f => tree => Promise.all(Tree.toArrayBy(f, tree))
 
-let flattenLegacyFields = node => extendAllOn([node, node.config, node.data])
-
-let walkAsync = tree => f => parentFirstDFS(getChildren, f, tree)
 let process = _.curryN(
   2,
   async ({ providers, schemas }, groupParam, options = {}) => {
@@ -28,21 +29,16 @@ let process = _.curryN(
       processGroup: (g, options) => process({ providers, schemas }, g, options),
     })
     let group = _.cloneDeep(groupParam)
-    let walk = walkAsync(group)
+    let walk = f => walkAsync(f)(group)
     try {
+      Tree.walk(initNode)(group)
       await walk(
-        // Do all of these in the same traversal
-        overAsync([
-          initNode,
-          flattenLegacyFields,
-          materializePaths,
-          async node => {
-            node._meta.hasValue = await runTypeFunction('hasValue', node)
-            if (node._meta.hasValue && !node.contextOnly) {
-              node._meta.filter = await runTypeFunction('filter', node)
-            }
-          },
-        ])
+        async node => {
+          node._meta.hasValue = await runTypeFunction('hasValue', node)
+          if (node._meta.hasValue && !node.contextOnly) {
+            node._meta.filter = await runTypeFunction('filter', node)
+          }
+        }
       )
       await walk(node => {
         // Skip groups
