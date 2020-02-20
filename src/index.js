@@ -29,9 +29,9 @@ let process = _.curryN(
     })
     let group = _.cloneDeep(groupParam)
     try {
-      Tree.walk(initNode)(group)
       await Tree.walkAsync(
-        async node => {
+        async (node, ...args) => {
+          initNode(node, ...args)
           node._meta.hasValue = await runTypeFunction('hasValue', node)
           if (node._meta.hasValue && !node.contextOnly) {
             node._meta.filter = await runTypeFunction('filter', node)
