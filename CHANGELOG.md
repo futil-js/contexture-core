@@ -1,3 +1,6 @@
+### 0.7.1
+* Fix "Desccription" typo to "Description"
+
 ### 0.7.0
 * Pass the node and path in `onResult`, not the raw context value
 * Optimize performance by reducing the number of tree traversals

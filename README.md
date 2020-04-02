@@ -13,7 +13,7 @@ While the Contexture DSL can be built anyway you'd like, it pairs well with the 
 
 ### Ecosystem And Resources
 
-| Github | npm | Desccription |
+| Github | npm | Description |
 | ------ | --- | ------------ |
 | [`contexture`](http://github.com/smartprocure/contexture) | [`contexture`](https://www.npmjs.com/package/contexture) | The core library that exectues the DSL to retrieve data |
 | [`contexture-elasticsearch`](http://github.com/smartprocure/contexture-elasticsearch) | [`contexture-elasticsearch`](https://www.npmjs.com/package/contexture-elasticsearch) | Elasticsearch provider for contexture |
