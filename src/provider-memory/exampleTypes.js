@@ -34,14 +34,12 @@ module.exports = () => ({
     filter({ field, from = dateMin, to = dateMax, useDateMath }) {
       if (useDateMath) {
         let now = Date.now()
-
         if (!from) {
           from = new Date(dateMin)
         }
         if (!to) {
           to = new Date(dateMax)
         }
-
         if (from === 'thisQuarter') {
           from = startOfQuarter(now)
           to = endOfQuarter(from)
@@ -58,7 +56,6 @@ module.exports = () => ({
           to = endOfDay(to)
         }
       }
-
       return _.conforms({
         [field]: _.inRange(new Date(from), new Date(to)),
       })
