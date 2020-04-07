@@ -32,15 +32,16 @@ module.exports = () => ({
   date: {
     hasValue: node => F.isNotNil(node.from) || F.isNotNil(node.to),
     filter({ field, from = dateMin, to = dateMax, useDateMath }) {
-      if (!from) {
-        from = new Date(dateMin)
-      }
-      if (!to) {
-        to = new Date(dateMax)
-      }
-
       if (useDateMath) {
         let now = Date.now()
+
+        if (!from) {
+          from = new Date(dateMin)
+        }
+        if (!to) {
+          to = new Date(dateMax)
+        }
+
         if (from === 'thisQuarter') {
           from = startOfQuarter(now)
           to = endOfQuarter(from)
