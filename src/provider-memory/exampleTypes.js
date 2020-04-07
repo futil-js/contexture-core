@@ -17,6 +17,26 @@ let toStringIncludes = _.curry((item, list) =>
 let dateMin = -8640000000000000
 let dateMax = 8640000000000000
 
+let computeDateMathRange = (from, to) => {
+  let now = Date.now()
+  if (from === 'thisQuarter') {
+    from = startOfQuarter(now)
+    to = endOfQuarter(from)
+  } else if (from === 'lastQuarter') {
+    from = _.flow(startOfQuarter, subQuarters(1))(now)
+    to = endOfQuarter(from)
+  } else if (from === 'nextQuarter') {
+    from = _.flow(startOfQuarter, addQuarters(1))(now)
+    to = endOfQuarter(from)
+  }
+  from = datemath.parse(from).toDate()
+  to = datemath.parse(to).toDate()
+  if (to.getTime() < dateMax) {
+    to = endOfDay(to)
+  }
+  return { from, to }
+}
+
 module.exports = () => ({
   default: {
     validContext: () => true,
@@ -33,28 +53,15 @@ module.exports = () => ({
     hasValue: node => F.isNotNil(node.from) || F.isNotNil(node.to),
     filter({ field, from = dateMin, to = dateMax, useDateMath }) {
       if (useDateMath) {
-        let now = Date.now()
         if (!from) {
           from = new Date(dateMin)
         }
         if (!to) {
           to = new Date(dateMax)
         }
-        if (from === 'thisQuarter') {
-          from = startOfQuarter(now)
-          to = endOfQuarter(from)
-        } else if (from === 'lastQuarter') {
-          from = _.flow(startOfQuarter, subQuarters(1))(now)
-          to = endOfQuarter(from)
-        } else if (from === 'nextQuarter') {
-          from = _.flow(startOfQuarter, addQuarters(1))(now)
-          to = endOfQuarter(from)
-        }
-        from = datemath.parse(from).toDate()
-        to = datemath.parse(to).toDate()
-        if (to.getTime() < dateMax) {
-          to = endOfDay(to)
-        }
+        let computeDates = computeDateMathRange(from, to)
+        from = computeDates.from
+        to = computeDates.to
       }
       return _.conforms({
         [field]: _.inRange(new Date(from), new Date(to)),
