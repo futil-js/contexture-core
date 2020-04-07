@@ -1,10 +1,21 @@
 let _ = require('lodash/fp')
 let F = require('futil')
+let datemath = require('@elastic/datemath')
+let {
+  endOfDay,
+  subQuarters,
+  addQuarters,
+  endOfQuarter,
+  startOfQuarter,
+} = require('date-fns/fp')
 
 // like `_.includes` but casts everything to string first
 let toStringIncludes = _.curry((item, list) =>
   _.includes(_.toString(item), _.map(_.toString, list))
 )
+
+let dateMin = -8640000000000000
+let dateMax = 8640000000000000
 
 module.exports = () => ({
   default: {
@@ -20,11 +31,37 @@ module.exports = () => ({
   },
   date: {
     hasValue: node => F.isNotNil(node.from) || F.isNotNil(node.to),
-    // Date math for rolling dates not supported yet
-    filter: ({ field, from = -8640000000000000, to = 8640000000000000 }) =>
-      _.conforms({
+    filter({ field, from = dateMin, to = dateMax, useDateMath }) {
+      if (!from) {
+        from = new Date(dateMin)
+      }
+      if (!to) {
+        to = new Date(dateMax)
+      }
+
+      if (useDateMath) {
+        let now = Date.now()
+        if (from === 'thisQuarter') {
+          from = startOfQuarter(now)
+          to = endOfQuarter(from)
+        } else if (from === 'lastQuarter') {
+          from = _.flow(startOfQuarter, subQuarters(1))(now)
+          to = endOfQuarter(from)
+        } else if (from === 'nextQuarter') {
+          from = _.flow(startOfQuarter, addQuarters(1))(now)
+          to = endOfQuarter(from)
+        }
+        from = datemath.parse(from).toDate()
+        to = datemath.parse(to).toDate()
+        if (to.getTime() < dateMax) {
+          to = endOfDay(to)
+        }
+      }
+
+      return _.conforms({
         [field]: _.inRange(new Date(from), new Date(to)),
-      }),
+      })
+    },
   },
   exists: {
     filter: ({ field, value }) =>
