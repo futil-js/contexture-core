@@ -1,6 +1,6 @@
 {
   "name": "contexture",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "The Contexture (aka ContextTree) Core",
   "main": "src/index.js",
   "scripts": {
@@ -29,8 +29,11 @@
   },
   "homepage": "https://github.com/smartprocure/contexture#readme",
   "dependencies": {
+    "@elastic/datemath": "^5.0.3",
+    "date-fns": "^2.11.1",
     "futil": "^1.66.1",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",

@@ -1,3 +1,6 @@
+### 0.8.0
+* Add support for date math operations on provider-memory date type
+
 ### 0.7.1
 * Fix "Desccription" typo to "Description"
 

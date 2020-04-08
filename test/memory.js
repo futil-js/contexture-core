@@ -7,6 +7,7 @@ let exampleTypes = require('../src/exampleTypes')
 let movies = require('./imdb-data')
 
 describe('Memory Provider', () => {
+  let now = new Date()
   let getSavedSearch = async id =>
     ({
       AdamFavorites: {
@@ -75,6 +76,14 @@ describe('Memory Provider', () => {
             { movie: 'Game of Thrones', user: 'Hope' },
             { movie: 'The Lucky One', user: 'Hope' },
           ],
+        },
+      },
+      currentYearMovies: {
+        memory: {
+          records: _.flow(
+            _.take(5),
+            _.map(x => ({ ...x, released: now }))
+          )(movies),
         },
       },
     },
@@ -412,6 +421,36 @@ describe('Memory Provider', () => {
         2012,
         2013,
       ])
+    })
+    it('should handle date math', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'currentYearMovies',
+        join: 'and',
+        children: [
+          {
+            key: 'datefilter',
+            type: 'date',
+            field: 'released',
+            from: 'now/y',
+            to: 'now',
+            useDateMath: true,
+          },
+          {
+            key: 'results',
+            type: 'results',
+            page: 1,
+          },
+        ],
+      }
+      let result = await process(dsl)
+      let results = _.find({ key: 'results' }, result.children).context.results
+      let inspectedResults = _.flow(
+        _.map(x => x.released.getFullYear()),
+        _.uniq
+      )(results)
+      expect(inspectedResults).to.deep.equal([now.getFullYear()])
     })
     it('should handle results sorting', async () => {
       let dsl = {
