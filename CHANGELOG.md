@@ -1,3 +1,6 @@
+### 0.8.1
+* Fix issue with filter on provider-memory bool type
+
 ### 0.8.0
 * Add support for date math operations on provider-memory date type
 

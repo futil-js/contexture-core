@@ -77,7 +77,7 @@ module.exports = () => ({
   bool: {
     filter: ({ field, value }) =>
       _.conforms({
-        [field]: value,
+        [field]: _.isEqual(value),
       }),
   },
   facet: {
