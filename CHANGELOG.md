@@ -1,4 +1,4 @@
-0.8.2
+### 0.8.2
 * fix memory facet type to respect optionsFilter when provided
 
 ### 0.8.1
