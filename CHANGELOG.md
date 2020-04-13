@@ -1,5 +1,5 @@
 ### 0.8.2
-* fix memory facet type to respect optionsFilter when provided
+* Fix memory facet type to respect optionsFilter when provided
 
 ### 0.8.1
 * Fix issue with filter on provider-memory bool type
