@@ -37,6 +37,8 @@ let computeDateMathRange = (from, to) => {
   return { from, to }
 }
 
+let stringContains = match => _.flow(_.toString, F.matchAnyWord(match))
+
 module.exports = () => ({
   default: {
     validContext: () => true,
@@ -86,10 +88,15 @@ module.exports = () => ({
       _.conforms({
         [field]: toStringIncludes(_, values),
       }),
-    result({ field, size = 10 }, search) {
+    result({ field, size = 10, optionsFilter }, search) {
       let options = search(
         _.flow(
-          _.filter(field), // TODO: handle "missing" - by default this would say "undefined" when missing
+          _.filter(
+            _.flow(
+              _.get(field),
+              optionsFilter ? stringContains(optionsFilter) : F.exists
+            )
+          ), // TODO: handle "missing" - by default this would say "undefined" when missing
           _.countBy(field),
           _.toPairs,
           _.map(([name, count]) => ({ name, count })),
