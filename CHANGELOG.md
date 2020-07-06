@@ -1,3 +1,6 @@
+### 0.8.3
+* Bump duti
+
 ### 0.8.2
 * Fix memory facet type to respect optionsFilter when provided
 

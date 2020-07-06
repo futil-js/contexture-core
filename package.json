@@ -1,6 +1,6 @@
 {
   "name": "contexture",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "The Contexture (aka ContextTree) Core",
   "main": "src/index.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "babel-eslint": "^8.0.1",
     "chai": "^4.1.2",
     "chokidar-cli": "^1.2.0",
-    "duti": "^0.7.0",
+    "duti": "^0.15.2",
     "eslint": "^4.7.2",
     "eslint-config-smartprocure": "^1.0.0",
     "mocha": "^3.5.3",

@@ -56,7 +56,3 @@ typings/
 
 # dotenv environment variables file
 .env
-
-# Remove package-lock
-package-lock.json
-
