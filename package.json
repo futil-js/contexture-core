@@ -30,7 +30,6 @@
   "homepage": "https://github.com/smartprocure/contexture#readme",
   "dependencies": {
     "@elastic/datemath": "^5.0.3",
-    "danger": "^6.1.13",
     "date-fns": "^2.11.1",
     "futil": "^1.66.1",
     "lodash": "^4.17.4",
@@ -40,6 +39,7 @@
     "babel-eslint": "^8.0.1",
     "chai": "^4.1.2",
     "chokidar-cli": "^1.2.0",
+    "danger": "^6.1.13",
     "duti": "^0.15.2",
     "eslint": "^4.7.2",
     "eslint-config-smartprocure": "^1.0.0",
