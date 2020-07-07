@@ -8,11 +8,7 @@ let {
   endOfQuarter,
   startOfQuarter,
 } = require('date-fns/fp')
-
-// like `_.includes` but casts everything to string first
-let toStringIncludes = _.curry((item, list) =>
-  _.includes(_.toString(item), _.map(_.toString, list))
-)
+let { mapCountBy } = require('../utils')
 
 let dateMin = -8640000000000000
 let dateMax = 8640000000000000
@@ -86,18 +82,20 @@ module.exports = () => ({
     hasValue: node => _.size(node.values),
     filter: ({ field, values }) =>
       _.conforms({
-        [field]: toStringIncludes(_, values),
+        [field]: _.flow(
+          _.castArray,
+          _.intersectionWith(_.isEqual, values),
+          _.negate(_.isEmpty)
+        ),
       }),
     result({ field, size = 10, optionsFilter }, search) {
       let options = search(
         _.flow(
-          _.filter(
-            _.flow(
-              _.get(field),
-              optionsFilter ? stringContains(optionsFilter) : F.exists
-            )
-          ), // TODO: handle "missing" - by default this would say "undefined" when missing
-          _.countBy(field),
+          _.flatMap(field),
+          _.reject(_.isUndefined),
+          // NOTE: optionsFilter only supports string options
+          optionsFilter ? _.filter(stringContains(optionsFilter)) : _.identity,
+          mapCountBy(_.identity),
           _.toPairs,
           _.map(([name, count]) => ({ name, count })),
           _.orderBy('count', 'desc')

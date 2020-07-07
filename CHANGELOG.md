@@ -1,3 +1,7 @@
+### 0.9.0
+* Unwind facet results
+* Support non-primitive values when counting facet results
+
 ### 0.8.3
 * Bump duti
 
