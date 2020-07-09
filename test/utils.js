@@ -1,6 +1,5 @@
-let _ = require('lodash/fp')
 let { expect } = require('chai')
-let { getProvider, getRelevantFilters, mapCountBy } = require('../src/utils')
+let { getProvider, getRelevantFilters } = require('../src/utils')
 let DebugProvider = require('../src/provider-debug')
 
 describe('Utils', () => {
@@ -524,41 +523,6 @@ describe('Utils', () => {
       expect(result).to.deep.equal({
         and: ['cable', 'result'],
       })
-    })
-  })
-  describe('mapCountBy', () => {
-    it('works on primitives', () => {
-      expect(mapCountBy(_.identity, [1, 3, 3])).to.deep.equal(
-        new Map([
-          [1, 1],
-          [3, 2],
-        ])
-      )
-    })
-    it('works on objects', () => {
-      expect(
-        mapCountBy(_.identity, [{ a: 1 }, { a: 1 }, { b: 2 }])
-      ).to.deep.equal(
-        new Map([
-          [{ a: 1 }, 2],
-          [{ b: 2 }, 1],
-        ])
-      )
-    })
-    it('works with custom iteratee', () => {
-      expect(
-        mapCountBy('b', [{ a: 1, b: 1 }, { a: 1, b: 1 }, { b: 2 }])
-      ).to.deep.equal(
-        new Map([
-          [1, 2],
-          [2, 1],
-        ])
-      )
-    })
-    it('works with undefined keys', () => {
-      expect(mapCountBy('c', [{ a: 1 }, { a: 1 }, { b: 2 }])).to.deep.equal(
-        new Map([])
-      )
     })
   })
 })

@@ -68,26 +68,9 @@ let runTypeFunction = config => async (name, node, search) => {
   }
 }
 
-// A _.countBy that works on non-primitive types and returns an ES6 Map
-let mapCountBy = _.curry((iter, list) => {
-  let iteratee = _.iteratee(iter)
-  let counts = _.reduce(
-    (result, item) => {
-      let key = iteratee(item)
-      if (_.isUndefined(key)) return result
-      let json = JSON.stringify(key)
-      return _.set([json], _.getOr(0, [json], result) + 1, result)
-    },
-    {},
-    list
-  )
-  return new Map(F.mapIndexed((value, key) => [JSON.parse(key), value], counts))
-})
-
 module.exports = {
   Tree,
   getRelevantFilters,
   getProvider,
   runTypeFunction,
-  mapCountBy,
 }

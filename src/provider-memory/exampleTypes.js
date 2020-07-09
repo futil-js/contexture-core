@@ -8,7 +8,6 @@ let {
   endOfQuarter,
   startOfQuarter,
 } = require('date-fns/fp')
-let { mapCountBy } = require('../utils')
 
 let dateMin = -8640000000000000
 let dateMax = 8640000000000000
@@ -32,8 +31,6 @@ let computeDateMathRange = (from, to) => {
   }
   return { from, to }
 }
-
-let stringContains = match => _.flow(_.toString, F.matchAnyWord(match))
 
 module.exports = () => ({
   default: {
@@ -93,11 +90,11 @@ module.exports = () => ({
         _.flow(
           _.flatMap(field),
           _.reject(_.isUndefined),
-          // NOTE: optionsFilter only supports string options
-          optionsFilter ? _.filter(stringContains(optionsFilter)) : _.identity,
-          mapCountBy(_.identity),
+          _.map(JSON.stringify),
+          optionsFilter ? _.filter(F.matchAnyWord(optionsFilter)) : _.identity,
+          _.countBy(_.identity),
           _.toPairs,
-          _.map(([name, count]) => ({ name, count })),
+          _.map(([name, count]) => ({ name: JSON.parse(name), count })),
           _.orderBy('count', 'desc')
         )
       )
