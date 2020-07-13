@@ -1,6 +1,8 @@
 ### 0.9.0
-* Unwind facet results
-* Support non-primitive values when counting facet results
+* Memory facet type
+    * Unwind results
+    * Support non-primitive values when counting results
+    * Preserve types of results when filtering them
 
 ### 0.8.3
 * Bump duti
