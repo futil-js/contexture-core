@@ -1,6 +1,6 @@
 {
   "name": "contexture",
-  "version": "0.8.3",
+  "version": "0.9.0",
   "description": "The Contexture (aka ContextTree) Core",
   "main": "src/index.js",
   "scripts": {
@@ -45,5 +45,10 @@
     "eslint-config-smartprocure": "^1.0.0",
     "mocha": "^3.5.3",
     "prettier": "^1.7.2"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false,
+    "trailingComma": "es5"
   }
 }
