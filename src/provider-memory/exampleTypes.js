@@ -153,7 +153,9 @@ module.exports = () => ({
       results: search(
         _.flow(
           _.orderBy(sortField, sortDir),
-          _.slice((page - 1) * pageSize, page * pageSize)
+          pageSize > 0
+            ? _.slice((page - 1) * pageSize, page * pageSize)
+            : _.identity
         )
       ),
     }),

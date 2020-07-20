@@ -3,6 +3,7 @@
     * Unwind results
     * Support non-primitive values when counting results
     * Preserve types of results when filtering them
+* Memory results type: do not paginate if pageSize = 0
 
 ### 0.8.3
 * Bump duti
