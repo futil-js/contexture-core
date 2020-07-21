@@ -78,13 +78,12 @@ module.exports = () => ({
   facet: {
     hasValue: node => _.size(node.values),
     filter: ({ field, values }) =>
-      _.conforms({
-        [field]: _.flow(
-          _.castArray,
-          _.intersectionWith(_.isEqual, values),
-          _.negate(_.isEmpty)
-        ),
-      }),
+      _.flow(
+        _.get(field),
+        _.castArray,
+        _.intersectionWith(_.isEqual, values),
+        _.negate(_.isEmpty)
+      ),
     result({ field, size = 10, optionsFilter }, search) {
       let options = search(
         _.flow(
