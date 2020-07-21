@@ -1,3 +1,6 @@
+### 0.9.1
+* Memory facet type: handle dotted paths
+
 ### 0.9.0
 * Memory facet type
     * Unwind results
