@@ -1,5 +1,18 @@
-### 0.8.3
+### 0.9.2
 * Fix memory exists to work & add test cases for exists & bool types
+
+### 0.9.1
+* Memory facet type: handle dotted paths
+
+### 0.9.0
+* Memory facet type
+    * Unwind results
+    * Support non-primitive values when counting results
+    * Preserve types of results when filtering them
+* Memory results type: do not paginate if pageSize = 0
+
+### 0.8.3
+* Bump duti
 
 ### 0.8.2
 * Fix memory facet type to respect optionsFilter when provided

@@ -9,11 +9,6 @@ let {
   startOfQuarter,
 } = require('date-fns/fp')
 
-// like `_.includes` but casts everything to string first
-let toStringIncludes = _.curry((item, list) =>
-  _.includes(_.toString(item), _.map(_.toString, list))
-)
-
 let dateMin = -8640000000000000
 let dateMax = 8640000000000000
 
@@ -36,8 +31,6 @@ let computeDateMathRange = (from, to) => {
   }
   return { from, to }
 }
-
-let stringContains = match => _.flow(_.toString, F.matchAnyWord(match))
 
 module.exports = () => ({
   default: {
@@ -89,21 +82,22 @@ module.exports = () => ({
   facet: {
     hasValue: node => _.size(node.values),
     filter: ({ field, values }) =>
-      _.conforms({
-        [field]: toStringIncludes(_, values),
-      }),
+      _.flow(
+        _.get(field),
+        _.castArray,
+        _.intersectionWith(_.isEqual, values),
+        _.negate(_.isEmpty)
+      ),
     result({ field, size = 10, optionsFilter }, search) {
       let options = search(
         _.flow(
-          _.filter(
-            _.flow(
-              _.get(field),
-              optionsFilter ? stringContains(optionsFilter) : F.exists
-            )
-          ), // TODO: handle "missing" - by default this would say "undefined" when missing
-          _.countBy(field),
+          _.flatMap(field),
+          _.reject(_.isUndefined),
+          _.map(JSON.stringify),
+          optionsFilter ? _.filter(F.matchAnyWord(optionsFilter)) : _.identity,
+          _.countBy(_.identity),
           _.toPairs,
-          _.map(([name, count]) => ({ name, count })),
+          _.map(([name, count]) => ({ name: JSON.parse(name), count })),
           _.orderBy('count', 'desc')
         )
       )
@@ -162,7 +156,9 @@ module.exports = () => ({
       results: search(
         _.flow(
           _.orderBy(sortField, sortDir),
-          _.slice((page - 1) * pageSize, page * pageSize)
+          pageSize > 0
+            ? _.slice((page - 1) * pageSize, page * pageSize)
+            : _.identity
         )
       ),
     }),

@@ -71,6 +71,25 @@ describe('Memory Provider', () => {
             { a: false },
             { a: 1 },
             { a: 0 },
+            { a: '1' }
+          ]
+        }
+      },
+      arrayFacets: {
+        memory: {
+          records: [
+            { b: 1, c: [1, 2] },
+            { b: 2, c: [1, 2] },
+            { b: 3, c: [1, 2] },
+          ],
+        },
+      },
+      arrayOfObjectsFacets: {
+        memory: {
+          records: [
+            { b: 1, c: [{ a: 1 }, { b: 1 }] },
+            { b: 2, c: [{ a: 1 }, { b: 1 }] },
+            { b: 3, c: [{ a: 1 }, { b: 1 }] },
           ],
         },
       },
@@ -146,13 +165,13 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       expect(result.children[0].context).to.deep.equal({
         cardinality: 1,
-        options: [{ name: '1', count: 2 }],
+        options: [{ name: 1, count: 2 }],
       })
       expect(result.children[1].context).to.deep.equal({
         cardinality: 2,
         options: [
-          { name: '1', count: 2 },
-          { name: '2', count: 1 },
+          { name: 1, count: 2 },
+          { name: 2, count: 1 },
         ],
       })
       expect(result.children[2].context).to.deep.equal({
@@ -195,17 +214,17 @@ describe('Memory Provider', () => {
       expect(result.children[0].context).to.deep.equal({
         cardinality: 3,
         options: [
-          { name: '1', count: 2 },
-          { name: '2', count: 1 },
-          { name: '3', count: 1 },
+          { name: 1, count: 2 },
+          { name: 2, count: 1 },
+          { name: 3, count: 1 },
         ],
       })
       expect(result.children[1].context).to.deep.equal({
         cardinality: 3,
         options: [
-          { name: '1', count: 2 },
-          { name: '2', count: 1 },
-          { name: '3', count: 1 },
+          { name: 1, count: 2 },
+          { name: 2, count: 1 },
+          { name: 3, count: 1 },
         ],
       })
       expect(result.children[2].context).to.deep.equal({
@@ -317,6 +336,46 @@ describe('Memory Provider', () => {
         totalRecords: 2,
       })
     })
+    it('should unwind array facets', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'arrayFacets',
+        join: 'and',
+        children: [
+          {
+            key: 'filter',
+            type: 'facet',
+            field: 'c',
+          },
+        ],
+      }
+      let result = await process(dsl)
+      expect(result.children[0].context.options).to.deep.equal([
+        { name: 1, count: 3 },
+        { name: 2, count: 3 },
+      ])
+    })
+    it('should unwind array of objects facets', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'arrayOfObjectsFacets',
+        join: 'and',
+        children: [
+          {
+            key: 'filter',
+            type: 'facet',
+            field: 'c',
+          },
+        ],
+      }
+      let result = await process(dsl)
+      expect(result.children[0].context.options).to.deep.equal([
+        { name: { a: 1 }, count: 3 },
+        { name: { b: 1 }, count: 3 },
+      ])
+    })
   })
 
   describe('exists test cases', () => {
@@ -413,8 +472,9 @@ describe('Memory Provider', () => {
           { a: false },
           { a: 1 },
           { a: 0 },
+          { a: '1' },
         ],
-        totalRecords: 8,
+        totalRecords: 9,
       })
     })
     it('bool (true) should work', async () => {
