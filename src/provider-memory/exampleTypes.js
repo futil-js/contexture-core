@@ -66,11 +66,8 @@ module.exports = () => ({
   exists: {
     hasValue: ({ value }) => _.isBoolean(value),
     filter: ({ field, value }) =>
-    // No _.conforms here since it does not get invoked on props which do not exist
-      _.flow(
-        _.get(field),
-        value ? F.isNotNil : _.isNil
-      )
+      // No _.conforms here since it does not get invoked on props which do not exist
+      _.flow(_.get(field), value ? F.isNotNil : _.isNil),
   },
   bool: {
     hasValue: ({ value }) => _.isBoolean(value),
