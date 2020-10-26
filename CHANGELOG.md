@@ -1,3 +1,6 @@
+### 0.8.3
+* Fix memory exists to work & add test cases for exists & bool types
+
 ### 0.8.2
 * Fix memory facet type to respect optionsFilter when provided
 
