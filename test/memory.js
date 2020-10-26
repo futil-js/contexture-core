@@ -43,11 +43,7 @@ describe('Memory Provider', () => {
     schemas: {
       test: {
         memory: {
-          records: [
-            { a: 1, b: 1 },
-            { a: 1, b: 3 },
-            { a: 2, b: 2 },
-          ],
+          records: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }, { a: 3 }],
         },
       },
       test2: {
@@ -56,6 +52,21 @@ describe('Memory Provider', () => {
             { b: 1, c: 1 },
             { b: 2, c: 2 },
             { b: 3, c: 1 },
+          ],
+        },
+      },
+      bool: {
+        memory: {
+          records: [
+            { a: true, b: true },
+            { a: true, b: false },
+            { a: false, b: true },
+            { a: false, b: false },
+            { a: true },
+            { a: false },
+            { a: 1 },
+            { a: 0 },
+            { a: '1' },
           ],
         },
       },
@@ -196,26 +207,24 @@ describe('Memory Provider', () => {
       }
       let result = await process(dsl)
       expect(result.children[0].context).to.deep.equal({
-        cardinality: 2,
+        cardinality: 3,
         options: [
           { name: 1, count: 2 },
           { name: 2, count: 1 },
+          { name: 3, count: 1 },
         ],
       })
       expect(result.children[1].context).to.deep.equal({
-        cardinality: 2,
+        cardinality: 3,
         options: [
           { name: 1, count: 2 },
           { name: 2, count: 1 },
+          { name: 3, count: 1 },
         ],
       })
       expect(result.children[2].context).to.deep.equal({
-        results: [
-          { a: 1, b: 1 },
-          { a: 1, b: 3 },
-          { a: 2, b: 2 },
-        ],
-        totalRecords: 3,
+        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }, { a: 3 }],
+        totalRecords: 4,
       })
     })
     it('should handle savedSearch', async () => {
@@ -356,6 +365,115 @@ describe('Memory Provider', () => {
         { name: { a: 1 }, count: 3 },
         { name: { b: 1 }, count: 3 },
       ])
+    })
+  })
+
+  describe('exists test cases', () => {
+    let dsl = {
+      key: 'root',
+      type: 'group',
+      schema: 'test',
+      join: 'and',
+      children: [
+        {
+          key: 'filter',
+          type: 'exists',
+          field: 'a',
+        },
+        {
+          key: 'results',
+          type: 'results',
+          config: {
+            page: 1,
+          },
+        },
+      ],
+    }
+    it('exists (null) should work', async () => {
+      dsl.children[0].values = null
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }, { a: 3 }],
+        totalRecords: 4,
+      })
+    })
+    it('exists (true) should work', async () => {
+      dsl.children[0].value = true
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }, { a: 3 }],
+        totalRecords: 4,
+      })
+    })
+    it('exists (false) should work', async () => {
+      dsl.children[0].field = 'b'
+      dsl.children[0].value = false
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [{ a: 3 }],
+        totalRecords: 1,
+      })
+    })
+  })
+
+  describe('bool test cases', () => {
+    let dsl = {
+      key: 'root',
+      type: 'group',
+      schema: 'bool',
+      join: 'and',
+      children: [
+        {
+          key: 'filter',
+          type: 'bool',
+          field: 'a',
+        },
+        {
+          key: 'results',
+          type: 'results',
+          config: {
+            page: 1,
+          },
+        },
+      ],
+    }
+    it('bool (null) should work', async () => {
+      dsl.children[0].values = null
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [
+          { a: true, b: true },
+          { a: true, b: false },
+          { a: false, b: true },
+          { a: false, b: false },
+          { a: true },
+          { a: false },
+          { a: 1 },
+          { a: 0 },
+          { a: '1' },
+        ],
+        totalRecords: 9,
+      })
+    })
+    it('bool (true) should work', async () => {
+      dsl.children[0].value = true
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [{ a: true, b: true }, { a: true, b: false }, { a: true }],
+        totalRecords: 3,
+      })
+    })
+    it('bool (false) should work', async () => {
+      dsl.children[0].field = 'b'
+      dsl.children[0].value = false
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [
+          { a: true, b: false },
+          { a: false, b: false },
+        ],
+        totalRecords: 2,
+      })
     })
   })
 

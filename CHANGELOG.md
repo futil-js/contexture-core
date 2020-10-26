@@ -1,3 +1,6 @@
+### 0.9.2
+* Fix memory exists to work & add test cases for exists & bool types
+
 ### 0.9.1
 * Memory facet type: handle dotted paths
 
