@@ -6,6 +6,14 @@ let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
 let exampleTypes = require('../src/exampleTypes')
 let movies = require('./imdb-data')
 
+let getResultsNode = () => ({
+  key: 'results',
+  type: 'results',
+  config: {
+    page: 1,
+  },
+})
+
 describe('Memory Provider', () => {
   let now = new Date()
   let getSavedSearch = async id =>
@@ -148,13 +156,7 @@ describe('Memory Provider', () => {
             field: 'a',
             values: [1],
           },
-          {
-            key: 'results',
-            type: 'results',
-            config: {
-              page: 1,
-            },
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -196,13 +198,7 @@ describe('Memory Provider', () => {
             field: 'a',
             values: [1],
           },
-          {
-            key: 'results',
-            type: 'results',
-            config: {
-              page: 1,
-            },
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -227,6 +223,29 @@ describe('Memory Provider', () => {
         totalRecords: 4,
       })
     })
+    it('should handle EXCLUDE mode', async () => {
+      let dsl = {
+        key: 'root',
+        type: 'group',
+        schema: 'test',
+        join: 'and',
+        children: [
+          {
+            key: 'filter',
+            type: 'facet',
+            mode: 'exclude',
+            field: 'a',
+            values: [1, 2],
+          },
+          getResultsNode(),
+        ],
+      }
+      let result = await process(dsl)
+      expect(result.children[1].context).to.deep.equal({
+        results: [{ a: 3 }],
+        totalRecords: 1,
+      })
+    })
     it('should handle savedSearch', async () => {
       let dsl = {
         key: 'root',
@@ -249,20 +268,11 @@ describe('Memory Provider', () => {
                   field: 'a',
                   values: [1],
                 },
-                {
-                  key: 'results',
-                  type: 'results',
-                  config: {
-                    page: 1,
-                  },
-                },
+                getResultsNode(),
               ],
             },
           },
-          {
-            key: 'results',
-            type: 'results',
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -298,23 +308,11 @@ describe('Memory Provider', () => {
                   field: 'a',
                   values: [1],
                 },
-                {
-                  key: 'results',
-                  type: 'results',
-                  config: {
-                    page: 1,
-                  },
-                },
+                getResultsNode(),
               ],
             },
           },
-          {
-            key: 'results',
-            type: 'results',
-            config: {
-              page: 1,
-            },
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -380,13 +378,7 @@ describe('Memory Provider', () => {
           type: 'exists',
           field: 'a',
         },
-        {
-          key: 'results',
-          type: 'results',
-          config: {
-            page: 1,
-          },
-        },
+        getResultsNode(),
       ],
     }
     it('exists (null) should work', async () => {
@@ -428,13 +420,7 @@ describe('Memory Provider', () => {
           type: 'bool',
           field: 'a',
         },
-        {
-          key: 'results',
-          type: 'results',
-          config: {
-            page: 1,
-          },
-        },
+        getResultsNode(),
       ],
     }
     it('bool (null) should work', async () => {
@@ -491,11 +477,7 @@ describe('Memory Provider', () => {
             field: 'rated',
             values: ['R', 'PG-13'],
           },
-          {
-            key: 'results',
-            type: 'results',
-            page: 1,
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -546,11 +528,7 @@ describe('Memory Provider', () => {
             value: 'game',
             operator: 'startsWith',
           },
-          {
-            key: 'results',
-            type: 'results',
-            page: 1,
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -575,11 +553,7 @@ describe('Memory Provider', () => {
             field: 'released',
             from: '2013-01-01',
           },
-          {
-            key: 'results',
-            type: 'results',
-            page: 1,
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -613,11 +587,7 @@ describe('Memory Provider', () => {
             to: 'now',
             useDateMath: true,
           },
-          {
-            key: 'results',
-            type: 'results',
-            page: 1,
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -683,13 +653,7 @@ describe('Memory Provider', () => {
               ],
             },
           },
-          {
-            key: 'results',
-            type: 'results',
-            config: {
-              page: 1,
-            },
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -714,10 +678,7 @@ describe('Memory Provider', () => {
             foreignField: 'movie',
             searchId: 'AdamFavorites',
           },
-          {
-            key: 'results',
-            type: 'results',
-          },
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -772,11 +733,7 @@ describe('Memory Provider', () => {
             field: 'rated',
             values: ['R', 'PG-13'],
           },
-          {
-            key: 'results',
-            type: 'results',
-            page: 1,
-          },
+          getResultsNode(),
         ],
       }
       let results = []

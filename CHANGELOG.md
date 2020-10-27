@@ -1,3 +1,6 @@
+### 0.9.3
+* Fix memory facet `exclude` mode & add test
+
 ### 0.9.2
 * Fix memory exists to work & add test cases for exists & bool types
 
