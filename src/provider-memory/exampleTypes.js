@@ -78,11 +78,13 @@ module.exports = () => ({
   },
   facet: {
     hasValue: node => _.size(node.values),
-    filter: ({ field, values }) =>
+    filter: ({ field, values, mode = 'include' }) =>
       _.flow(
         _.get(field),
         _.castArray,
-        _.intersectionWith(_.isEqual, values),
+        mode === 'include'
+          ? _.intersectionWith(_.isEqual, values)
+          : _.differenceWith(_.isEqual, _, values),
         _.negate(_.isEmpty)
       ),
     result({ field, size = 10, optionsFilter }, search) {
