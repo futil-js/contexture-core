@@ -156,7 +156,7 @@ describe('Memory Provider', () => {
             field: 'a',
             values: [1],
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -198,7 +198,7 @@ describe('Memory Provider', () => {
             field: 'a',
             values: [1],
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -237,7 +237,7 @@ describe('Memory Provider', () => {
             field: 'a',
             values: [1, 2],
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -268,11 +268,11 @@ describe('Memory Provider', () => {
                   field: 'a',
                   values: [1],
                 },
-                getResultsNode()
+                getResultsNode(),
               ],
             },
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -308,11 +308,11 @@ describe('Memory Provider', () => {
                   field: 'a',
                   values: [1],
                 },
-                getResultsNode()
+                getResultsNode(),
               ],
             },
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -378,7 +378,7 @@ describe('Memory Provider', () => {
           type: 'exists',
           field: 'a',
         },
-        getResultsNode()
+        getResultsNode(),
       ],
     }
     it('exists (null) should work', async () => {
@@ -420,7 +420,7 @@ describe('Memory Provider', () => {
           type: 'bool',
           field: 'a',
         },
-        getResultsNode()
+        getResultsNode(),
       ],
     }
     it('bool (null) should work', async () => {
@@ -477,7 +477,7 @@ describe('Memory Provider', () => {
             field: 'rated',
             values: ['R', 'PG-13'],
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -528,7 +528,7 @@ describe('Memory Provider', () => {
             value: 'game',
             operator: 'startsWith',
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -553,7 +553,7 @@ describe('Memory Provider', () => {
             field: 'released',
             from: '2013-01-01',
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -587,7 +587,7 @@ describe('Memory Provider', () => {
             to: 'now',
             useDateMath: true,
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -653,7 +653,7 @@ describe('Memory Provider', () => {
               ],
             },
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -678,7 +678,7 @@ describe('Memory Provider', () => {
             foreignField: 'movie',
             searchId: 'AdamFavorites',
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let result = await process(dsl)
@@ -733,7 +733,7 @@ describe('Memory Provider', () => {
             field: 'rated',
             values: ['R', 'PG-13'],
           },
-          getResultsNode()
+          getResultsNode(),
         ],
       }
       let results = []
