@@ -1,4 +1,3 @@
-
 let _ = require('lodash/fp')
 let { expect } = require('chai')
 let moment = require('moment-timezone')
@@ -130,7 +129,7 @@ let testRange = async ({ range = 'exact', from, to, expected }) => {
   let tree = _.cloneDeep(dsl)
   tree.children[0] = { ...tree.children[0], range, from, to }
   let response = await process(tree)
-  let results = _.map(key => _.find({key}, dates), expected)
+  let results = _.map(key => _.find({ key }, dates), expected)
   expect(response.children[1].context).to.deep.equal({
     results,
     totalRecords: results.length,
@@ -141,37 +140,93 @@ describe('Date example type test cases', () => {
   it('allFutureDates', async () =>
     testRange({
       range: 'allFutureDates',
-      expected: ['tomorrow', 'nextMonth', 'next6Months', 'next5Years']
+      expected: ['tomorrow', 'nextMonth', 'next6Months', 'next5Years'],
     }))
   it('allPastDates', async () =>
     testRange({
       range: 'allPastDates',
-      expected: ['last15Months', 'lastMonth', 'last3Days', 'last6Days', 'last20Days', 'last6Months', 'last10Weeks', 'last20Months', 'last5Years']
+      expected: [
+        'last15Months',
+        'lastMonth',
+        'last3Days',
+        'last6Days',
+        'last20Days',
+        'last6Months',
+        'last10Weeks',
+        'last20Months',
+        'last5Years',
+      ],
     }))
   it('last3Days', async () => testRange({ range: 'last3Days', expected: [] }))
   it('last7Days', async () =>
     testRange({ range: 'last7Days', expected: ['last3Days', 'last6Days'] }))
   it('last90Days', async () =>
-    testRange({ range: 'last90Days', expected: ['lastMonth', 'last3Days', 'last6Days', 'last20Days', 'last10Weeks'] }))
+    testRange({
+      range: 'last90Days',
+      expected: [
+        'lastMonth',
+        'last3Days',
+        'last6Days',
+        'last20Days',
+        'last10Weeks',
+      ],
+    }))
   it('lastCalendarMonth', async () =>
     testRange({ range: 'lastCalendarMonth', expected: ['lastMonth'] }))
   it('thisCalendarYear', async () =>
-    testRange({ range: 'thisCalendarYear', expected: ['lastMonth', 'last3Days', 'last6Days', 'last20Days', 'last6Months', 'last10Weeks', 'tomorrow', 'nextMonth' ] }))
+    testRange({
+      range: 'thisCalendarYear',
+      expected: [
+        'lastMonth',
+        'last3Days',
+        'last6Days',
+        'last20Days',
+        'last6Months',
+        'last10Weeks',
+        'tomorrow',
+        'nextMonth',
+      ],
+    }))
   it('nextCalendarYear', async () =>
     testRange({ range: 'nextCalendarYear', expected: ['next6Months'] })),
-  it('next6Months', async () =>
-    testRange({ range: 'next6Months', expected: ['tomorrow', 'nextMonth'] }))
+    it('next6Months', async () =>
+      testRange({ range: 'next6Months', expected: ['tomorrow', 'nextMonth'] }))
   it('next36Months', async () =>
-    testRange({ range: 'next36Months', expected: ['tomorrow', 'nextMonth', 'next6Months'] }))
+    testRange({
+      range: 'next36Months',
+      expected: ['tomorrow', 'nextMonth', 'next6Months'],
+    }))
   it('exact FROM with open TO', async () =>
     testRange({
       from: moment()
         .subtract(65, 'days')
         .format(),
-      expected: ['lastMonth', 'last3Days', 'last6Days', 'last20Days', 'tomorrow', 'nextMonth', 'next6Months', 'next5Years'],
+      expected: [
+        'lastMonth',
+        'last3Days',
+        'last6Days',
+        'last20Days',
+        'tomorrow',
+        'nextMonth',
+        'next6Months',
+        'next5Years',
+      ],
     }))
   it('exact TO with open FROM', async () =>
-    testRange({ to: new Date(), expected: ['last15Months', 'lastMonth', 'last3Days', 'last6Days', 'last20Days', 'last6Months', 'last10Weeks', 'last20Months', 'last5Years'] }))
+    testRange({
+      to: new Date(),
+      expected: [
+        'last15Months',
+        'lastMonth',
+        'last3Days',
+        'last6Days',
+        'last20Days',
+        'last6Months',
+        'last10Weeks',
+        'last20Months',
+        'last5Years',
+      ],
+    }))
   it('exact FROM & TO', async () =>
     testRange({
       from: moment()
