@@ -7,19 +7,72 @@ let provider = require('../src/provider-memory')
 let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
 
 let dates = [
-  { date: moment().subtract(15, 'months').format() },
-  { date: moment().subtract(1, 'months').format() },
-  { date: moment().subtract(3, 'days').format() },
-  { date: moment().subtract(6, 'days').format() },
-  { date: moment().subtract(20, 'days').format() },
-  { date: moment().subtract(6, 'months').format() },
-  { date: moment().subtract(10, 'months').toDate().getTime() },
-  { date: moment().subtract(20, 'months').format('LLLL') },
-  { date: moment().subtract(5, 'years').format('MM/DD/YYYY') },
-  { date: moment().add(1, 'days').format() },
-  { date: moment().add(1, 'months').format() },
-  { date: moment().add(6, 'months').format() },
-  { date: moment().add(5, 'years').format() },
+  {
+    date: moment()
+      .subtract(15, 'months')
+      .format(),
+  },
+  {
+    date: moment()
+      .subtract(1, 'months')
+      .format(),
+  },
+  {
+    date: moment()
+      .subtract(3, 'days')
+      .format(),
+  },
+  {
+    date: moment()
+      .subtract(6, 'days')
+      .format(),
+  },
+  {
+    date: moment()
+      .subtract(20, 'days')
+      .format(),
+  },
+  {
+    date: moment()
+      .subtract(6, 'months')
+      .format(),
+  },
+  {
+    date: moment()
+      .subtract(10, 'months')
+      .toDate()
+      .getTime(),
+  },
+  {
+    date: moment()
+      .subtract(20, 'months')
+      .format('LLLL'),
+  },
+  {
+    date: moment()
+      .subtract(5, 'years')
+      .format('MM/DD/YYYY'),
+  },
+  {
+    date: moment()
+      .add(1, 'days')
+      .format(),
+  },
+  {
+    date: moment()
+      .add(1, 'months')
+      .format(),
+  },
+  {
+    date: moment()
+      .add(6, 'months')
+      .format(),
+  },
+  {
+    date: moment()
+      .add(5, 'years')
+      .format(),
+  },
 ]
 
 let dsl = {
