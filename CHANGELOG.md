@@ -1,3 +1,6 @@
+### 0.9.4
+* Fix memory date type and add tests
+
 ### 0.9.3
 * Fix memory facet `exclude` mode & add test
 

@@ -1,67 +1,21 @@
 let _ = require('lodash/fp')
 let F = require('futil')
-let datemath = require('@elastic/datemath')
-let {
-  endOfDay,
-  subQuarters,
-  addQuarters,
-  endOfQuarter,
-  startOfQuarter,
-} = require('date-fns/fp')
-
-let dateMin = -8640000000000000
-let dateMax = 8640000000000000
-
-let computeDateMathRange = (from, to) => {
-  let now = Date.now()
-  if (from === 'thisQuarter') {
-    from = startOfQuarter(now)
-    to = endOfQuarter(from)
-  } else if (from === 'lastQuarter') {
-    from = _.flow(startOfQuarter, subQuarters(1))(now)
-    to = endOfQuarter(from)
-  } else if (from === 'nextQuarter') {
-    from = _.flow(startOfQuarter, addQuarters(1))(now)
-    to = endOfQuarter(from)
-  }
-  from = datemath.parse(from).toDate()
-  to = datemath.parse(to).toDate()
-  if (to.getTime() < dateMax) {
-    to = endOfDay(to)
-  }
-  return { from, to }
-}
+let date = require('./date')
+let results = require('./results')
 
 module.exports = () => ({
   default: {
     validContext: () => true,
     hasValue: () => true,
   },
+  date,
+  results,
   number: {
     hasValue: node => F.isNotNil(node.min) || F.isNotNil(node.max),
     filter: ({ field, min = -Infinity, max = Infinity }) =>
       _.conforms({
         [field]: _.inRange(min, max),
       }),
-  },
-  date: {
-    hasValue: node => F.isNotNil(node.from) || F.isNotNil(node.to),
-    filter({ field, from = dateMin, to = dateMax, useDateMath }) {
-      if (useDateMath) {
-        if (!from) {
-          from = new Date(dateMin)
-        }
-        if (!to) {
-          to = new Date(dateMax)
-        }
-        let computeDates = computeDateMathRange(from, to)
-        from = computeDates.from
-        to = computeDates.to
-      }
-      return _.conforms({
-        [field]: _.inRange(new Date(from), new Date(to)),
-      })
-    },
   },
   exists: {
     hasValue: ({ value }) => _.isBoolean(value),
@@ -144,22 +98,6 @@ module.exports = () => ({
       max: search(_.maxBy(field)),
       min: search(_.minBy(field)),
       sum: search(_.sumBy(field)),
-    }),
-  },
-  results: {
-    result: (
-      { pageSize = 10, page = 1, sortField, sortDir = 'desc' },
-      search
-    ) => ({
-      totalRecords: search(_.size),
-      results: search(
-        _.flow(
-          _.orderBy(sortField, sortDir),
-          pageSize > 0
-            ? _.slice((page - 1) * pageSize, page * pageSize)
-            : _.identity
-        )
-      ),
     }),
   },
 })
