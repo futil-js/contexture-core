@@ -99,7 +99,7 @@ module.exports = {
     timezone = 'UTC',
     ...context
   }) {
-    let { from, to } = _.includes(range, ['exact', 'allDates'])
+    let { from, to } = range === 'exact'
       ? context
       : rollingRangeToDates(range, timezone)
 
