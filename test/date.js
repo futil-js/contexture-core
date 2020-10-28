@@ -6,23 +6,20 @@ let Contexture = require('../src/index')
 let provider = require('../src/provider-memory')
 let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
 
-let timezone = 'America/New_York'
-let m = () => moment().tz(timezone, true)
-
 let dates = [
-  { date: m().subtract(15, 'months').format() },
-  { date: m().subtract(1, 'months').format() },
-  { date: m().subtract(3, 'days').format() },
-  { date: m().subtract(6, 'days').format() },
-  { date: m().subtract(20, 'days').format() },
-  { date: m().subtract(6, 'months').format() },
-  { date: m().subtract(10, 'months').toDate().getTime() },
-  { date: m().subtract(20, 'months').format('LLLL') },
-  { date: m().subtract(5, 'years').format('MM/DD/YYYY') },
-  { date: m().add(1, 'days').format() },
-  { date: m().add(1, 'months').format() },
-  { date: m().add(6, 'months').format() },
-  { date: m().add(5, 'years').format() },
+  { date: moment().subtract(15, 'months').format() },
+  { date: moment().subtract(1, 'months').format() },
+  { date: moment().subtract(3, 'days').format() },
+  { date: moment().subtract(6, 'days').format() },
+  { date: moment().subtract(20, 'days').format() },
+  { date: moment().subtract(6, 'months').format() },
+  { date: moment().subtract(10, 'months').toDate().getTime() },
+  { date: moment().subtract(20, 'months').format('LLLL') },
+  { date: moment().subtract(5, 'years').format('MM/DD/YYYY') },
+  { date: moment().add(1, 'days').format() },
+  { date: moment().add(1, 'months').format() },
+  { date: moment().add(6, 'months').format() },
+  { date: moment().add(5, 'years').format() },
 ]
 
 let dsl = {
@@ -32,10 +29,8 @@ let dsl = {
   join: 'and',
   children: [
     {
-      key: 'date-filter',
       type: 'date',
       field: 'date',
-      timezone,
     },
     {
       key: 'results',
