@@ -137,7 +137,7 @@ let testRange = async ({ range = 'exact', from, to, expected }) => {
   })
 }
 
-describe.only('Date example type test cases', () => {
+describe('Date example type test cases', () => {
   it('allFutureDates', async () =>
     testRange({
       range: 'allFutureDates',
