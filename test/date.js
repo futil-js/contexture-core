@@ -6,86 +6,23 @@ let Contexture = require('../src/index')
 let provider = require('../src/provider-memory')
 let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
 
+let timezone = 'America/New_York'
+let m = () => moment().tz(timezone, true)
+
 let dates = [
-  {
-    index: 0,
-    date: moment()
-      .subtract(15, 'months')
-      .format(),
-  },
-  {
-    index: 1,
-    date: moment()
-      .subtract(1, 'months')
-      .format(),
-  },
-  {
-    index: 2,
-    date: moment()
-      .subtract(3, 'days')
-      .format(),
-  },
-  {
-    index: 3,
-    date: moment()
-      .subtract(6, 'days')
-      .format(),
-  },
-  {
-    index: 4,
-    date: moment()
-      .subtract(20, 'days')
-      .format(),
-  },
-  {
-    index: 5,
-    date: moment()
-      .subtract(6, 'months')
-      .format(),
-  },
-  {
-    index: 6,
-    date: moment()
-      .subtract(10, 'months')
-      .toDate()
-      .getTime(),
-  },
-  {
-    index: 7,
-    date: moment()
-      .subtract(20, 'months')
-      .format('LLLL'),
-  },
-  {
-    index: 8,
-    date: moment()
-      .subtract(5, 'years')
-      .format('MM/DD/YYYY'),
-  },
-  {
-    index: 9,
-    date: moment()
-      .add(1, 'days')
-      .format(),
-  },
-  {
-    index: 10,
-    date: moment()
-      .add(1, 'months')
-      .format(),
-  },
-  {
-    index: 11,
-    date: moment()
-      .add(6, 'months')
-      .format(),
-  },
-  {
-    index: 12,
-    date: moment()
-      .add(5, 'years')
-      .format(),
-  },
+  { date: m().subtract(15, 'months').format() },
+  { date: m().subtract(1, 'months').format() },
+  { date: m().subtract(3, 'days').format() },
+  { date: m().subtract(6, 'days').format() },
+  { date: m().subtract(20, 'days').format() },
+  { date: m().subtract(6, 'months').format() },
+  { date: m().subtract(10, 'months').toDate().getTime() },
+  { date: m().subtract(20, 'months').format('LLLL') },
+  { date: m().subtract(5, 'years').format('MM/DD/YYYY') },
+  { date: m().add(1, 'days').format() },
+  { date: m().add(1, 'months').format() },
+  { date: m().add(6, 'months').format() },
+  { date: m().add(5, 'years').format() },
 ]
 
 let dsl = {
@@ -98,7 +35,7 @@ let dsl = {
       key: 'date-filter',
       type: 'date',
       field: 'date',
-      timezone: 'America/New_York',
+      timezone,
     },
     {
       key: 'results',
