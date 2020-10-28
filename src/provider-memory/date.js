@@ -92,7 +92,13 @@ let hasValue = ({ from, to, range }) =>
 module.exports = {
   hasValue,
   // NOTE: timezone is only used for rolling dates
-  filter({ field, range, dateType = 'timestamp', timezone = 'UTC', ...context }) {
+  filter({
+    field,
+    range,
+    dateType = 'timestamp',
+    timezone = 'UTC',
+    ...context
+  }) {
     let { from, to } = _.includes(range, ['exact', 'allDates'])
       ? context
       : rollingRangeToDates(range, timezone)
@@ -106,10 +112,6 @@ module.exports = {
       to = dateMax
     }
 
-    return _.flow(
-      _.get(field),
-      format,
-      _.inRange(format(from), format(to))
-    )
+    return _.flow(_.get(field), format, _.inRange(format(from), format(to)))
   },
 }
