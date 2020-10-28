@@ -99,9 +99,8 @@ module.exports = {
     timezone = 'UTC',
     ...context
   }) {
-    let { from, to } = range === 'exact'
-      ? context
-      : rollingRangeToDates(range, timezone)
+    let { from, to } =
+      range === 'exact' ? context : rollingRangeToDates(range, timezone)
 
     let format = dateTypeToFormatFn[dateType]
 
