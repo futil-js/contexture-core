@@ -541,7 +541,7 @@ describe('Memory Provider', () => {
         'Game Night',
       ])
     })
-    it('should handle date', async () => {
+    it('should handle date (exact)', async () => {
       let dsl = {
         key: 'root',
         type: 'group',
@@ -574,7 +574,7 @@ describe('Memory Provider', () => {
         2004,
       ])
     })
-    it('should handle date math', async () => {
+    it('should handle date (range)', async () => {
       let dsl = {
         key: 'root',
         type: 'group',
@@ -585,9 +585,7 @@ describe('Memory Provider', () => {
             key: 'datefilter',
             type: 'date',
             field: 'released',
-            from: 'now/y',
-            to: 'now',
-            useDateMath: true,
+            range: 'thisCalendarYear'
           },
           getResultsNode(),
         ],
