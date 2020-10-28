@@ -1,7 +1,7 @@
 /*
-* Description: Test cases for the Date memory type
-* Test Notes: Just do `console.table(dates)` to help with matching the indexes visually
-*/
+ * Description: Test cases for the Date memory type
+ * Test Notes: Just do `console.table(dates)` to help with matching the indexes visually
+ */
 
 let F = require('futil')
 let _ = require('lodash/fp')
