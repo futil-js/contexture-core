@@ -15,36 +15,36 @@ let getResultsNode = () => ({
 })
 
 let getSavedSearch = async id =>
-({
-  AdamFavorites: {
-    key: 'criteria',
-    type: 'group',
-    schema: 'favorites',
-    join: 'and',
-    children: [
-      {
-        key: 'filter',
-        type: 'facet',
-        field: 'user',
-        values: ['Adam'],
-      },
-    ],
-  },
-  HopeFavorites: {
-    key: 'criteria',
-    type: 'group',
-    schema: 'favorites',
-    join: 'and',
-    children: [
-      {
-        key: 'filter',
-        type: 'facet',
-        field: 'user',
-        values: ['Hope'],
-      },
-    ],
-  },
-}[id])
+  ({
+    AdamFavorites: {
+      key: 'criteria',
+      type: 'group',
+      schema: 'favorites',
+      join: 'and',
+      children: [
+        {
+          key: 'filter',
+          type: 'facet',
+          field: 'user',
+          values: ['Adam'],
+        },
+      ],
+    },
+    HopeFavorites: {
+      key: 'criteria',
+      type: 'group',
+      schema: 'favorites',
+      join: 'and',
+      children: [
+        {
+          key: 'filter',
+          type: 'facet',
+          field: 'user',
+          values: ['Hope'],
+        },
+      ],
+    },
+  }[id])
 
 describe('Memory Provider', () => {
   let now = new Date()
@@ -585,7 +585,7 @@ describe('Memory Provider', () => {
             key: 'datefilter',
             type: 'date',
             field: 'released',
-            range: 'thisCalendarYear'
+            range: 'thisCalendarYear',
           },
           getResultsNode(),
         ],
