@@ -14,39 +14,40 @@ let getResultsNode = () => ({
   },
 })
 
+let getSavedSearch = async id =>
+  ({
+    AdamFavorites: {
+      key: 'criteria',
+      type: 'group',
+      schema: 'favorites',
+      join: 'and',
+      children: [
+        {
+          key: 'filter',
+          type: 'facet',
+          field: 'user',
+          values: ['Adam'],
+        },
+      ],
+    },
+    HopeFavorites: {
+      key: 'criteria',
+      type: 'group',
+      schema: 'favorites',
+      join: 'and',
+      children: [
+        {
+          key: 'filter',
+          type: 'facet',
+          field: 'user',
+          values: ['Hope'],
+        },
+      ],
+    },
+  }[id])
+
 describe('Memory Provider', () => {
   let now = new Date()
-  let getSavedSearch = async id =>
-    ({
-      AdamFavorites: {
-        key: 'criteria',
-        type: 'group',
-        schema: 'favorites',
-        join: 'and',
-        children: [
-          {
-            key: 'filter',
-            type: 'facet',
-            field: 'user',
-            values: ['Adam'],
-          },
-        ],
-      },
-      HopeFavorites: {
-        key: 'criteria',
-        type: 'group',
-        schema: 'favorites',
-        join: 'and',
-        children: [
-          {
-            key: 'filter',
-            type: 'facet',
-            field: 'user',
-            values: ['Hope'],
-          },
-        ],
-      },
-    }[id])
   let process = Contexture({
     schemas: {
       test: {
@@ -540,7 +541,7 @@ describe('Memory Provider', () => {
         'Game Night',
       ])
     })
-    it('should handle date', async () => {
+    it('should handle date (exact)', async () => {
       let dsl = {
         key: 'root',
         type: 'group',
@@ -559,20 +560,21 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = _.map('year', results)
+
       expect(inspectedResults).to.deep.equal([
+        2011,
+        1977,
         2012,
-        2013,
-        2009,
-        2013,
-        2012,
-        2013,
-        2013,
-        2013,
-        2012,
-        2013,
+        1995,
+        1999,
+        1981,
+        2008,
+        2006,
+        1995,
+        2004,
       ])
     })
-    it('should handle date math', async () => {
+    it('should handle date (range)', async () => {
       let dsl = {
         key: 'root',
         type: 'group',
@@ -583,9 +585,7 @@ describe('Memory Provider', () => {
             key: 'datefilter',
             type: 'date',
             field: 'released',
-            from: 'now/y',
-            to: 'now',
-            useDateMath: true,
+            range: 'thisCalendarYear',
           },
           getResultsNode(),
         ],
