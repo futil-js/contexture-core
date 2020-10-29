@@ -173,24 +173,8 @@ describe('Date example type test cases', () => {
     }))
   it('lastCalendarMonth', async () =>
     testRange({ range: 'lastCalendarMonth', expected: ['lastMonth'] }))
-  it('thisCalendarYear', async () =>
-    testRange({
-      range: 'thisCalendarYear',
-      expected: [
-        'lastMonth',
-        'last3Days',
-        'last6Days',
-        'last20Days',
-        'last6Months',
-        'last10Weeks',
-        'tomorrow',
-        'nextMonth',
-      ],
-    }))
-  it('nextCalendarYear', async () =>
-    testRange({ range: 'nextCalendarYear', expected: ['next6Months'] })),
-    it('next6Months', async () =>
-      testRange({ range: 'next6Months', expected: ['tomorrow', 'nextMonth'] }))
+  it('next6Months', async () =>
+    testRange({ range: 'next6Months', expected: ['tomorrow', 'nextMonth'] }))
   it('next36Months', async () =>
     testRange({
       range: 'next36Months',
