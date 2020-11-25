@@ -80,13 +80,14 @@ let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
   extendAllOn([node, node.config, node.data])
 }
 
-let attachFilters = runTypeFunction => async group => Tree.walkAsync(async (node, ...args) => {
-  initNode(node, ...args)
-  node._meta.hasValue = await runTypeFunction('hasValue', node)
-  if (node._meta.hasValue && !node.contextOnly) {
-    node._meta.filter = await runTypeFunction('filter', node)
-  }
-})(group)
+let attachFilters = runTypeFunction => async group =>
+  Tree.walkAsync(async (node, ...args) => {
+    initNode(node, ...args)
+    node._meta.hasValue = await runTypeFunction('hasValue', node)
+    if (node._meta.hasValue && !node.contextOnly) {
+      node._meta.filter = await runTypeFunction('filter', node)
+    }
+  })(group)
 
 module.exports = {
   Tree,
@@ -94,5 +95,5 @@ module.exports = {
   getProvider,
   runTypeFunction,
   initNode,
-  attachFilters
+  attachFilters,
 }
