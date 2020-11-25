@@ -52,6 +52,7 @@ let rangeToDatemath = {
   next90Days: { from: 'now/d', to: 'now/d+90d-1ms' },
   next6Months: { from: 'now/d', to: 'now/d+6M-1ms' },
   next12Months: { from: 'now/d', to: 'now/d+12M-1ms' },
+  next18Months: { from: 'now/d', to: 'now/d+18M-1ms' },
   next24Months: { from: 'now/d', to: 'now/d+24M-1ms' },
   next36Months: { from: 'now/d', to: 'now/d+36M-1ms' },
   allPastDates: { from: '', to: 'now/d-1ms' },
