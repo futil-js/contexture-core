@@ -94,6 +94,5 @@ module.exports = {
   getRelevantFilters,
   getProvider,
   runTypeFunction,
-  initNode,
   attachFilters,
 }
