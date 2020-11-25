@@ -1,3 +1,6 @@
+### 0.9.5 
+* export fn to attach _meta.filters to search nodes
+
 ### 0.9.4
 * Fix memory date type and add tests
 
