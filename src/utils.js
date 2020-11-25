@@ -68,9 +68,31 @@ let runTypeFunction = config => async (name, node, search) => {
   }
 }
 
+let extendAllOn = _.extendAll.convert({ immutable: false })
+
+let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
+  // Add schema, _meta path and requests
+  F.defaultsOn(
+    { schema, _meta: { requests: [], path: path.concat([node.key]) } },
+    node
+  )
+  // Flatten legacy fields
+  extendAllOn([node, node.config, node.data])
+}
+
+let attachFilters = runTypeFunction => async group => Tree.walkAsync(async (node, ...args) => {
+  initNode(node, ...args)
+  node._meta.hasValue = await runTypeFunction('hasValue', node)
+  if (node._meta.hasValue && !node.contextOnly) {
+    node._meta.filter = await runTypeFunction('filter', node)
+  }
+})(group)
+
 module.exports = {
   Tree,
   getRelevantFilters,
   getProvider,
   runTypeFunction,
+  initNode,
+  attachFilters
 }
