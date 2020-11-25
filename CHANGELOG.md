@@ -1,5 +1,5 @@
 ### 0.10.0
-* add next18Months rolling date type option
+* add next18Months rolling memory date type option
 
 ### 0.9.4
 * Fix memory date type and add tests
