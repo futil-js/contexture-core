@@ -1,4 +1,4 @@
-### 0.10.1 
+### 0.11.0 
 * export fn to attach _meta.filters to search nodes
 
 ### 0.10.0
