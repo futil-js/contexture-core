@@ -1,19 +1,7 @@
 let F = require('futil')
 let _ = require('lodash/fp')
 let utils = require('./utils')
-
-let extendAllOn = _.extendAll.convert({ immutable: false })
-let { Tree, getRelevantFilters } = utils
-
-let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
-  // Add schema, _meta path and requests
-  F.defaultsOn(
-    { schema, _meta: { requests: [], path: path.concat([node.key]) } },
-    node
-  )
-  // Flatten legacy fields
-  extendAllOn([node, node.config, node.data])
-}
+let { Tree, getRelevantFilters, attachFilters } = utils
 
 let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
   let getProvider = utils.getProvider(providers, schemas)
@@ -25,13 +13,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
     processGroup: (g, options) => process({ providers, schemas }, g, options),
   })
   try {
-    await Tree.walkAsync(async (node, ...args) => {
-      initNode(node, ...args)
-      node._meta.hasValue = await runTypeFunction('hasValue', node)
-      if (node._meta.hasValue && !node.contextOnly) {
-        node._meta.filter = await runTypeFunction('filter', node)
-      }
-    })(group)
+    await attachFilters(runTypeFunction)(group)
     Tree.walk(node => {
       // Skip groups
       if (!Tree.traverse(node))

@@ -1,3 +1,6 @@
+### 0.11.0 
+* export fn to attach _meta.filters to search nodes
+
 ### 0.10.0
 * add next18Months rolling memory date type option
 
