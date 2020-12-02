@@ -172,7 +172,10 @@ describe('Date example type test cases', () => {
       ],
     }))
   it('lastCalendarMonth', async () =>
-    testRange({ range: 'lastCalendarMonth', expected: ['lastMonth','last3Days','last6Days','last20Days'] }))
+    testRange({
+      range: 'lastCalendarMonth',
+      expected: ['lastMonth', 'last3Days', 'last6Days', 'last20Days'],
+    }))
   it('next6Months', async () =>
     testRange({ range: 'next6Months', expected: ['tomorrow', 'nextMonth'] }))
   it('next36Months', async () =>
