@@ -1,11 +1,11 @@
 ### 0.11.1 
-* fix unit test of date type 
+* Fix unit test of date type 
 
 ### 0.11.0 
-* export fn to attach _meta.filters to search nodes
+* Export fn to attach _meta.filters to search nodes
 
 ### 0.10.0
-* add next18Months rolling memory date type option
+* Add next18Months rolling memory date type option
 
 ### 0.9.4
 * Fix memory date type and add tests
