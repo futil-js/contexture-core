@@ -1,3 +1,6 @@
+### 0.11.1 
+* fix unit test of date type 
+
 ### 0.11.0 
 * export fn to attach _meta.filters to search nodes
 
