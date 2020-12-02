@@ -1,5 +1,5 @@
 ### 0.11.1 
-* Fix unit test of date type 
+* Fix unit test:  Date example type test cases - lastCalendarMonth 
 
 ### 0.11.0 
 * Export fn to attach _meta.filters to search nodes
