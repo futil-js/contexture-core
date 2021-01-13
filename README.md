@@ -120,13 +120,13 @@ Additionally, a provider may expose config for it's client (e.g. `hosts` or requ
 All `Types` can implement any if the following properties. All are optional:
 
 - `filter`
-	- Takes the current context and produces the filter that will apply to other data contexts in the group (except those related via `OR`). Typically JSON but can be a string as in the SQL case.
+	- Takes the current node and produces the filter that will apply to other data contexts in the group (except those related via `OR`). Typically JSON but can be a string as in the SQL case.
 - `hasValue`
-	- Takes the current context and returns a truthy value for whether or not it has a value
+	- Takes the current node and returns a truthy value for whether or not it has a value
 - `result`
-	- Takes the current context, a curried version of the provider's `runSearch` with filters and everything pre-applied (so it is really easy to run searches), the current schema, and the current provider for advanced use cases. This can run one or more async calls - as long as it returns a promise for the final result. If you need to do additional filtering logic, you can use `runSearch` on the provider directly instead of the convenient curried version and inspect the `_meta.relevantFilters` property to see which filters would have been auto-applied, allowing you to do literally any kind of search you want - but there hasn't been a need for this yet.
+	- Takes the current node, a curried version of the provider's `runSearch` with filters and everything pre-applied (so it is really easy to run searches), the current schema, and the current provider for advanced use cases. This can run one or more async calls - as long as it returns a promise for the final result. If you need to do additional filtering logic, you can use `runSearch` on the provider directly instead of the convenient curried version and inspect the `_meta.relevantFilters` property to see which filters would have been auto-applied, allowing you to do literally any kind of search you want - but there hasn't been a need for this yet.
 - `validContext`
-	- Takes the current context and returns a truthy value for whether or not it should get results.
+	- Takes the current node and returns a truthy value for whether or not it should get results.
 
 [^MultiSchema]: This completely solves and obviates the need for the `MultiIndexGroupProcessor` on the client and handles it in much more elegant way (and in a single service call, instead of `n` services calls). A caveat is that it does not currently handle schemas from different providers (because filters are generated based on their context's local schema), so you can't currently mix a elasticsearch schema with a mongo schema (because it could try to call mongo with elastic search filters for example).
 
