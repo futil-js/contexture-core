@@ -34,38 +34,27 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   return groupCombinator(group, _.compact(relevantFilters))
 })
 
+// todo: be explicit about providers instead of firstCommonKey nonsense?
 let getProvider = _.curry(
   (providers, schemas, node) =>
     providers[
-      node.provider || F.firstCommonKey(providers, schemas[node.schema])
+      F.firstCommonKey(providers, schemas[node.schema])
     ] ||
     F.throws(
       new Error(
-        `No Provider found ${node.schema} and was not overridden for ${node.key}`
+        `No Provider found ${node.schema}`
       )
     )
 )
 
-let runTypeFunction = config => async (name, node, search) => {
+// todo: named params to fn so the signature is consistent?
+let runTypeFunction = config => (name, node, search) => {
+  let types = config.getProvider(node).types  
   let schema = config.getSchema(node.schema)
-  let fn = F.cascade(
-    [`${node.type}.${name}`, `default.${name}`],
-    config.getProvider(node).types,
-    _.noop
-  )
-  try {
-    return await (search
-      ? fn(node, search, schema, config)
-      : fn(node, schema, config))
-  } catch (error) {
-    throw {
-      message: `Failed running search for ${node.type} (${
-        node.key
-      }) at ${name}: ${_.getOr(error, 'message', error)}`,
-      error,
-      node,
-    }
-  }
+  let fn = _.getOr(_.noop, `${node.type}.${name}`, types)
+  return (search
+    ? fn(node, search, schema, config)
+    : fn(node, schema, config))
 }
 
 let extendAllOn = _.extendAll.convert({ immutable: false })
@@ -76,8 +65,6 @@ let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
     { schema, _meta: { requests: [], path: path.concat([node.key]) } },
     node
   )
-  // Flatten legacy fields
-  extendAllOn([node, node.config, node.data])
 }
 
 let attachFilters = runTypeFunction => async group =>
