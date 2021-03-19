@@ -37,24 +37,16 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
 // todo: be explicit about providers instead of firstCommonKey nonsense?
 let getProvider = _.curry(
   (providers, schemas, node) =>
-    providers[
-      F.firstCommonKey(providers, schemas[node.schema])
-    ] ||
-    F.throws(
-      new Error(
-        `No Provider found ${node.schema}`
-      )
-    )
+    providers[F.firstCommonKey(providers, schemas[node.schema])] ||
+    F.throws(new Error(`No Provider found ${node.schema}`))
 )
 
 // todo: named params to fn so the signature is consistent?
 let runTypeFunction = config => (name, node, search) => {
-  let types = config.getProvider(node).types  
+  let types = config.getProvider(node).types
   let schema = config.getSchema(node.schema)
   let fn = _.getOr(_.noop, `${node.type}.${name}`, types)
-  return (search
-    ? fn(node, search, schema, config)
-    : fn(node, schema, config))
+  return search ? fn(node, search, schema, config) : fn(node, schema, config)
 }
 
 let extendAllOn = _.extendAll.convert({ immutable: false })
