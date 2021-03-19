@@ -1,8 +1,7 @@
 let _ = require('lodash/fp')
 let F = require('futil')
 
-let getChildren = x => F.cascade(['children', 'items', 'data.items'], x)
-let Tree = F.tree(getChildren)
+let Tree = F.tree(_.get('children'))
 
 let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   if (!_.includes(group.key, Path))
@@ -48,8 +47,6 @@ let runTypeFunction = config => (name, node, search) => {
   let fn = _.getOr(_.noop, `${node.type}.${name}`, types)
   return search ? fn(node, search, schema, config) : fn(node, schema, config)
 }
-
-let extendAllOn = _.extendAll.convert({ immutable: false })
 
 let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
   // Add schema, _meta path and requests
