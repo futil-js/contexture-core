@@ -1,3 +1,6 @@
+### 0.11.1
+* Adjusts the way errors are handled so they can be handled on a per node basis
+
 ### 0.11.1 
 * Fix unit test:  Date example type test cases - lastCalendarMonth 
 

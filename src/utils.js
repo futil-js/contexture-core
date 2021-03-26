@@ -58,13 +58,7 @@ let runTypeFunction = config => async (name, node, search) => {
       ? fn(node, search, schema, config)
       : fn(node, schema, config))
   } catch (error) {
-    throw {
-      message: `Failed running search for ${node.type} (${
-        node.key
-      }) at ${name}: ${_.getOr(error, 'message', error)}`,
-      error,
-      node,
-    }
+    return error
   }
 }
 
