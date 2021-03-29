@@ -1,7 +1,13 @@
-### 0.11.1 
+### 0.11.2
+* Cleanup packag-lock.json
+* Fix unit test:  Date example type test cases - lastCalendarMonth
+  * this is a permant fix as it lock the date for the tests
+* Refactored date test to make use of bdd-lazy-var
+
+### 0.11.1
 * Fix unit test:  Date example type test cases - lastCalendarMonth 
 
-### 0.11.0 
+### 0.11.0
 * Export fn to attach _meta.filters to search nodes
 
 ### 0.10.0
