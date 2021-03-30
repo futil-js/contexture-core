@@ -1,11 +1,12 @@
 let _ = require('lodash/fp')
 let { expect } = require('chai')
+let MockDate = require('mockdate')
 let moment = require('moment-timezone')
 let Contexture = require('../src/index')
 let provider = require('../src/provider-memory')
 let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
 
-let dates = [
+let dates = () => [
   {
     key: 'last15Months',
     date: moment()
@@ -107,29 +108,30 @@ let dsl = {
   ],
 }
 
-let process = Contexture({
-  schemas: {
-    date: {
+let process = () =>
+  Contexture({
+    schemas: {
+      date: {
+        memory: {
+          records: dates(),
+        },
+      },
+    },
+    providers: {
       memory: {
-        records: dates,
+        ...provider,
+        types: {
+          ...memoryExampleTypes(),
+        },
       },
     },
-  },
-  providers: {
-    memory: {
-      ...provider,
-      types: {
-        ...memoryExampleTypes(),
-      },
-    },
-  },
-})
+  })
 
 let testRange = async ({ range = 'exact', from, to, expected }) => {
   let tree = _.cloneDeep(dsl)
   tree.children[0] = { ...tree.children[0], range, from, to }
-  let response = await process(tree)
-  let results = _.map(key => _.find({ key }, dates), expected)
+  let response = await process()(tree)
+  let results = _.map(key => _.find({ key }, dates()), expected)
   expect(response.children[1].context).to.deep.equal({
     results,
     totalRecords: results.length,
@@ -137,6 +139,12 @@ let testRange = async ({ range = 'exact', from, to, expected }) => {
 }
 
 describe('Date example type test cases', () => {
+  before(() => {
+    MockDate.set(moment('2021-12-01T21:39:10.172Z', moment.ISO_8601))
+  })
+  after(() => {
+    MockDate.reset()
+  })
   it('allFutureDates', async () =>
     testRange({
       range: 'allFutureDates',
