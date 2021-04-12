@@ -8,8 +8,8 @@
     "test:ci": "./node_modules/mocha/bin/_mocha --recursive --reporter json > test-results.json",
     "test:watch": "chokidar 'src/**/*.js' 'test/**/*.js' -c 'npm t'",
     "duti": "duti",
-    "fmt": "prettier --write '{src,test}/**/*.js' --single-quote --no-semi --trailing-comma es5",
-    "lint": "eslint --ignore-path .gitignore '{src,test}/**/*.js'",
+    "fmt": "prettier --ignore-path .gitignore  --write './**/*.js'",
+    "lint": "eslint --ignore-path .gitignore './**/*.js'",
     "lint:fix": "npm run lint -- --fix",
     "lint:ci": "npm run lint -- -o lint-results.json -f json",
     "duti:fix": "npm run fmt && npm run lint:fix; npm run fmt"
