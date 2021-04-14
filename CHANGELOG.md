@@ -1,3 +1,6 @@
+### 0.11.3
+* Changed over CI from circleCI to Github Actions.
+
 ### 0.11.2
 * Cleanup packag-lock.json
 * Fix unit test:  Date example type test cases - lastCalendarMonth
