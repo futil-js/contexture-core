@@ -1,3 +1,5 @@
+### 0.11.4
+* Add last 1 Day and last 1 hour to date math calculations
 ### 0.11.3
 * Changed over CI from circleCI to Github Actions.
 
