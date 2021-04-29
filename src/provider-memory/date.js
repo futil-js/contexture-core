@@ -29,6 +29,8 @@ let quarterToOffset = {
 
 // https://www.elastic.co/guide/en/elasticsearch/reference/7.x/common-options.html#date-math
 let rangeToDatemath = {
+  last1Hour: { from: 'now-1h', to: 'now' },
+  last1Day: { from: 'now-1d', to: 'now' },
   last3Days: { from: 'now-3d', to: 'now' },
   last7Days: { from: 'now-7d', to: 'now' },
   last30Days: { from: 'now-30d', to: 'now' },
