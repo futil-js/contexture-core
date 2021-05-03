@@ -23,7 +23,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
           group
         )
     })(group)
-    await Tree.walkAsync(async node => {
+    await Promise.all(Tree.toArrayBy(async node => {
       let validContext = await runTypeFunction('validContext', node)
 
       // Reject filterOnly
@@ -44,7 +44,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
       let path = node._meta.path
       if (!options.debug) delete node._meta
       if (options.onResult) options.onResult({ path, node })
-    })(group)
+    })(group))
 
     return group
   } catch (error) {

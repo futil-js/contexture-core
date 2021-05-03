@@ -1,3 +1,6 @@
+### 0.11.4
+* Performance: executing runSearch requests in parallel
+
 ### 0.11.3
 * Changed over CI from circleCI to Github Actions.
 
