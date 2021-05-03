@@ -23,28 +23,32 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
           group
         )
     })(group)
-    await Promise.all(Tree.toArrayBy(async node => {
-      let validContext = await runTypeFunction('validContext', node)
+    await Promise.all(
+      Tree.toArrayBy(async node => {
+        let validContext = await runTypeFunction('validContext', node)
 
-      // Reject filterOnly
-      if (node.filterOnly || !validContext) return
+        // Reject filterOnly
+        if (node.filterOnly || !validContext) return
 
-      let curriedSearch = _.partial(getProvider(node).runSearch, [
-        options,
-        node,
-        getSchema(node.schema),
-        node._meta.relevantFilters,
-      ])
+        let curriedSearch = _.partial(getProvider(node).runSearch, [
+          options,
+          node,
+          getSchema(node.schema),
+          node._meta.relevantFilters,
+        ])
 
-      node.context = await runTypeFunction('result', node, curriedSearch).catch(
-        error => {
+        node.context = await runTypeFunction(
+          'result',
+          node,
+          curriedSearch
+        ).catch(error => {
           throw F.extendOn(error, { node })
-        }
-      )
-      let path = node._meta.path
-      if (!options.debug) delete node._meta
-      if (options.onResult) options.onResult({ path, node })
-    })(group))
+        })
+        let path = node._meta.path
+        if (!options.debug) delete node._meta
+        if (options.onResult) options.onResult({ path, node })
+      })(group)
+    )
 
     return group
   } catch (error) {
