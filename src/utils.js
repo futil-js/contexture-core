@@ -55,6 +55,7 @@ let runTypeFunction = config => async (name, node, search) => {
   )
   try {
     return await (search
+      // 
       ? fn(node, search, schema, config)
       : fn(node, schema, config))
   } catch (error) {
@@ -85,7 +86,7 @@ let attachFilters = runTypeFunction => async group =>
     initNode(node, ...args)
     node._meta.hasValue = await runTypeFunction('hasValue', node)
     if (node._meta.hasValue && !node.contextOnly) {
-      node._meta.filter = await runTypeFunction('filter', node)
+      node._meta.filter = await runTypeFunction('filter', node, group)
     }
   })(group)
 
