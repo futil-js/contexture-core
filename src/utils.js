@@ -55,8 +55,8 @@ let runTypeFunction = config => async (name, node, search) => {
   )
   try {
     return await (search
-      // 
-      ? fn(node, search, schema, config)
+      ? //
+        fn(node, search, schema, config)
       : fn(node, schema, config))
   } catch (error) {
     throw {
