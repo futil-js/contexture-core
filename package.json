@@ -1,11 +1,11 @@
 {
   "name": "contexture",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "The Contexture (aka ContextTree) Core",
   "main": "src/index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/_mocha --recursive",
-    "test:ci": "./node_modules/mocha/bin/_mocha --recursive --reporter json > test-results.json",
+    "test": "jest",
+    "test:ci": "jest --coverage --json --outputFile=test-results.json",
     "test:watch": "chokidar 'src/**/*.js' 'test/**/*.js' -c 'npm t'",
     "danger": "duti",
     "fmt": "prettier --ignore-path .gitignore  --write './**/*.js'",
@@ -38,15 +38,33 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
-    "chai": "^4.1.2",
     "chokidar-cli": "^1.2.0",
     "danger": "^10.5.4",
     "duti": "^0.15.2",
     "eslint": "^4.7.2",
     "eslint-config-smartprocure": "^1.0.0",
-    "mocha": "^3.5.3",
+    "jest": "^23.6.0",
+    "jest-cli": "^23.6.0",
     "mockdate": "^3.0.5",
     "prettier": "^1.7.2"
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/test/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.{js,jsx}",
+      "!**/node_modules/**"
+    ],
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
+      }
+    }
   },
   "prettier": {
     "singleQuote": true,
