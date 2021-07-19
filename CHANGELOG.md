@@ -1,3 +1,6 @@
+### 0.12.3
+* Converted tests to jest
+
 ### 0.12.2
 * Updated CI to use node16 and npm7
 * Updated package-lock.json to version 2

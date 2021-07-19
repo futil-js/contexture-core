@@ -1,5 +1,4 @@
 let _ = require('lodash/fp')
-let { expect } = require('chai')
 let MockDate = require('mockdate')
 let moment = require('moment-timezone')
 let Contexture = require('../src/index')
@@ -132,17 +131,17 @@ let testRange = async ({ range = 'exact', from, to, expected }) => {
   tree.children[0] = { ...tree.children[0], range, from, to }
   let response = await process()(tree)
   let results = _.map(key => _.find({ key }, dates()), expected)
-  expect(response.children[1].context).to.deep.equal({
+  expect(response.children[1].context).toEqual({
     results,
     totalRecords: results.length,
   })
 }
 
 describe('Date example type test cases', () => {
-  before(() => {
+  beforeAll(() => {
     MockDate.set(moment('2021-12-01T21:39:10.172Z', moment.ISO_8601))
   })
-  after(() => {
+  afterAll(() => {
     MockDate.reset()
   })
   it('allFutureDates', async () =>
