@@ -1,3 +1,5 @@
+### 0.12.4
+* Revert parallelization until we can make it configurable and test more thoroughly
 ### 0.12.3
 * Converted tests to jest
 
