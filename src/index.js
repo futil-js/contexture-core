@@ -27,8 +27,10 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
       let validContext = await runTypeFunction('validContext', node)
 
       // Reject filterOnly
-      if (node.filterOnly || !validContext) return
-
+      if (node.filterOnly || !validContext) {
+        if (!options.debug) delete node._meta
+        return
+      }
       let curriedSearch = _.partial(getProvider(node).runSearch, [
         options,
         node,
