@@ -1,5 +1,11 @@
 ### 0.12.4
 * Revert parallelization until we can make it configurable and test more thoroughly
+### 0.12.3
+* Converted tests to jest
+
+### 0.12.2
+* Updated CI to use node16 and npm7
+* Updated package-lock.json to version 2
 
 ### 0.12.1
 * Performance: executing runSearch requests in parallel
