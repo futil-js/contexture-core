@@ -9,7 +9,7 @@
 
 ### 0.12.1
 * Performance: executing runSearch requests in parallel
- 
+
 ### 0.12.0
 * Add last 1 Day and last 1 hour to date math calculations
 
