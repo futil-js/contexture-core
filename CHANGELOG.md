@@ -1,4 +1,4 @@
-### 0.12.4
+### 0.12.5
 * Ensure _meta is stripped from filterOnly nodes / nodes without valid context if debug option is falsy
 ### 0.12.3
 * Converted tests to jest
