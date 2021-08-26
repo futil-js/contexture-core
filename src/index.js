@@ -26,17 +26,17 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
     await Tree.walkAsync(async node => {
       let validContext = await runTypeFunction('validContext', node)
 
-        // Reject filterOnly
-        if (node.filterOnly || !validContext) {
-          if (!options.debug) delete node._meta
-          return
-        }
-        let curriedSearch = _.partial(getProvider(node).runSearch, [
-          options,
-          node,
-          getSchema(node.schema),
-          node._meta.relevantFilters,
-        ])
+      // Reject filterOnly
+      if (node.filterOnly || !validContext) {
+        if (!options.debug) delete node._meta
+        return
+      }
+      let curriedSearch = _.partial(getProvider(node).runSearch, [
+        options,
+        node,
+        getSchema(node.schema),
+        node._meta.relevantFilters,
+      ])
 
       node.context = await runTypeFunction('result', node, curriedSearch).catch(
         error => {
