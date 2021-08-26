@@ -1,5 +1,6 @@
 let Contexture = require('../src/index')
 let provider = require('../src/provider-debug')
+let _ = require('lodash/fp')
 
 describe('Contexture Core', () => {
   let process = Contexture({
@@ -96,5 +97,37 @@ describe('Contexture Core', () => {
       },
       filter: undefined,
     })
+  })
+  it('should remove _meta from all valid nodes if debug option is falsy', async () => {
+    let result = await process(dsl, { debug: false })
+    let {
+      children: [filter, results],
+    } = result
+
+    expect(_.has('_meta', filter)).toEqual(false)
+    expect(_.has('_meta', results)).toEqual(false)
+  })
+  it('should also remove _meta from nodes without a valid context / filterOnly nodes if debug option is falsy', async () => {
+    let newDSL = {
+      ...dsl,
+      children: dsl.children.concat({
+        key: 'filterOnlyFilter',
+        type: 'test',
+        data: {
+          value: 1,
+        },
+        config: {
+          c: 1,
+        },
+        filterOnly: true,
+      }),
+    }
+
+    let result = await process(newDSL, { debug: false })
+    let {
+      children: [, , filterOnlyNode],
+    } = result
+
+    expect(_.has('_meta', filterOnlyNode)).toEqual(false)
   })
 })
