@@ -1,4 +1,4 @@
-### 0.12.2
+### 0.12.4
 * Revert parallelization until we can make it configurable and test more thoroughly
 
 ### 0.12.1
