@@ -1,4 +1,7 @@
 ### 0.12.5
+* Use the provider specifed on the schema if available.
+
+### 0.12.5
 * Ensure _meta is stripped from filterOnly nodes / nodes without valid context if debug option is falsy
 
 ### 0.12.4
