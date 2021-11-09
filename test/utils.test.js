@@ -28,6 +28,16 @@ describe('Utils', () => {
           random: 'stuff',
         },
       },
+      schema3: {
+        randomProperty: 6,
+        provider1: {
+          random: 'stuff',
+        },
+        provider2: {
+          random: 'other stuff',
+        },
+        provider: 'provider2',
+      },
     }
     let f = getProvider(Providers, Schemas)
     it('should support explicit providers', () => {
@@ -43,6 +53,12 @@ describe('Utils', () => {
         schema: 'schema1',
       })
       expect(provider).toBe(Providers.provider1)
+    })
+    it('should get the provider specified on schema', () => {
+      let provider = f({
+        schema: 'schema3',
+      })
+      expect(provider).toBe(Providers.provider2)
     })
   })
   describe('getRelevantFilters', () => {
