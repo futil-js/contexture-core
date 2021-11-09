@@ -37,7 +37,9 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
 let getProvider = _.curry(
   (providers, schemas, node) =>
     providers[
-      node.provider || _.get('provider', schemas[node.schema]) || F.firstCommonKey(providers, schemas[node.schema])
+      node.provider ||
+        _.get('provider', schemas[node.schema]) ||
+        F.firstCommonKey(providers, schemas[node.schema])
     ] ||
     F.throws(
       new Error(
