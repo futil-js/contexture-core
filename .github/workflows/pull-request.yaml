@@ -25,8 +25,8 @@ jobs:
           ${{ runner.OS }}-
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm run test:ci || true
-    - run: npm run lint:ci || true
+    - run: npm run test:ci
+    - run: npm run lint:ci
     - name: pre-danger
       run: git config user.email "decrapifier@govspend.com" && git config user.name "Decrapifier" && git checkout ${{github.head_ref}} && git config push.default upstream && git branch -u origin/${{github.head_ref}}
     - run: npm run danger
