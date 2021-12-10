@@ -25,10 +25,12 @@ jobs:
           ${{ runner.OS }}-
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm run test:ci || true
-    - run: npm run lint:ci || true
+    - run: npm run test:ci || touch FAIL_JOB
+    - run: npm run lint:ci || touch FAIL_JOB
     - name: pre-danger
       run: git config user.email "decrapifier@govspend.com" && git config user.name "Decrapifier" && git checkout ${{github.head_ref}} && git config push.default upstream && git branch -u origin/${{github.head_ref}}
     - run: npm run danger
       env:
         DANGER_GITHUB_API_TOKEN: '${{ secrets.PAT_DECRAPIFIER }}'
+    - name: check-if-lint-or-test-runs-failed
+      run: 'if test -f "FAIL_JOB"; then exit 1; fi'

@@ -1,3 +1,6 @@
+### 0.12.6
+* Update the pull-request workflow to better catch test failures
+
 ### 0.12.5
 * Use the provider specifed on the schema if available.
 
