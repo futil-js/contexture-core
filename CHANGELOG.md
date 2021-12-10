@@ -1,3 +1,6 @@
+### 0.12.6
+* Update the pull-request workflow to better catch test failures
+
 ### 0.12.5
 * Ensure _meta is stripped from filterOnly nodes / nodes without valid context if debug option is falsy
 
