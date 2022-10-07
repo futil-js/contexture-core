@@ -41,7 +41,7 @@
     "danger": "^11.1.2",
     "danger-plugin-coverage": "^1.6.2",
     "duti": "^0.15.2",
-    "eslint": "^4.7.2",
+    "eslint": "^8.24.0",
     "eslint-config-smartprocure": "^1.0.0",
     "jest": "^29.0.2",
     "mockdate": "^3.0.5",
