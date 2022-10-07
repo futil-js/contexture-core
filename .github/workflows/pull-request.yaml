@@ -23,7 +23,7 @@ jobs:
         restore-keys: |
           ${{ runner.OS }}-node-
           ${{ runner.OS }}-
-    - run: npm ci
+    - run: npm ci --legacy-peer-deps
     - run: npm run build --if-present
     - run: npm run test:ci || touch FAIL_JOB
     - run: npm run lint:ci || touch FAIL_JOB
