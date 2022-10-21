@@ -7,14 +7,10 @@
   "scripts": {
     "prepack": "node scripts/build.js",
     "test": "jest",
-    "test:watch": "jest --watch",
     "test:ci": "jest --coverage --json --outputFile test-results.json",
-    "danger": "danger ci",
-    "fmt": "prettier -w .",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "lint:ci": "eslint . -o lint-results.json -f json",
-    "duti:fix": "eslint . --fix && prettier -w ."
+    "lint:ci": "eslint -o lint-results.json -f json .",
+    "duti:fix": "eslint --fix . && prettier -w ."
   },
   "repository": {
     "type": "git",
