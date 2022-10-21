@@ -1,13 +1,13 @@
 // TODO: All of this should move to contexture-export
 
-let _ = require('lodash/fp')
-let F = require('futil')
+import _ from 'lodash/fp'
+import F from 'futil'
 
-let Tree = F.tree(_.get('children'), key => ({ key }))
-let setFilterOnly = Tree.transform(node => {
+let Tree = F.tree(_.get('children'), (key) => ({ key }))
+let setFilterOnly = Tree.transform((node) => {
   node.filterOnly = true
 })
-let lastChild = x => _.last(Tree.traverse(x))
+let lastChild = (x) => _.last(Tree.traverse(x))
 
 let wrapTree = _.curry((analysisNodes, tree) => ({
   key: 'analysisRoot',
@@ -17,11 +17,11 @@ let wrapTree = _.curry((analysisNodes, tree) => ({
   children: [setFilterOnly(tree), ..._.castArray(analysisNodes)],
 }))
 
-let analyzeTree = _.curry(async (service, tree, analysisNodes) =>
+export let analyzeTree = _.curry(async (service, tree, analysisNodes) =>
   lastChild(await service(wrapTree(analysisNodes, tree)))
 )
 
-let facet = ({ service, tree, field, size = 100, sortDir }) => {
+export let facet = ({ service, tree, field, size = 100, sortDir }) => {
   let analyze = analyzeTree(service, tree)
   let getTotalRecords = _.memoize(async () => {
     let result = await analyze({
@@ -50,9 +50,4 @@ let facet = ({ service, tree, field, size = 100, sortDir }) => {
     hasNext: () => !done,
     getNext,
   }
-}
-
-module.exports = {
-  facet,
-  analyzeTree,
 }

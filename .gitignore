@@ -15,7 +15,10 @@ pids
 lib-cov
 
 # Coverage directory used by tools like istanbul
-coverage
+coverage/*
+
+# Build output
+dist/*
 
 # nyc test coverage
 .nyc_output
@@ -59,3 +62,12 @@ typings/
 
 test-results.json
 lint-results.json
+
+# yarn stuff
+# see https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

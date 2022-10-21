@@ -1,5 +1,5 @@
-let { getProvider, getRelevantFilters } = require('../src/utils')
-let DebugProvider = require('../src/provider-debug')
+import { getProvider, getRelevantFilters } from './utils'
+import DebugProvider from './provider-debug'
 
 describe('Utils', () => {
   // Not handled - missing schema, schema with no matching provider

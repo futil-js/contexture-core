@@ -1,9 +1,9 @@
-let _ = require('lodash/fp')
-let Contexture = require('../src/index')
-let provider = require('../src/provider-memory')
-let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
-let exampleTypes = require('../src/exampleTypes')
-let movies = require('./imdb-data')
+import _ from 'lodash/fp'
+import Contexture from './index'
+import provider from './provider-memory'
+import memoryExampleTypes from './provider-memory/exampleTypes'
+import exampleTypes from './exampleTypes'
+import movies from './__data__/imdb'
 
 let getResultsNode = () => ({
   key: 'results',
@@ -13,7 +13,7 @@ let getResultsNode = () => ({
   },
 })
 
-let getSavedSearch = async id =>
+let getSavedSearch = async (id) =>
   ({
     AdamFavorites: {
       key: 'criteria',
@@ -98,7 +98,7 @@ describe('Memory Provider', () => {
       },
       movies: {
         memory: {
-          records: _.map(x => {
+          records: _.map((x) => {
             x.released = new Date(x.released)
             return x
           }, movies),
@@ -119,7 +119,7 @@ describe('Memory Provider', () => {
         memory: {
           records: _.flow(
             _.take(5),
-            _.map(x => ({ ...x, released: now }))
+            _.map((x) => ({ ...x, released: now }))
           )(movies),
         },
       },
@@ -561,16 +561,7 @@ describe('Memory Provider', () => {
       let inspectedResults = _.map('year', results)
 
       expect(inspectedResults).toEqual([
-        2011,
-        1977,
-        2012,
-        1995,
-        1999,
-        1981,
-        2008,
-        2006,
-        1995,
-        2004,
+        2011, 1977, 2012, 1995, 1999, 1981, 2008, 2006, 1995, 2004,
       ])
     })
     it('should handle date (range)', async () => {
@@ -592,7 +583,7 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = _.flow(
-        _.map(x => x.released.getFullYear()),
+        _.map((x) => x.released.getFullYear()),
         _.uniq
       )(results)
       expect(inspectedResults).toEqual([now.getFullYear()])
@@ -713,7 +704,7 @@ describe('Memory Provider', () => {
         key: 'raw',
         schema: 'movies',
         type: 'raw',
-        filter: x => x.year > 2010,
+        filter: (x) => x.year > 2010,
         result: _.flow(_.map('year'), _.uniq),
       }
       let result = await process(dsl)
@@ -736,7 +727,7 @@ describe('Memory Provider', () => {
         ],
       }
       let results = []
-      let onResult = x => {
+      let onResult = (x) => {
         results.push(x)
       }
       await process(dsl, { onResult })

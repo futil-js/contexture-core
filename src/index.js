@@ -1,12 +1,17 @@
-let F = require('futil')
-let _ = require('lodash/fp')
-let utils = require('./utils')
-let { Tree, getRelevantFilters, attachFilters } = utils
+import F from 'futil'
+import _ from 'lodash/fp'
+import {
+  Tree,
+  getRelevantFilters,
+  attachFilters,
+  getProvider as getProviderUtil,
+  runTypeFunction as runTypeFunctionUtil,
+} from './utils'
 
 let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
-  let getProvider = utils.getProvider(providers, schemas)
-  let getSchema = schema => schemas[schema]
-  let runTypeFunction = utils.runTypeFunction({
+  let getProvider = getProviderUtil(providers, schemas)
+  let getSchema = (schema) => schemas[schema]
+  let runTypeFunction = runTypeFunctionUtil({
     options,
     getSchema,
     getProvider,
@@ -14,7 +19,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
   })
   try {
     await attachFilters(runTypeFunction)(group)
-    Tree.walk(node => {
+    Tree.walk((node) => {
       // Skip groups
       if (!Tree.traverse(node))
         node._meta.relevantFilters = getRelevantFilters(
@@ -23,7 +28,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
           group
         )
     })(group)
-    await Tree.walkAsync(async node => {
+    await Tree.walkAsync(async (node) => {
       let validContext = await runTypeFunction('validContext', node)
 
       // Reject filterOnly
@@ -39,7 +44,7 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
       ])
 
       node.context = await runTypeFunction('result', node, curriedSearch).catch(
-        error => {
+        (error) => {
           throw F.extendOn(error, { node })
         }
       )
@@ -53,7 +58,8 @@ let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
     throw error.node ? error : new Error(`Uncaught search exception: ${error}`)
   }
 })
-module.exports = process
+
+export default process
 
 // Psuedo code process
 // -----

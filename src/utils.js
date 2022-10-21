@@ -1,10 +1,11 @@
-let _ = require('lodash/fp')
-let F = require('futil')
+import _ from 'lodash/fp'
+import F from 'futil'
 
-let getChildren = x => F.cascade(['children', 'items', 'data.items'], x)
-let Tree = F.tree(getChildren)
+let getChildren = (x) => F.cascade(['children', 'items', 'data.items'], x)
 
-let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
+export let Tree = F.tree(getChildren)
+
+export let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   if (!_.includes(group.key, Path))
     // If we're not in the path, it doesn't matter what the rest of it is
     Path = []
@@ -20,7 +21,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
     relevantChildren = _.filter({ key: currentKey }, relevantChildren)
   // Exclude self
   relevantChildren = _.reject(
-    node => node.key === currentKey && !getChildren(node),
+    (node) => node.key === currentKey && !getChildren(node),
     relevantChildren
   )
 
@@ -34,7 +35,7 @@ let getRelevantFilters = _.curry((groupCombinator, Path, group) => {
   return groupCombinator(group, _.compact(relevantFilters))
 })
 
-let getProvider = _.curry(
+export let getProvider = _.curry(
   (providers, schemas, node) =>
     providers[
       node.provider ||
@@ -48,7 +49,7 @@ let getProvider = _.curry(
     )
 )
 
-let runTypeFunction = config => async (name, node, search) => {
+export let runTypeFunction = (config) => async (name, node, search) => {
   let schema = config.getSchema(node.schema)
   let fn = F.cascade(
     [`${node.type}.${name}`, `default.${name}`],
@@ -82,7 +83,7 @@ let initNode = (node, i, [{ schema, _meta: { path = [] } = {} } = {}]) => {
   extendAllOn([node, node.config, node.data])
 }
 
-let attachFilters = runTypeFunction => async group =>
+export let attachFilters = (runTypeFunction) => async (group) =>
   Tree.walkAsync(async (node, ...args) => {
     initNode(node, ...args)
     node._meta.hasValue = await runTypeFunction('hasValue', node)
@@ -90,11 +91,3 @@ let attachFilters = runTypeFunction => async group =>
       node._meta.filter = await runTypeFunction('filter', node)
     }
   })(group)
-
-module.exports = {
-  Tree,
-  getRelevantFilters,
-  getProvider,
-  runTypeFunction,
-  attachFilters,
-}
