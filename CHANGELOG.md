@@ -1,3 +1,11 @@
+### 0.12.8
+
+- Use yarn
+- Use esbuild for both packaging and test running
+- Change github actions to use yarn
+- Use import/export syntax instead of CJS
+- Co-locate tests with source code
+
 ### 0.12.7
 
 - Add coverage to danger
