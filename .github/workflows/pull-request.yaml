@@ -8,6 +8,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_DECRAPIFIER }}
+          fetch-depth: 0
 
       - name: Setup node
         uses: actions/setup-node@v3
@@ -19,17 +22,22 @@ jobs:
         run: yarn install --immutable
 
       - name: Lint
-        run: yarn run lint:ci
+        run: yarn run lint:ci || touch FAIL_JOB
 
       - name: Test
-        run: yarn run test:ci
+        run: yarn run test:ci || touch FAIL_JOB
 
       - name: Setup Decrapifier user
         run: |
           git config user.email "decrapifier@govspend.com"
           git config user.name "Decrapifier"
+          git config push.default upstream
+          git checkout --track origin/${{github.head_ref}}
 
       - name: Run danger
-        run: yarn run danger ci
+        run: yarn run danger ci || touch FAIL_JOB
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.PAT_DECRAPIFIER }}
+
+      - name: check-if-lint-or-test-runs-failed
+        run: 'if test -f "FAIL_JOB"; then exit 1; fi'

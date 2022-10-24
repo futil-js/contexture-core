@@ -10,6 +10,7 @@ let setFilterOnly = Tree.transform((node) => {
 let lastChild = (x) => _.last(Tree.traverse(x))
 
 let wrapTree = _.curry((analysisNodes, tree) => ({
+
   key: 'analysisRoot',
   type: 'group',
   join: 'and',
