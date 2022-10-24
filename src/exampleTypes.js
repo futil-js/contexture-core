@@ -1,11 +1,11 @@
-let _ = require('lodash/fp')
-let strategies = require('./dataStrategies')
+import _ from 'lodash/fp'
+import * as strategies from './dataStrategies'
 
-module.exports = ({ getSavedSearch } = {}) => ({
+export default ({ getSavedSearch } = {}) => ({
   savedSearch: {
-    hasValue: node => node.search || node.searchId,
+    hasValue: (node) => node.search || node.searchId,
     async filter(node, schema, { processGroup }) {
-      let debugSearch = x => processGroup(x, { debug: true })
+      let debugSearch = (x) => processGroup(x, { debug: true })
       let search = node.search || (await getSavedSearch(node.searchId))
       let result = await strategies.analyzeTree(debugSearch, search, {
         key: 'targetNode',
@@ -14,7 +14,7 @@ module.exports = ({ getSavedSearch } = {}) => ({
     },
   },
   subquery: {
-    hasValue: node =>
+    hasValue: (node) =>
       node.localField && node.foreignField && (node.search || node.searchId),
     async filter(node, schema, { processGroup, getProvider, getSchema }) {
       let tree = node.search || (await getSavedSearch(node.searchId))

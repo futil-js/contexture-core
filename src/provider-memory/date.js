@@ -1,25 +1,16 @@
-let _ = require('lodash/fp')
-let moment = require('moment-timezone')
-let datemath = require('@elastic/datemath')
+import _ from 'lodash/fp'
+import moment from 'moment-timezone'
+import datemath from '@elastic/datemath'
 
 let dateMin = -8640000000000000
 let dateMax = 8640000000000000
 
 let getStartOfQuarter = (quarterOffset, timezone) => {
-  let quarter =
-    moment()
-      .tz(timezone)
-      .quarter() + quarterOffset
-  return moment()
-    .tz(timezone)
-    .quarter(quarter)
-    .startOf('quarter')
+  let quarter = moment().tz(timezone).quarter() + quarterOffset
+  return moment().tz(timezone).quarter(quarter).startOf('quarter')
 }
 
-let getEndOfQuarter = date =>
-  moment(date)
-    .add(1, 'Q')
-    .subtract(1, 'ms')
+let getEndOfQuarter = (date) => moment(date).add(1, 'Q').subtract(1, 'ms')
 
 let quarterToOffset = {
   thisCalendarQuarter: 0,
@@ -82,9 +73,9 @@ let rollingRangeToDates = (range, timezone) => {
 }
 
 let dateTypeToFormatFn = {
-  date: x => x && moment.utc(x).toDate(),
-  unix: x => x && moment.utc(x).unix(),
-  timestamp: x => x && new Date(x).getTime(),
+  date: (x) => x && moment.utc(x).toDate(),
+  unix: (x) => x && moment.utc(x).unix(),
+  timestamp: (x) => x && new Date(x).getTime(),
 }
 
 let hasValue = ({ from, to, range }) =>
@@ -92,7 +83,7 @@ let hasValue = ({ from, to, range }) =>
   range !== 'allDates' &&
   ((range === 'exact' && (from || to)) || range !== 'exact')
 
-module.exports = {
+export default {
   hasValue,
   // NOTE: timezone is only used for rolling dates
   filter({

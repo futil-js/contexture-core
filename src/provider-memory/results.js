@@ -1,6 +1,6 @@
-let _ = require('lodash/fp')
+import _ from 'lodash/fp'
 
-module.exports = {
+export default {
   result: (
     { pageSize = 10, page = 1, sortField, sortDir = 'desc' },
     search

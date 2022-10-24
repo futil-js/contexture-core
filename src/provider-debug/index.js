@@ -13,7 +13,7 @@ let DebugProvider = {
       hasValue: () => true,
     },
     test: {
-      filter: x => ({ [`${x.field || x.key} (${x.type})`]: x.data }),
+      filter: (x) => ({ [`${x.field || x.key} (${x.type})`]: x.data }),
       result: (context, search) =>
         search({ test: context.config }).then(() => ({
           abc: 123,
@@ -28,4 +28,4 @@ let DebugProvider = {
   },
 }
 
-module.exports = DebugProvider
+export default DebugProvider

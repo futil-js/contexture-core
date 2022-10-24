@@ -1,9 +1,9 @@
-let _ = require('lodash/fp')
-let F = require('futil')
-let date = require('./date')
-let results = require('./results')
+import _ from 'lodash/fp'
+import F from 'futil'
+import date from './date'
+import results from './results'
 
-module.exports = () => ({
+export default () => ({
   default: {
     validContext: () => true,
     hasValue: () => true,
@@ -11,7 +11,7 @@ module.exports = () => ({
   date,
   results,
   number: {
-    hasValue: node => F.isNotNil(node.min) || F.isNotNil(node.max),
+    hasValue: (node) => F.isNotNil(node.min) || F.isNotNil(node.max),
     filter: ({ field, min = -Infinity, max = Infinity }) =>
       _.conforms({
         [field]: _.inRange(min, max),
@@ -31,7 +31,7 @@ module.exports = () => ({
       }),
   },
   facet: {
-    hasValue: node => _.size(node.values),
+    hasValue: (node) => _.size(node.values),
     filter: ({ field, values, mode = 'include' }) =>
       _.flow(
         _.get(field),
@@ -61,7 +61,7 @@ module.exports = () => ({
     },
   },
   text: {
-    hasValue: node => node.value || _.size(node.values),
+    hasValue: (node) => node.value || _.size(node.values),
     filter({ join = 'all', values, value, operator = 'containsWord', field }) {
       let regexMap = (operator, val) =>
         ({
@@ -75,7 +75,7 @@ module.exports = () => ({
         }[operator])
 
       let conditions = _.map(
-        nodeValue => recordValue =>
+        (nodeValue) => (recordValue) =>
           RegExp(regexMap(operator, nodeValue), 'i').test(recordValue),
         values || [value]
       )

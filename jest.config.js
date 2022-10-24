@@ -1,12 +1,10 @@
-/* eslint-env node */
-
-/*
- * For a detailed explanation regarding each configuration property, visit:
- * https://jestjs.io/docs/configuration
- */
-
-module.exports = {
-  testMatch: ['<rootDir>/test/**/*.test.js'],
+// https://jestjs.io/docs/configuration
+export default {
+  testMatch: ['<rootDir>/src/**/*.test.js'],
+  transform: {
+    '^.+\\.js?$': ['esbuild-jest', { sourcemap: true, target: 'es2022' }],
+  },
+  coverageProvider: 'v8',
   coverageReporters: ['clover'],
   collectCoverageFrom: ['src/**/*.js'],
 }
