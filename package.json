@@ -1,6 +1,6 @@
 {
   "name": "contexture",
-  "version": "0.12.8",
+  "version": "0.12.9",
   "description": "The Contexture (aka ContextTree) Core",
   "main": "dist/index.js",
   "type": "module",
