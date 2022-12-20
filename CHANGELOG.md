@@ -1,3 +1,7 @@
+### 0.12.9
+
+- Thread search options in example types
+
 ### 0.12.8
 
 - Use yarn
