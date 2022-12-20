@@ -1,9 +1,9 @@
-import _ from 'lodash/fp'
-import Contexture from './index'
-import provider from './provider-memory'
-import memoryExampleTypes from './provider-memory/exampleTypes'
-import exampleTypes from './exampleTypes'
-import movies from './__data__/imdb'
+import _ from 'lodash/fp.js'
+import Contexture from './index.js'
+import provider from './provider-memory/index.js'
+import memoryExampleTypes from './provider-memory/exampleTypes.js'
+import exampleTypes from './exampleTypes.js'
+import movies from './__data__/imdb.js'
 
 let getResultsNode = () => ({
   key: 'results',

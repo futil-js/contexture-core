@@ -1,6 +1,6 @@
-import Contexture from './index'
-import provider from './provider-debug'
-import _ from 'lodash/fp'
+import _ from 'lodash/fp.js'
+import Contexture from './index.js'
+import provider from './provider-debug/index.js'
 
 describe('Contexture Core', () => {
   let process = Contexture({

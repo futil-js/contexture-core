@@ -1,5 +1,5 @@
-import { getProvider, getRelevantFilters } from './utils'
-import DebugProvider from './provider-debug'
+import { getProvider, getRelevantFilters } from './utils.js'
+import DebugProvider from './provider-debug/index.js'
 
 describe('Utils', () => {
   // Not handled - missing schema, schema with no matching provider

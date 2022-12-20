@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     title: 'Game of Thrones',
     year: 2011,

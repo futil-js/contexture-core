@@ -1,9 +1,9 @@
-import _ from 'lodash/fp'
+import _ from 'lodash/fp.js'
 import MockDate from 'mockdate'
 import moment from 'moment-timezone'
-import Contexture from './index'
-import provider from './provider-memory'
-import memoryExampleTypes from './provider-memory/exampleTypes'
+import Contexture from './index.js'
+import provider from './provider-memory/index.js'
+import memoryExampleTypes from './provider-memory/exampleTypes.js'
 
 let dates = () => [
   {

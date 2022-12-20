@@ -1,3 +1,11 @@
+### 0.12.10
+
+- Build and publish browser-safe version of this package
+
+### 0.12.10
+
+- Fix package publishing
+
 ### 0.12.9
 
 - Thread search options in example types
