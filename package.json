@@ -1,7 +1,10 @@
 {
   "name": "contexture",
-  "version": "0.12.9",
+  "version": "0.12.10",
   "description": "The Contexture (aka ContextTree) Core",
+  "files": [
+    "./dist"
+  ],
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
