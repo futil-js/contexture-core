@@ -1,4 +1,4 @@
-### 0.12.10
+### 0.12.11
 
 - Build and publish browser-safe version of this package
 
