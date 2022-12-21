@@ -1,6 +1,6 @@
 // TODO: All of this should move to contexture-export
 
-import _ from 'lodash/fp'
+import _ from 'lodash/fp.js'
 import F from 'futil'
 
 let Tree = F.tree(_.get('children'), (key) => ({ key }))

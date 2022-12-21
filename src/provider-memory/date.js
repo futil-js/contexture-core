@@ -1,4 +1,4 @@
-import _ from 'lodash/fp'
+import _ from 'lodash/fp.js'
 import moment from 'moment-timezone'
 import datemath from '@elastic/datemath'
 

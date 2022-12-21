@@ -1,7 +1,7 @@
-import _ from 'lodash/fp'
+import _ from 'lodash/fp.js'
 import F from 'futil'
-import date from './date'
-import results from './results'
+import date from './date.js'
+import results from './results.js'
 
 export default () => ({
   default: {

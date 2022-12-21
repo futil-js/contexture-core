@@ -1,5 +1,5 @@
-import _ from 'lodash/fp'
-import * as strategies from './dataStrategies'
+import _ from 'lodash/fp.js'
+import * as strategies from './dataStrategies.js'
 
 export default ({ getSavedSearch } = {}) => ({
   savedSearch: {

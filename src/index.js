@@ -1,12 +1,12 @@
 import F from 'futil'
-import _ from 'lodash/fp'
+import _ from 'lodash/fp.js'
 import {
   Tree,
   getRelevantFilters,
   attachFilters,
   getProvider as getProviderUtil,
   runTypeFunction as runTypeFunctionUtil,
-} from './utils'
+} from './utils.js'
 
 let process = _.curry(async ({ providers, schemas }, group, options = {}) => {
   let getProvider = getProviderUtil(providers, schemas)

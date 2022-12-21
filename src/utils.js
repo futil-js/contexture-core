@@ -1,4 +1,4 @@
-import _ from 'lodash/fp'
+import _ from 'lodash/fp.js'
 import F from 'futil'
 
 let getChildren = (x) => F.cascade(['children', 'items', 'data.items'], x)

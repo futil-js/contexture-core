@@ -1,12 +1,13 @@
 {
   "name": "contexture",
-  "version": "0.12.10",
+  "version": "0.12.11",
   "description": "The Contexture (aka ContextTree) Core",
+  "type": "module",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "files": [
     "./dist"
   ],
-  "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "prepack": "node scripts/build.js",
     "test": "jest",
@@ -45,6 +46,7 @@
     "esbuild": "^0.15.12",
     "esbuild-jest": "^0.5.0",
     "eslint": "^8.25.0",
+    "eslint-plugin-import": "^2.26.0",
     "glob": "^8.0.3",
     "jest": "^29.0.2",
     "mockdate": "^3.0.5",
