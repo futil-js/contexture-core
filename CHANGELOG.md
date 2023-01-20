@@ -1,3 +1,8 @@
+### 0.12.12
+
+- Add exports to package.json so node knows which version of the code to import
+- Do not use esbuild to transpile source when running tests. Instead use jest ESM support
+
 ### 0.12.11
 
 - Build and publish browser-safe version of this package
