@@ -1,6 +1,8 @@
 import fs from 'fs/promises'
 import glob from 'glob'
 import esbuild from 'esbuild'
+// https://github.com/flex-development/toggle-pkg-type#when-should-i-use-this
+import toggleTypeModule from '@flex-development/toggle-pkg-type'
 
 // Clear build directory since esbuild won't do it for us
 await fs.rm('dist', { force: true, recursive: true })
@@ -16,6 +18,8 @@ let entryPoints = glob.sync('src/**/*.js', {
 
 // Build project
 
+toggleTypeModule('off')
+
 await esbuild.build({
   platform: 'node',
   format: 'cjs',
@@ -26,8 +30,10 @@ await esbuild.build({
 
 await fs.writeFile('./dist/cjs/package.json', '{ "type": "commonjs" }')
 
+toggleTypeModule('on')
+
 await esbuild.build({
-  platform: 'browser',
+  platform: 'node',
   format: 'esm',
   target: 'es2022',
   outdir: 'dist/esm',
