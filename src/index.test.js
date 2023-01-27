@@ -1,6 +1,6 @@
-let { expect } = require('chai')
-let Contexture = require('../src/index')
-let provider = require('../src/provider-debug')
+import _ from 'lodash/fp.js'
+import Contexture from './index.js'
+import provider from './provider-debug/index.js'
 
 describe('Contexture Core', () => {
   let process = Contexture({
@@ -42,14 +42,14 @@ describe('Contexture Core', () => {
     let {
       children: [filter, results],
     } = await process(dsl)
-    expect(filter.context).to.deep.equal({
+    expect(filter.context).toEqual({
       abc: 123,
     })
-    expect(filter._meta).to.not.exist
-    expect(results.context).to.deep.equal({
+    expect(filter._meta).toBeFalsy()
+    expect(results.context).toEqual({
       results: [],
     })
-    expect(results._meta).to.not.exist
+    expect(results._meta).toBeFalsy()
   })
   it('should add _meta with debug option', async () => {
     let result = await process(dsl, { debug: true })
@@ -57,7 +57,7 @@ describe('Contexture Core', () => {
       children: [filter, results],
     } = result
 
-    expect(filter._meta).to.deep.equal({
+    expect(filter._meta).toEqual({
       requests: [
         {
           where: undefined,
@@ -73,7 +73,7 @@ describe('Contexture Core', () => {
         },
       },
     })
-    expect(results._meta).to.deep.equal({
+    expect(results._meta).toEqual({
       requests: [
         {
           where: {
@@ -97,5 +97,37 @@ describe('Contexture Core', () => {
       },
       filter: undefined,
     })
+  })
+  it('should remove _meta from all valid nodes if debug option is falsy', async () => {
+    let result = await process(dsl, { debug: false })
+    let {
+      children: [filter, results],
+    } = result
+
+    expect(_.has('_meta', filter)).toEqual(false)
+    expect(_.has('_meta', results)).toEqual(false)
+  })
+  it('should also remove _meta from nodes without a valid context / filterOnly nodes if debug option is falsy', async () => {
+    let newDSL = {
+      ...dsl,
+      children: dsl.children.concat({
+        key: 'filterOnlyFilter',
+        type: 'test',
+        data: {
+          value: 1,
+        },
+        config: {
+          c: 1,
+        },
+        filterOnly: true,
+      }),
+    }
+
+    let result = await process(newDSL, { debug: false })
+    let {
+      children: [, , filterOnlyNode],
+    } = result
+
+    expect(_.has('_meta', filterOnlyNode)).toEqual(false)
   })
 })

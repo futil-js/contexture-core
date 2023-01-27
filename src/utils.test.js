@@ -1,6 +1,5 @@
-let { expect } = require('chai')
-let { getProvider, getRelevantFilters } = require('../src/utils')
-let DebugProvider = require('../src/provider-debug')
+import { getProvider, getRelevantFilters } from './utils.js'
+import DebugProvider from './provider-debug/index.js'
 
 describe('Utils', () => {
   // Not handled - missing schema, schema with no matching provider
@@ -29,6 +28,16 @@ describe('Utils', () => {
           random: 'stuff',
         },
       },
+      schema3: {
+        randomProperty: 6,
+        provider1: {
+          random: 'stuff',
+        },
+        provider2: {
+          random: 'other stuff',
+        },
+        provider: 'provider2',
+      },
     }
     let f = getProvider(Providers, Schemas)
     it('should support explicit providers', () => {
@@ -37,13 +46,19 @@ describe('Utils', () => {
         schema: 'schema2',
         provider: 'provider1',
       })
-      expect(provider).to.equal(Providers.provider1)
+      expect(provider).toBe(Providers.provider1)
     })
     it('should get first provider on schema', () => {
       let provider = f({
         schema: 'schema1',
       })
-      expect(provider).to.equal(Providers.provider1)
+      expect(provider).toBe(Providers.provider1)
+    })
+    it('should get the provider specified on schema', () => {
+      let provider = f({
+        schema: 'schema3',
+      })
+      expect(provider).toBe(Providers.provider2)
     })
   })
   describe('getRelevantFilters', () => {
@@ -73,7 +88,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal('test')
+      expect(result).toEqual('test')
     })
     it('should handle basic sibling, but with items instead of children', () => {
       let result = getRelevantFilters(
@@ -101,7 +116,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal('test')
+      expect(result).toEqual('test')
     })
     it('should handle two siblings', () => {
       let result = getRelevantFilters(
@@ -135,7 +150,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal({
+      expect(result).toEqual({
         and: ['test', 'test2'],
       })
     })
@@ -171,7 +186,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal({
+      expect(result).toEqual({
         and: ['test', 'blah'],
       })
     })
@@ -207,7 +222,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal('blah')
+      expect(result).toEqual('blah')
     })
     it('should not collapse NOT', () => {
       let result = getRelevantFilters(
@@ -247,7 +262,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal({
+      expect(result).toEqual({
         and: [
           'test',
           {
@@ -311,7 +326,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal({
+      expect(result).toEqual({
         and: [
           'cable',
           {
@@ -386,7 +401,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal({
+      expect(result).toEqual({
         and: [
           'cable',
           {
@@ -461,7 +476,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal('res:FL')
+      expect(result).toEqual('res:FL')
     })
     it('should handle nested AND', () => {
       let result = getRelevantFilters(
@@ -520,7 +535,7 @@ describe('Utils', () => {
           ],
         }
       )
-      expect(result).to.deep.equal({
+      expect(result).toEqual({
         and: ['cable', 'result'],
       })
     })

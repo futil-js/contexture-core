@@ -1,10 +1,9 @@
-let _ = require('lodash/fp')
-let { expect } = require('chai')
-let Contexture = require('../src/index')
-let provider = require('../src/provider-memory')
-let memoryExampleTypes = require('../src/provider-memory/exampleTypes')
-let exampleTypes = require('../src/exampleTypes')
-let movies = require('./imdb-data')
+import _ from 'lodash/fp.js'
+import Contexture from './index.js'
+import provider from './provider-memory/index.js'
+import memoryExampleTypes from './provider-memory/exampleTypes.js'
+import exampleTypes from './exampleTypes.js'
+import movies from './__data__/imdb.js'
 
 let getResultsNode = () => ({
   key: 'results',
@@ -14,7 +13,7 @@ let getResultsNode = () => ({
   },
 })
 
-let getSavedSearch = async id =>
+let getSavedSearch = async (id) =>
   ({
     AdamFavorites: {
       key: 'criteria',
@@ -99,7 +98,7 @@ describe('Memory Provider', () => {
       },
       movies: {
         memory: {
-          records: _.map(x => {
+          records: _.map((x) => {
             x.released = new Date(x.released)
             return x
           }, movies),
@@ -120,7 +119,7 @@ describe('Memory Provider', () => {
         memory: {
           records: _.flow(
             _.take(5),
-            _.map(x => ({ ...x, released: now }))
+            _.map((x) => ({ ...x, released: now }))
           )(movies),
         },
       },
@@ -161,18 +160,18 @@ describe('Memory Provider', () => {
         ],
       }
       let result = await process(dsl)
-      expect(result.children[0].context).to.deep.equal({
+      expect(result.children[0].context).toEqual({
         cardinality: 1,
         options: [{ name: 1, count: 2 }],
       })
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         cardinality: 2,
         options: [
           { name: 1, count: 2 },
           { name: 2, count: 1 },
         ],
       })
-      expect(result.children[2].context).to.deep.equal({
+      expect(result.children[2].context).toEqual({
         results: [
           { a: 1, b: 1 },
           { a: 1, b: 3 },
@@ -203,7 +202,7 @@ describe('Memory Provider', () => {
         ],
       }
       let result = await process(dsl)
-      expect(result.children[0].context).to.deep.equal({
+      expect(result.children[0].context).toEqual({
         cardinality: 3,
         options: [
           { name: 1, count: 2 },
@@ -211,7 +210,7 @@ describe('Memory Provider', () => {
           { name: 3, count: 1 },
         ],
       })
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         cardinality: 3,
         options: [
           { name: 1, count: 2 },
@@ -219,7 +218,7 @@ describe('Memory Provider', () => {
           { name: 3, count: 1 },
         ],
       })
-      expect(result.children[2].context).to.deep.equal({
+      expect(result.children[2].context).toEqual({
         results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }, { a: 3 }],
         totalRecords: 4,
       })
@@ -242,7 +241,7 @@ describe('Memory Provider', () => {
         ],
       }
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [{ a: 3 }],
         totalRecords: 1,
       })
@@ -277,7 +276,7 @@ describe('Memory Provider', () => {
         ],
       }
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [
           { a: 1, b: 1 },
           { a: 1, b: 3 },
@@ -317,7 +316,7 @@ describe('Memory Provider', () => {
         ],
       }
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [
           { b: 1, c: 1 },
           { b: 3, c: 1 },
@@ -340,7 +339,7 @@ describe('Memory Provider', () => {
         ],
       }
       let result = await process(dsl)
-      expect(result.children[0].context.options).to.deep.equal([
+      expect(result.children[0].context.options).toEqual([
         { name: 1, count: 3 },
         { name: 2, count: 3 },
       ])
@@ -360,7 +359,7 @@ describe('Memory Provider', () => {
         ],
       }
       let result = await process(dsl)
-      expect(result.children[0].context.options).to.deep.equal([
+      expect(result.children[0].context.options).toEqual([
         { name: { a: 1 }, count: 3 },
         { name: { b: 1 }, count: 3 },
       ])
@@ -385,7 +384,7 @@ describe('Memory Provider', () => {
     it('exists (null) should work', async () => {
       dsl.children[0].values = null
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }, { a: 3 }],
         totalRecords: 4,
       })
@@ -393,7 +392,7 @@ describe('Memory Provider', () => {
     it('exists (true) should work', async () => {
       dsl.children[0].value = true
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [{ a: 1, b: 1 }, { a: 1, b: 3 }, { a: 2, b: 2 }, { a: 3 }],
         totalRecords: 4,
       })
@@ -402,7 +401,7 @@ describe('Memory Provider', () => {
       dsl.children[0].field = 'b'
       dsl.children[0].value = false
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [{ a: 3 }],
         totalRecords: 1,
       })
@@ -427,7 +426,7 @@ describe('Memory Provider', () => {
     it('bool (null) should work', async () => {
       dsl.children[0].values = null
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [
           { a: true, b: true },
           { a: true, b: false },
@@ -445,7 +444,7 @@ describe('Memory Provider', () => {
     it('bool (true) should work', async () => {
       dsl.children[0].value = true
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [{ a: true, b: true }, { a: true, b: false }, { a: true }],
         totalRecords: 3,
       })
@@ -454,7 +453,7 @@ describe('Memory Provider', () => {
       dsl.children[0].field = 'b'
       dsl.children[0].value = false
       let result = await process(dsl)
-      expect(result.children[1].context).to.deep.equal({
+      expect(result.children[1].context).toEqual({
         results: [
           { a: true, b: false },
           { a: false, b: false },
@@ -483,8 +482,8 @@ describe('Memory Provider', () => {
       }
       let result = await process(dsl)
       let ratings = _.find({ key: 'ratings' }, result.children).context
-      expect(ratings.cardinality).to.equal(25)
-      expect(ratings.options).to.deep.equal([
+      expect(ratings.cardinality).toBe(25)
+      expect(ratings.options).toEqual([
         { name: 'R', count: 1104 },
         { name: 'PG-13', count: 525 },
         { name: 'TV-14', count: 361 },
@@ -498,7 +497,7 @@ describe('Memory Provider', () => {
       ])
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = results.map(_.pick(['title', 'year', 'rated']))
-      expect(inspectedResults).to.deep.equal([
+      expect(inspectedResults).toEqual([
         { title: 'The Dark Knight Rises', year: 2012, rated: 'PG-13' },
         { title: 'The Usual Suspects', year: 1995, rated: 'R' },
         { title: 'American Beauty', year: 1999, rated: 'R' },
@@ -535,7 +534,7 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = _.map('title', results)
-      expect(inspectedResults).to.deep.equal([
+      expect(inspectedResults).toEqual([
         'Game of Thrones',
         'Gamer',
         'Game Night',
@@ -561,17 +560,8 @@ describe('Memory Provider', () => {
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = _.map('year', results)
 
-      expect(inspectedResults).to.deep.equal([
-        2011,
-        1977,
-        2012,
-        1995,
-        1999,
-        1981,
-        2008,
-        2006,
-        1995,
-        2004,
+      expect(inspectedResults).toEqual([
+        2011, 1977, 2012, 1995, 1999, 1981, 2008, 2006, 1995, 2004,
       ])
     })
     it('should handle date (range)', async () => {
@@ -593,10 +583,10 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = _.flow(
-        _.map(x => x.released.getFullYear()),
+        _.map((x) => x.released.getFullYear()),
         _.uniq
       )(results)
-      expect(inspectedResults).to.deep.equal([now.getFullYear()])
+      expect(inspectedResults).toEqual([now.getFullYear()])
     })
     it('should handle results sorting', async () => {
       let dsl = {
@@ -617,14 +607,14 @@ describe('Memory Provider', () => {
       let result = await process(dsl)
       let results = _.find({ key: 'results' }, result.children).context.results
       let inspectedResults = _.map('year', results)
-      expect(inspectedResults).to.deep.equal([2013])
+      expect(inspectedResults).toEqual([2013])
 
       dsl.children[0].sortDir = 'asc'
       let ascResult = await process(dsl)
       let ascResults = _.find({ key: 'results' }, ascResult.children).context
         .results
       let ascInspectedResults = _.map('year', ascResults)
-      expect(ascInspectedResults).to.deep.equal([1915])
+      expect(ascInspectedResults).toEqual([1915])
     })
     it('should handle subquery', async () => {
       let dsl = {
@@ -658,7 +648,7 @@ describe('Memory Provider', () => {
       }
       let result = await process(dsl)
       let results = result.children[1].context.results
-      expect(_.map('title', results)).to.deep.equal([
+      expect(_.map('title', results)).toEqual([
         'Game of Thrones',
         'Star Trek: The Next Generation',
         'The Matrix',
@@ -683,7 +673,7 @@ describe('Memory Provider', () => {
       }
       let result = await process(dsl)
       let results = result.children[1].context.results
-      expect(_.map('title', results)).to.deep.equal([
+      expect(_.map('title', results)).toEqual([
         'Game of Thrones',
         'Star Trek: The Next Generation',
         'The Matrix',
@@ -698,13 +688,13 @@ describe('Memory Provider', () => {
       }
       let result = await process(dsl)
       let firstPage = result.context.results
-      expect(_.map('movie', firstPage)).to.deep.equal([
+      expect(_.map('movie', firstPage)).toEqual([
         'Game of Thrones',
         'The Matrix',
       ])
       result = await process({ ...dsl, page: 2 })
       let secondPage = result.context.results
-      expect(_.map('movie', secondPage)).to.deep.equal([
+      expect(_.map('movie', secondPage)).toEqual([
         'Star Trek: The Next Generation',
         'Game of Thrones',
       ])
@@ -714,11 +704,11 @@ describe('Memory Provider', () => {
         key: 'raw',
         schema: 'movies',
         type: 'raw',
-        filter: x => x.year > 2010,
+        filter: (x) => x.year > 2010,
         result: _.flow(_.map('year'), _.uniq),
       }
       let result = await process(dsl)
-      expect(result.context.result).to.deep.equal([2011, 2012, 2013])
+      expect(result.context.result).toEqual([2011, 2012, 2013])
     })
     it('should handle onResult', async () => {
       let dsl = {
@@ -737,11 +727,11 @@ describe('Memory Provider', () => {
         ],
       }
       let results = []
-      let onResult = x => {
+      let onResult = (x) => {
         results.push(x)
       }
       await process(dsl, { onResult })
-      expect(_.map('path', results)).to.deep.equal([
+      expect(_.map('path', results)).toEqual([
         ['root'],
         ['root', 'ratings'],
         ['root', 'results'],

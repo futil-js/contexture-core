@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Publish to npm
+        run: |
+          echo -e "npmRegistryServer: \"https://registry.npmjs.org/\"\nnpmAuthToken: \"$NPM_TOKEN\"" >> ./.yarnrc.yml
+          yarn npm publish --access public
+        env:
+          NPM_TOKEN: '${{ secrets.NPM_TOKEN }}'

@@ -1,5 +1,5 @@
-let _ = require('lodash/fp')
-let F = require('futil')
+import _ from 'lodash/fp.js'
+import F from 'futil'
 
 let MemoryProvider = {
   groupCombinator: (group, filters) =>
@@ -12,4 +12,4 @@ let MemoryProvider = {
     _.flow(_.filter(filters), aggs)(schema.memory.records),
 }
 
-module.exports = MemoryProvider
+export default MemoryProvider
